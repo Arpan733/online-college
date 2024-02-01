@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:online_college/consts/route_name.dart';
 import 'package:online_college/consts/utils.dart';
+import 'package:online_college/providers/teacher_data_local_storage_provider.dart';
+import 'package:provider/provider.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({Key? key}) : super(key: key);
@@ -23,24 +26,31 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Hi, ',
-                    style: GoogleFonts.rubik(
-                      color: Colors.white,
-                      fontSize: 30,
+                  Consumer<TeacherSharedPreferencesProvider>(
+                    builder: (context, teacher, _) => Text(
+                      'Hi, ${teacher.name ?? ''}',
+                      style: GoogleFonts.rubik(
+                        color: Colors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   ),
-                  Container(
-                    height: 70,
-                    width: 70,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(35),
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/student.png',
-                        fit: BoxFit.fitHeight,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, RoutesName.profile);
+                    },
+                    child: Container(
+                      height: 70,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(35),
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/student.png',
+                          fit: BoxFit.fitHeight,
+                        ),
                       ),
                     ),
                   )

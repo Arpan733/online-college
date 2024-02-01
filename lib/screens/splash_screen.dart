@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:online_college/providers/teacher_data_local_storage_provider.dart';
+import 'package:online_college/repositories/teacher_shared_preferences.dart';
 
 import '../consts/route_name.dart';
 
@@ -14,6 +16,9 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    TeacherSharedPreferences().init();
+    TeacherSharedPreferencesProvider().getAllData();
+
     Future.delayed(
       const Duration(seconds: 3),
       () {

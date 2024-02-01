@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               seconds--;
                                               showSendOTP = false;
                                             } else {
-                                              if (!mounted) {
+                                              if (mounted) {
                                                 t?.cancel();
                                               }
                                               seconds = 60;

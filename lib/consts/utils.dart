@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:online_college/consts/route_name.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Utils {
   List<Map<String, dynamic>> functionalityListTeacher = [
@@ -71,8 +72,13 @@ class Utils {
     {
       'name': 'Log Out',
       'image': 'assets/icons/logout.png',
-      'onTap': (BuildContext context) {
-        FirebaseAuth.instance.signOut();
+      'onTap': (BuildContext context) async {
+        await FirebaseAuth.instance.signOut();
+        SharedPreferences preference = await SharedPreferences.getInstance();
+        await preference.clear();
+
+        if (!context.mounted) return;
+
         Navigator.pushNamedAndRemoveUntil(
           context,
           RoutesName.login,
@@ -135,8 +141,13 @@ class Utils {
     {
       'name': 'Log Out',
       'image': 'assets/icons/logout.png',
-      'onTap': (BuildContext context) {
-        FirebaseAuth.instance.signOut();
+      'onTap': (BuildContext context) async {
+        await FirebaseAuth.instance.signOut();
+        SharedPreferences preference = await SharedPreferences.getInstance();
+        await preference.clear();
+
+        if (!context.mounted) return;
+
         Navigator.pushNamedAndRemoveUntil(
           context,
           RoutesName.login,

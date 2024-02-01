@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
+import 'package:online_college/providers/teacher_data_local_storage_provider.dart';
 import 'package:online_college/repositories/sign_in_firebase.dart';
 
 import '../consts/route_name.dart';
@@ -66,9 +67,14 @@ class SignInProvider extends ChangeNotifier {
         );
       }
 
-      TeacherDataProvider().makeUser(
+      TeacherDataFireStoreProvider().makeTeacher(
           phoneNumber: firebaseAuth.currentUser!.phoneNumber.toString(),
           uid: firebaseAuth.currentUser!.uid);
+
+      TeacherSharedPreferencesProvider()
+          .setPhoneNumber(firebaseAuth.currentUser!.phoneNumber.toString());
+      TeacherSharedPreferencesProvider()
+          .setUid(firebaseAuth.currentUser!.uid.toString());
     }
 
     _isLoginLoading = false;

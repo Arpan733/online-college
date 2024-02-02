@@ -4,15 +4,15 @@ import 'package:online_college/screens/assignment_screen.dart';
 import 'package:online_college/screens/dashboard_screen.dart';
 import 'package:online_college/screens/doubts_screen.dart';
 import 'package:online_college/screens/events_screen.dart';
+import 'package:online_college/screens/leave_application_screen.dart';
 import 'package:online_college/screens/login_screen.dart';
+import 'package:online_college/screens/professor_list_screen.dart';
 import 'package:online_college/screens/profile_screen.dart';
 import 'package:online_college/screens/school_gallary_screen.dart';
 import 'package:online_college/screens/school_holiday_screen.dart';
+import 'package:online_college/screens/splash_screen.dart';
 import 'package:online_college/screens/student_list_screen.dart';
 import 'package:online_college/screens/timetable_screen.dart';
-
-import '../screens/leave_application_screen.dart';
-import '../screens/splash_screen.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -50,6 +50,9 @@ class Routes {
       case RoutesName.studentList:
         return MaterialPageRoute(
             builder: (BuildContext context) => const StudentListScreen());
+      case RoutesName.professorList:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const ProfessorListScreen());
       case RoutesName.timetable:
         return MaterialPageRoute(
             builder: (BuildContext context) => const TimeTableScreen());

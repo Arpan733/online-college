@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
-import 'package:online_college/providers/teacher_data_local_storage_provider.dart';
 import 'package:online_college/repositories/sign_in_firebase.dart';
 
 import '../consts/route_name.dart';
 import '../consts/utils.dart';
+import '../repositories/teacher_shared_preferences.dart';
 
 class SignInProvider extends ChangeNotifier {
   bool _enableOTPField = false;
@@ -67,14 +67,12 @@ class SignInProvider extends ChangeNotifier {
         );
       }
 
-      TeacherDataFireStoreProvider().makeTeacher(
-          phoneNumber: firebaseAuth.currentUser!.phoneNumber.toString(),
-          uid: firebaseAuth.currentUser!.uid);
-
-      TeacherSharedPreferencesProvider()
-          .setPhoneNumber(firebaseAuth.currentUser!.phoneNumber.toString());
-      TeacherSharedPreferencesProvider()
-          .setUid(firebaseAuth.currentUser!.uid.toString());
+      TeacherDataFireStoreProvider().makeTeacher();
+      TeacherSharedPreferences.setString(
+          title: 'phoneNumber',
+          data: firebaseAuth.currentUser!.phoneNumber.toString());
+      TeacherSharedPreferences.setString(
+          title: 'uid', data: firebaseAuth.currentUser!.uid.toString());
     }
 
     _isLoginLoading = false;

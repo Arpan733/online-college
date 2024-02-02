@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:online_college/consts/route_name.dart';
-import 'package:online_college/consts/utils.dart';
-import 'package:online_college/providers/teacher_data_local_storage_provider.dart';
-import 'package:provider/provider.dart';
+
+import '../consts/route_name.dart';
+import '../consts/utils.dart';
+import '../repositories/teacher_shared_preferences.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({Key? key}) : super(key: key);
@@ -16,106 +16,134 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF21827E),
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              height: 125,
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Consumer<TeacherSharedPreferencesProvider>(
-                    builder: (context, teacher, _) => Text(
-                      'Hi, ${teacher.name ?? ''}',
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              expandedHeight: 200,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerRight,
+                      end: Alignment.centerLeft,
+                      colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+                    ),
+                  ),
+                  child: Image.asset('assets/images/background.png'),
+                ),
+              ),
+              bottom: PreferredSize(
+                  preferredSize: Size(MediaQuery.of(context).size.width, 40),
+                  child: Container(
+                    height: 40,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(40),
+                          topLeft: Radius.circular(40)),
+                      color: Colors.white,
+                    ),
+                  )),
+              toolbarHeight: 150,
+              title: Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Hi, ${TeacherSharedPreferences.name}',
                       style: GoogleFonts.rubik(
                         color: Colors.white,
                         fontSize: 30,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, RoutesName.profile);
-                    },
-                    child: Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(35),
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/images/student.png',
-                          fit: BoxFit.fitHeight,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50),
-                  ),
-                ),
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                    mainAxisExtent: 135,
-                  ),
-                  itemCount: Utils().functionalityListTeacher.length,
-                  itemBuilder: (context, index) {
-                    Map<String, dynamic> current =
-                        Utils().functionalityListTeacher[index];
-
-                    return GestureDetector(
+                    GestureDetector(
                       onTap: () {
-                        current['onTap'](context);
+                        Navigator.pushNamed(context, RoutesName.profile);
                       },
                       child: Container(
-                        height: 135,
-                        width: 165,
-                        padding:
-                            const EdgeInsets.only(top: 20, left: 20, right: 20),
+                        height: 70,
+                        width: 70,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF21827E).withOpacity(0.25),
-                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(35),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: 40,
-                              width: 40,
-                              margin: const EdgeInsets.only(bottom: 5),
-                              child: Image.asset(current['image']),
+                        child: ClipOval(
+                          child: Hero(
+                            tag: 'profilePhoto',
+                            child: Image.network(
+                              TeacherSharedPreferences.photoUrl,
+                              fit: BoxFit.fitHeight,
+                              errorBuilder: (BuildContext context, Object error,
+                                  StackTrace? stackTrace) {
+                                return Image.asset('assets/images/student.png');
+                              },
                             ),
-                            Text(
-                              current['name'],
-                              style: GoogleFonts.rubik(
-                                color: Colors.black87,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    );
-                  },
+                    )
+                  ],
                 ),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              sliver: SliverGrid.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  mainAxisExtent: 135,
+                ),
+                itemCount: Utils().functionalityListTeacher.length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> current =
+                      Utils().functionalityListTeacher[index];
+
+                  Key uniqueKey = ValueKey<String>(current['name']);
+
+                  return GestureDetector(
+                    onTap: () {
+                      current['onTap'](context);
+                    },
+                    child: Container(
+                      key: uniqueKey,
+                      height: 135,
+                      width: 165,
+                      padding:
+                          const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF5F6FC),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 40,
+                            width: 40,
+                            margin: const EdgeInsets.only(bottom: 5),
+                            child: Image.asset(current['image']),
+                          ),
+                          Text(
+                            current['name'],
+                            style: GoogleFonts.rubik(
+                              color: Colors.black87,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],

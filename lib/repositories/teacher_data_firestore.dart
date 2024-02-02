@@ -1,29 +1,33 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../consts/utils.dart';
 
 class TeacherDataFireStore {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> createTeacher(
-      {required String phoneNumber, required String uid}) async {
+  Future<void> updateTeacher(
+      {required String title, required String data}) async {
     try {
       Map<String, String> userdata = {
-        'phoneNumber': phoneNumber,
-        'uid': uid,
+        title: data,
       };
 
-      await firestore.collection('users').doc(uid).set(userdata);
+      await firestore.collection('users').doc(user?.uid).update(userdata);
     } catch (e) {
-      print('Error $e');
       Utils().showToast(e.toString());
     }
   }
 
-  Future<Map<String, dynamic>?> getTeacherData({required String uid}) async {
+  Future<Map<String, dynamic>?> getTeacherData() async {
     try {
       DocumentSnapshot snapshot =
-          await firestore.collection("user").doc(uid).get();
+          await firestore.collection("user").doc(user?.uid).get();
 
       if (snapshot.exists) {
         Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
@@ -31,9 +35,30 @@ class TeacherDataFireStore {
         return data;
       }
     } catch (e) {
-      print('Error $e');
       Utils().showToast(e.toString());
     }
+
+    return null;
+  }
+
+  Future<String?> uploadProfilePhoto({required PlatformFile pickedFile}) async {
+    try {
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('${user?.uid}/${pickedFile.name}');
+      UploadTask upload = ref.putFile(File(pickedFile.path!));
+
+      final snapshot = await upload.whenComplete(() {});
+      final url = await snapshot.ref.getDownloadURL();
+      user?.updatePhotoURL(url.toString());
+
+      if (url.isNotEmpty) {
+        return url;
+      }
+    } catch (e) {
+      Utils().showToast(e.toString());
+    }
+
     return null;
   }
 }

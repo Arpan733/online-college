@@ -29,7 +29,7 @@ class Utils {
     },
     {
       'name': 'School Holidays',
-      'image': 'assets/icons/holidays.png',
+      'image': 'assets/icons/holiday.png',
       'onTap': (BuildContext context) {
         Navigator.pushNamed(context, RoutesName.schoolHoliday);
       },
@@ -50,14 +50,14 @@ class Utils {
     },
     {
       'name': 'School Gallery',
-      'image': 'assets/icons/gallery.png',
+      'image': 'assets/icons/school_gallery.png',
       'onTap': (BuildContext context) {
         Navigator.pushNamed(context, RoutesName.schoolGallery);
       },
     },
     {
       'name': 'Leave Application',
-      'image': 'assets/icons/leave.png',
+      'image': 'assets/icons/leave_application.png',
       'onTap': (BuildContext context) {
         Navigator.pushNamed(context, RoutesName.leaveApplication);
       },
@@ -98,7 +98,7 @@ class Utils {
     },
     {
       'name': 'School Holidays',
-      'image': 'assets/icons/holidays.png',
+      'image': 'assets/icons/holiday.png',
       'onTap': (BuildContext context) {
         Navigator.pushNamed(context, RoutesName.schoolHoliday);
       },
@@ -119,14 +119,14 @@ class Utils {
     },
     {
       'name': 'School Gallery',
-      'image': 'assets/icons/gallery.png',
+      'image': 'assets/icons/school_gallery.png',
       'onTap': (BuildContext context) {
         Navigator.pushNamed(context, RoutesName.schoolGallery);
       },
     },
     {
       'name': 'Leave Application',
-      'image': 'assets/icons/leave.png',
+      'image': 'assets/icons/leave_application.png',
       'onTap': (BuildContext context) {
         Navigator.pushNamed(context, RoutesName.leaveApplication);
       },
@@ -156,6 +156,14 @@ class Utils {
       },
     },
   ];
+
+  bool isValidEmail(String email) {
+    RegExp emailRegExp = RegExp(
+      r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+    );
+
+    return emailRegExp.hasMatch(email);
+  }
 
   showToast(String message) {
     Fluttertoast.showToast(

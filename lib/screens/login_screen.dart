@@ -26,11 +26,17 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF21827E),
       body: SingleChildScrollView(
-        child: SizedBox(
+        child: Container(
           height: MediaQuery.of(context).size.height * 1,
           width: MediaQuery.of(context).size.width * 1,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerRight,
+              end: Alignment.centerLeft,
+              colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+            ),
+          ),
           child: Stack(
             children: [
               Consumer<SignInProvider>(
@@ -238,10 +244,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 60,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
-                                    gradient: LinearGradient(
+                                    gradient: const LinearGradient(
                                       colors: [
-                                        const Color(0xFF21827E),
-                                        const Color(0xFf21827E).withOpacity(0.6)
+                                        Color(0xFF2855AE),
+                                        Color(0xFF7292CF)
                                       ],
                                       begin: Alignment.bottomLeft,
                                       end: Alignment.topRight,

@@ -46,8 +46,11 @@ dependencies:
   shared_preferences: ^2.2.2
   uuid: ^4.3.3
   cloud_firestore: ^4.15.0
-  intl: ^0.19.0
+  intl:
   file_picker: ^6.1.1
+  table_calendar: ^3.0.9
+  material_dialogs: ^1.1.4
+  text_scroll: ^0.2.0
 
 dev_dependencies:
   flutter_test:

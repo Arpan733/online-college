@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../consts/utils.dart';
+import '../model/user_model.dart';
 
 class TeacherDataFireStore {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -24,13 +25,13 @@ class TeacherDataFireStore {
     }
   }
 
-  Future<Map<String, dynamic>?> getTeacherData() async {
+  Future<UserModel?> getTeacherData() async {
     try {
       DocumentSnapshot snapshot =
-          await firestore.collection("user").doc(user?.uid).get();
+          await firestore.collection("users").doc(user?.uid).get();
 
       if (snapshot.exists) {
-        Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
+        UserModel? data = UserModel.fromJson(snapshot.data());
 
         return data;
       }

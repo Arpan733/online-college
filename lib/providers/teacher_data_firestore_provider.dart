@@ -3,11 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:online_college/repositories/teacher_data_firestore.dart';
 
+import '../model/user_model.dart';
+
 class TeacherDataFireStoreProvider extends ChangeNotifier {
-  Map<String, dynamic>? _teacherData;
-  Map<String, dynamic>? get teacherData => _teacherData;
+  UserModel? _teacherData;
+
+  UserModel? get teacherData => _teacherData;
 
   String? _photoUrl;
+
   String? get photoUrl => _photoUrl;
 
   User? user = FirebaseAuth.instance.currentUser;

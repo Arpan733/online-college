@@ -24,6 +24,18 @@ class _LoginScreenState extends State<LoginScreen> {
   int seconds = 60;
 
   @override
+  void dispose() {
+    phoneNumberController.dispose();
+    otpController.dispose();
+    showSendOTP = false;
+    showTimer = false;
+    t?.cancel();
+    seconds = 60;
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(

@@ -23,16 +23,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             SliverAppBar(
               floating: true,
               expandedHeight: 200,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerRight,
-                      end: Alignment.centerLeft,
-                      colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
-                    ),
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerRight,
+                    end: Alignment.centerLeft,
+                    colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
                   ),
-                  child: Image.asset('assets/images/background.png'),
+                ),
+                child: FlexibleSpaceBar(
+                  background: Image.asset('assets/images/background.png'),
                 ),
               ),
               bottom: PreferredSize(

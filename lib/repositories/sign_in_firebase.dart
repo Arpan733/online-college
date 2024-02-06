@@ -23,7 +23,6 @@ class SignInFirebase {
 
       return verificationId;
     } on FirebaseAuthException catch (e) {
-      print(e);
       Utils().showToast(e.code.toString());
     }
 
@@ -32,7 +31,6 @@ class SignInFirebase {
 
   Future<UserCredential?> checkOTP(
       {required String verificationId, required String smsCode}) async {
-    print('verification $verificationId');
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: verificationId, smsCode: smsCode);
@@ -41,7 +39,6 @@ class SignInFirebase {
 
       return user;
     } on FirebaseAuthException catch (e) {
-      print(e);
       Utils().showToast(e.code.toString());
     }
 

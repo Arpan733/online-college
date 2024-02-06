@@ -2,19 +2,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
 import 'package:online_college/repositories/sign_in_firebase.dart';
+import 'package:online_college/repositories/user_repository.dart';
 
 import '../consts/route_name.dart';
 import '../consts/utils.dart';
-import '../repositories/teacher_shared_preferences.dart';
 
 class SignInProvider extends ChangeNotifier {
   bool _enableOTPField = false;
+
   bool get enableOTPField => _enableOTPField;
 
   bool _isLoading = false;
+
   bool get isLoading => _isLoading;
 
   bool _isLoginLoading = false;
+
   bool get isLoginLoading => _isLoginLoading;
 
   String? _verificationId;
@@ -59,23 +62,34 @@ class SignInProvider extends ChangeNotifier {
           .checkOTP(verificationId: _verificationId!, smsCode: smsCode);
 
       if (_user != null) {
-        if (!context.mounted) return;
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          RoutesName.dashboard,
-          (route) => false,
-        );
-      }
+        TeacherDataFireStoreProvider a = TeacherDataFireStoreProvider();
 
-      TeacherDataFireStoreProvider().makeTeacher();
-      TeacherSharedPreferences.setString(
-          title: 'phoneNumber',
-          data: firebaseAuth.currentUser!.phoneNumber.toString());
-      TeacherSharedPreferences.setString(
-          title: 'uid', data: firebaseAuth.currentUser!.uid.toString());
+        await a.makeTeacher();
+        await a.getTeacherData();
+
+        if (a.teacherData != null) {
+          UserRepository.saveUserPref(
+            phoneNumber: a.teacherData?.phoneNumber,
+            uid: a.teacherData?.uid,
+            address: a.teacherData?.address,
+            adhar: a.teacherData?.adhar,
+            dateOfBirth: a.teacherData?.dateOfBirth,
+            email: a.teacherData?.email,
+            name: a.teacherData?.name,
+            qualification: a.teacherData?.qualification,
+            photoUrl: a.teacherData?.photoUrl,
+          );
+        }
+      }
     }
 
     _isLoginLoading = false;
     notifyListeners();
+    if (!context.mounted) return;
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.dashboard,
+      (route) => false,
+    );
   }
 }

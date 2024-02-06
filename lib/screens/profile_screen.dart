@@ -56,6 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Consumer<TeacherDataFireStoreProvider>(
         builder: (context, fireStore, _) => CustomScrollView(
           slivers: [
@@ -348,10 +349,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           surface: Colors.white,
                                           onSurface: Color(0xFF6688CA),
                                         ),
-                                        textTheme:
-                                            GoogleFonts.robotoMonoTextTheme()
-                                                .copyWith(
-                                          bodyMedium: GoogleFonts.robotoMono(
+                                        textTheme: GoogleFonts.rubikTextTheme()
+                                            .copyWith(
+                                          bodyMedium: GoogleFonts.rubik(
                                             fontSize: 16,
                                             color: const Color(0xFF6688CA),
                                             fontWeight: FontWeight.w500,

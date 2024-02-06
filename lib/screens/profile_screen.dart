@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/consts/utils.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
-import 'package:online_college/repositories/teacher_shared_preferences.dart';
+import 'package:online_college/repositories/user_shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -34,12 +34,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    adharNoController.text = TeacherSharedPreferences.adhar;
-    dateOfBirthController.text = TeacherSharedPreferences.dateOfBirth;
-    addressController.text = TeacherSharedPreferences.address;
-    qualificationController.text = TeacherSharedPreferences.qualification;
-    emailController.text = TeacherSharedPreferences.email;
-    userUrl = TeacherSharedPreferences.photoUrl;
+    adharNoController.text = UserSharedPreferences.adhar;
+    dateOfBirthController.text = UserSharedPreferences.dateOfBirth;
+    addressController.text = UserSharedPreferences.address;
+    qualificationController.text = UserSharedPreferences.qualification;
+    emailController.text = UserSharedPreferences.email;
+    userUrl = UserSharedPreferences.photoUrl;
 
     adharNo = adharNoController.text;
     dateOfBirth = dateOfBirthController.text;
@@ -81,8 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: MediaQuery.of(context).size.width,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(40),
-                        topLeft: Radius.circular(40)),
+                        topRight: Radius.circular(40), topLeft: Radius.circular(40)),
                     color: Colors.white,
                   ),
                 ),
@@ -98,51 +97,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
               actions: [
                 GestureDetector(
                   onTap: () {
-                    if (adharNoController.text != '' &&
-                        adharNoController.text != adharNo) {
-                      TeacherSharedPreferences.setString(
-                          title: 'adhar', data: adharNoController.text);
-                      fireStore.updateTeacherAdhar(
-                          adhar: adharNoController.text.trim());
+                    if (adharNoController.text != '' && adharNoController.text != adharNo) {
+                      UserSharedPreferences.setString(title: 'adhar', data: adharNoController.text);
+                      fireStore.updateTeacherAdhar(adhar: adharNoController.text.trim());
                     }
 
-                    if (emailController.text != '' &&
-                        emailController.text != email) {
-                      TeacherSharedPreferences.setString(
-                          title: 'email', data: emailController.text);
-                      fireStore.updateTeacherEmail(
-                          email: emailController.text.trim());
+                    if (emailController.text != '' && emailController.text != email) {
+                      UserSharedPreferences.setString(title: 'email', data: emailController.text);
+                      fireStore.updateTeacherEmail(email: emailController.text.trim());
                     }
 
                     if (dateOfBirthController.text != '' &&
                         dateOfBirthController.text != dateOfBirth) {
-                      TeacherSharedPreferences.setString(
-                          title: 'dateOfBirth',
-                          data: dateOfBirthController.text);
+                      UserSharedPreferences.setString(
+                          title: 'dateOfBirth', data: dateOfBirthController.text);
                       fireStore.updateTeacherDateOfBirth(
                           dateOfBirth: dateOfBirthController.text.trim());
                     }
 
                     if (qualificationController.text != '' &&
                         qualificationController.text != qualification) {
-                      TeacherSharedPreferences.setString(
-                          title: 'qualification',
-                          data: qualificationController.text);
+                      UserSharedPreferences.setString(
+                          title: 'qualification', data: qualificationController.text);
                       fireStore.updateTeacherQualification(
                           qualification: qualificationController.text);
                     }
 
-                    if (addressController.text != '' &&
-                        addressController.text != address) {
-                      TeacherSharedPreferences.setString(
+                    if (addressController.text != '' && addressController.text != address) {
+                      UserSharedPreferences.setString(
                           title: 'address', data: addressController.text);
-                      fireStore.updateTeacherAddress(
-                          address: addressController.text);
+                      fireStore.updateTeacherAddress(address: addressController.text);
                     }
 
                     if (userUrl != '' && userUrl != url) {
-                      TeacherSharedPreferences.setString(
-                          title: 'photoUrl', data: userUrl.toString());
+                      UserSharedPreferences.setString(title: 'photoUrl', data: userUrl.toString());
                       fireStore.updateTeacherPhotoUrl(photoUrl: userUrl.trim());
                     }
                   },
@@ -203,8 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             decoration: BoxDecoration(
                               color: const Color(0xFF6688CA).withOpacity(0.7),
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: const Color(0xFF6688CA), width: 2),
+                              border: Border.all(color: const Color(0xFF6688CA), width: 2),
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
@@ -213,10 +200,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: Image.network(
                                   userUrl,
                                   fit: BoxFit.fitHeight,
-                                  errorBuilder: (BuildContext context,
-                                      Object error, StackTrace? stackTrace) {
-                                    return Image.asset(
-                                        'assets/images/student.png');
+                                  errorBuilder:
+                                      (BuildContext context, Object error, StackTrace? stackTrace) {
+                                    return Image.asset('assets/images/student.png');
                                   },
                                 ),
                               ),
@@ -227,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           Expanded(
                             child: Text(
-                              TeacherSharedPreferences.name,
+                              UserSharedPreferences.name,
                               style: GoogleFonts.rubik(
                                 color: Colors.black87,
                                 fontSize: 22,
@@ -240,14 +226,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              final result =
-                                  await FilePicker.platform.pickFiles();
+                              final result = await FilePicker.platform.pickFiles();
 
                               if (result != null) {
                                 PlatformFile pickedFile = result.files.first;
 
-                                await fireStore.uploadProfilePhoto(
-                                    pickedFile: pickedFile);
+                                await fireStore.uploadProfilePhoto(pickedFile: pickedFile);
 
                                 setState(() {
                                   userUrl = fireStore.photoUrl ?? '';
@@ -273,8 +257,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 160,
                           child: TextFormField(
                             controller: adharNoController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.digitsOnly,
@@ -349,8 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           surface: Colors.white,
                                           onSurface: Color(0xFF6688CA),
                                         ),
-                                        textTheme: GoogleFonts.rubikTextTheme()
-                                            .copyWith(
+                                        textTheme: GoogleFonts.rubikTextTheme().copyWith(
                                           bodyMedium: GoogleFonts.rubik(
                                             fontSize: 16,
                                             color: const Color(0xFF6688CA),
@@ -371,9 +353,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   );
 
                                   dateOfBirthController.text =
-                                      DateFormat('dd MMM yyyy')
-                                          .format(dateTime)
-                                          .toString();
+                                      DateFormat('dd MMM yyyy').format(dateTime).toString();
                                 });
                               }
                             },

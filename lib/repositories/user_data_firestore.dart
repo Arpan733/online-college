@@ -4,16 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:online_college/model/student_user_model.dart';
 
 import '../consts/utils.dart';
-import '../model/user_model.dart';
+import '../model/teacher_user_model.dart';
 
-class TeacherDataFireStore {
+class UserDataFireStore {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> updateTeacher(
-      {required String title, required String data}) async {
+  Future<void> updateUser({required String title, required String data}) async {
     try {
       Map<String, String> userdata = {
         title: data,
@@ -25,13 +25,28 @@ class TeacherDataFireStore {
     }
   }
 
-  Future<UserModel?> getTeacherData() async {
+  Future<TeacherUserModel?> getTeacherData() async {
     try {
-      DocumentSnapshot snapshot =
-          await firestore.collection("users").doc(user?.uid).get();
+      DocumentSnapshot snapshot = await firestore.collection("users").doc(user?.uid).get();
 
       if (snapshot.exists) {
-        UserModel? data = UserModel.fromJson(snapshot.data());
+        TeacherUserModel? data = TeacherUserModel.fromJson(snapshot.data() as Map<String, dynamic>);
+
+        return data;
+      }
+    } catch (e) {
+      Utils().showToast(e.toString());
+    }
+
+    return null;
+  }
+
+  Future<StudentUserModel?> getStudentData() async {
+    try {
+      DocumentSnapshot snapshot = await firestore.collection("users").doc(user?.uid).get();
+
+      if (snapshot.exists) {
+        StudentUserModel? data = StudentUserModel.fromJson(snapshot.data() as Map<String, dynamic>);
 
         return data;
       }
@@ -44,9 +59,7 @@ class TeacherDataFireStore {
 
   Future<String?> uploadProfilePhoto({required PlatformFile pickedFile}) async {
     try {
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('${user?.uid}/${pickedFile.name}');
+      final ref = FirebaseStorage.instance.ref().child('${user?.uid}/${pickedFile.name}');
       UploadTask upload = ref.putFile(File(pickedFile.path!));
 
       final snapshot = await upload.whenComplete(() {});

@@ -1,14 +1,14 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:online_college/repositories/teacher_data_firestore.dart';
+import 'package:online_college/repositories/user_data_firestore.dart';
 
-import '../model/user_model.dart';
+import '../model/teacher_user_model.dart';
 
 class TeacherDataFireStoreProvider extends ChangeNotifier {
-  UserModel? _teacherData;
+  TeacherUserModel? _teacherData;
 
-  UserModel? get teacherData => _teacherData;
+  TeacherUserModel? get teacherData => _teacherData;
 
   String? _photoUrl;
 
@@ -16,42 +16,35 @@ class TeacherDataFireStoreProvider extends ChangeNotifier {
 
   User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> makeTeacher() async {
-    TeacherDataFireStore().updateTeacher(
-        title: 'phoneNumber', data: user?.phoneNumber.toString() ?? '');
-    TeacherDataFireStore()
-        .updateTeacher(title: 'uid', data: user?.uid.toString() ?? '');
-  }
-
   Future<void> getTeacherData() async {
-    _teacherData = await TeacherDataFireStore().getTeacherData();
+    _teacherData = await UserDataFireStore().getTeacherData();
   }
 
   Future<void> uploadProfilePhoto({required PlatformFile pickedFile}) async {
-    _photoUrl =
-        await TeacherDataFireStore().uploadProfilePhoto(pickedFile: pickedFile);
+    _photoUrl = await UserDataFireStore().uploadProfilePhoto(pickedFile: pickedFile);
   }
 
   Future<void> updateTeacherName({required String name}) =>
-      TeacherDataFireStore().updateTeacher(title: 'name', data: name);
+      UserDataFireStore().updateUser(title: 'name', data: name);
+
+  Future<void> updateTeacherRole({required String role}) =>
+      UserDataFireStore().updateUser(title: 'role', data: role);
 
   Future<void> updateTeacherAdhar({required String adhar}) =>
-      TeacherDataFireStore().updateTeacher(title: 'adhar', data: adhar);
+      UserDataFireStore().updateUser(title: 'adhar', data: adhar);
 
   Future<void> updateTeacherDateOfBirth({required String dateOfBirth}) =>
-      TeacherDataFireStore()
-          .updateTeacher(title: 'dateOfBirth', data: dateOfBirth);
+      UserDataFireStore().updateUser(title: 'dateOfBirth', data: dateOfBirth);
 
   Future<void> updateTeacherEmail({required String email}) =>
-      TeacherDataFireStore().updateTeacher(title: 'email', data: email);
+      UserDataFireStore().updateUser(title: 'email', data: email);
 
   Future<void> updateTeacherQualification({required String qualification}) =>
-      TeacherDataFireStore()
-          .updateTeacher(title: 'qualification', data: qualification);
+      UserDataFireStore().updateUser(title: 'qualification', data: qualification);
 
   Future<void> updateTeacherAddress({required String address}) =>
-      TeacherDataFireStore().updateTeacher(title: 'address', data: address);
+      UserDataFireStore().updateUser(title: 'address', data: address);
 
   Future<void> updateTeacherPhotoUrl({required String photoUrl}) =>
-      TeacherDataFireStore().updateTeacher(title: 'photoUrl', data: photoUrl);
+      UserDataFireStore().updateUser(title: 'photoUrl', data: photoUrl);
 }

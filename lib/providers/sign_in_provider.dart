@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:online_college/providers/all_user_provider.dart';
+import 'package:online_college/providers/student_data_firestore_provider.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
 import 'package:online_college/repositories/sign_in_firebase.dart';
-import 'package:online_college/repositories/user_repository.dart';
+import 'package:provider/provider.dart';
 
 import '../consts/route_name.dart';
 import '../consts/utils.dart';
+import '../repositories/user_repository.dart';
 
 class SignInProvider extends ChangeNotifier {
   bool _enableOTPField = false;
@@ -52,44 +55,103 @@ class SignInProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkOTP(
-      {required BuildContext context, required String smsCode}) async {
+  Future<void> checkOTP({required BuildContext context, required String smsCode}) async {
     _isLoginLoading = true;
     notifyListeners();
 
     if (_verificationId != null && _verificationId!.isNotEmpty) {
-      _user = await SignInFirebase()
-          .checkOTP(verificationId: _verificationId!, smsCode: smsCode);
+      _user = await SignInFirebase().checkOTP(verificationId: _verificationId!, smsCode: smsCode);
+    }
 
-      if (_user != null) {
-        TeacherDataFireStoreProvider a = TeacherDataFireStoreProvider();
+    if (_user != null) {
+      if (!context.mounted) return;
+      await Provider.of<AllUserProvider>(context, listen: false).getAllUser();
 
-        await a.makeTeacher();
-        await a.getTeacherData();
+      String id = '';
+      String role = '';
 
-        if (a.teacherData != null) {
+      if (!context.mounted) return;
+      Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
+        if (element.phoneNumber == firebaseAuth.currentUser!.phoneNumber.toString().substring(3)) {
+          id = element.id!;
+          role = element.role!;
+        }
+      });
+
+      if (id.isNotEmpty && role.isNotEmpty) {
+        if (!context.mounted) return;
+        Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
+          if (element.phoneNumber ==
+              firebaseAuth.currentUser!.phoneNumber.toString().substring(3)) {
+            id = element.id!;
+            role = element.role!;
+          }
+        });
+      }
+
+      if (role == 'student') {
+        StudentDataFireStoreProvider studentFireStore = StudentDataFireStoreProvider();
+
+        await studentFireStore.getStudentData();
+
+        if (studentFireStore.studentData != null) {
           UserRepository.saveUserPref(
-            phoneNumber: a.teacherData?.phoneNumber,
-            uid: a.teacherData?.uid,
-            address: a.teacherData?.address,
-            adhar: a.teacherData?.adhar,
-            dateOfBirth: a.teacherData?.dateOfBirth,
-            email: a.teacherData?.email,
-            name: a.teacherData?.name,
-            qualification: a.teacherData?.qualification,
-            photoUrl: a.teacherData?.photoUrl,
+            phoneNumber: studentFireStore.studentData?.phoneNumber,
+            uid: studentFireStore.studentData?.uid,
+            address: studentFireStore.studentData?.address,
+            adhar: studentFireStore.studentData?.adhar,
+            dateOfBirth: studentFireStore.studentData?.dateOfBirth,
+            email: studentFireStore.studentData?.email,
+            name: studentFireStore.studentData?.name,
+            photoUrl: studentFireStore.studentData?.photoUrl,
+            id: studentFireStore.studentData?.id,
+            year: studentFireStore.studentData?.year,
+            fatherName: studentFireStore.studentData?.motherName,
+            motherName: studentFireStore.studentData?.fatherName,
           );
         }
+
+        _isLoginLoading = false;
+        notifyListeners();
+
+        if (!context.mounted) return;
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          RoutesName.dashboard,
+          (route) => false,
+        );
+      } else if (role == 'teacher') {
+        TeacherDataFireStoreProvider teacherFireStore = TeacherDataFireStoreProvider();
+
+        await teacherFireStore.getTeacherData();
+
+        if (teacherFireStore.teacherData != null) {
+          UserRepository.saveUserPref(
+            phoneNumber: teacherFireStore.teacherData?.phoneNumber,
+            uid: teacherFireStore.teacherData?.uid,
+            address: teacherFireStore.teacherData?.address,
+            adhar: teacherFireStore.teacherData?.adhar,
+            dateOfBirth: teacherFireStore.teacherData?.dateOfBirth,
+            email: teacherFireStore.teacherData?.email,
+            name: teacherFireStore.teacherData?.name,
+            qualification: teacherFireStore.teacherData?.qualification,
+            photoUrl: teacherFireStore.teacherData?.photoUrl,
+          );
+        }
+
+        _isLoginLoading = false;
+        notifyListeners();
+
+        if (!context.mounted) return;
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          RoutesName.dashboard,
+          (route) => false,
+        );
       }
     }
 
     _isLoginLoading = false;
     notifyListeners();
-    if (!context.mounted) return;
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RoutesName.dashboard,
-      (route) => false,
-    );
   }
 }

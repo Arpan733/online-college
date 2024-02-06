@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../consts/dashboard_lists.dart';
 import '../consts/route_name.dart';
-import '../consts/utils.dart';
-import '../repositories/teacher_shared_preferences.dart';
+import '../repositories/user_shared_preferences.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({Key? key}) : super(key: key);
@@ -42,8 +42,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     width: MediaQuery.of(context).size.width,
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(40),
-                          topLeft: Radius.circular(40)),
+                          topRight: Radius.circular(40), topLeft: Radius.circular(40)),
                       color: Colors.white,
                     ),
                   )),
@@ -54,7 +53,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Hi, ${TeacherSharedPreferences.name}',
+                      'Hi, ${UserSharedPreferences.name}',
                       style: GoogleFonts.rubik(
                         color: Colors.white,
                         fontSize: 30,
@@ -76,10 +75,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           child: Hero(
                             tag: 'profilePhoto',
                             child: Image.network(
-                              TeacherSharedPreferences.photoUrl,
+                              UserSharedPreferences.photoUrl,
                               fit: BoxFit.fitHeight,
-                              errorBuilder: (BuildContext context, Object error,
-                                  StackTrace? stackTrace) {
+                              errorBuilder:
+                                  (BuildContext context, Object error, StackTrace? stackTrace) {
                                 return Image.asset('assets/images/student.png');
                               },
                             ),
@@ -100,10 +99,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   mainAxisSpacing: 20,
                   mainAxisExtent: 135,
                 ),
-                itemCount: Utils().functionalityListTeacher.length,
+                itemCount: UserSharedPreferences.role == 'student'
+                    ? functionalityListStudent.length
+                    : functionalityListTeacher.length,
                 itemBuilder: (context, index) {
-                  Map<String, dynamic> current =
-                      Utils().functionalityListTeacher[index];
+                  Map<String, dynamic> current = UserSharedPreferences.role == 'student'
+                      ? functionalityListStudent[index]
+                      : functionalityListTeacher[index];
 
                   Key uniqueKey = ValueKey<String>(current['name']);
 
@@ -115,8 +117,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                       key: uniqueKey,
                       height: 135,
                       width: 165,
-                      padding:
-                          const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF5F6FC),
                         borderRadius: BorderRadius.circular(20),

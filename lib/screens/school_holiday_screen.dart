@@ -7,6 +7,9 @@ import 'package:online_college/providers/holiday_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../consts/bottom_sheet.dart';
+import '../repositories/user_shared_preferences.dart';
+
 class SchoolHolidayScreen extends StatefulWidget {
   const SchoolHolidayScreen({Key? key}) : super(key: key);
 
@@ -292,7 +295,7 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
                                                     if (!context.mounted) return;
                                                     Navigator.pop(context);
 
-                                                    await Utils().bottomSheet(
+                                                    await bottomSheet(
                                                       context: context,
                                                       title: hc.title!,
                                                       description: hc.description!,
@@ -403,29 +406,33 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: GestureDetector(
-        onTap: () async {
-          await Utils().bottomSheet(context: context);
-        },
-        child: Container(
-          height: 60,
-          width: 60,
-          margin: const EdgeInsets.only(bottom: 15),
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              begin: Alignment.centerRight,
-              end: Alignment.centerLeft,
-              colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
-            ),
-          ),
-          child: const Icon(
-            Icons.add,
-            size: 30,
-            color: Colors.white,
-          ),
-        ),
-      ),
+      floatingActionButton: UserSharedPreferences.role == 'teacher'
+          ? GestureDetector(
+              onTap: () async {
+                await bottomSheet(
+                  context: context,
+                );
+              },
+              child: Container(
+                height: 60,
+                width: 60,
+                margin: const EdgeInsets.only(bottom: 15),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.centerRight,
+                    end: Alignment.centerLeft,
+                    colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+                  ),
+                ),
+                child: const Icon(
+                  Icons.add,
+                  size: 30,
+                  color: Colors.white,
+                ),
+              ),
+            )
+          : null,
     );
   }
 }

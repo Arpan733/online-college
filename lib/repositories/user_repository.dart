@@ -1,4 +1,4 @@
-import 'package:online_college/repositories/teacher_shared_preferences.dart';
+import 'package:online_college/repositories/user_shared_preferences.dart';
 
 class UserRepository {
   static saveUserPref(
@@ -6,41 +6,53 @@ class UserRepository {
       String? email,
       String? dateOfBirth,
       String? qualification,
+      String? year,
+      String? id,
+      String? motherName,
+      String? fatherName,
       String? address,
       String? photoUrl,
       String? name,
       String? phoneNumber,
       String? uid}) {
     if (adhar != null) {
-      TeacherSharedPreferences.setString(title: 'adhar', data: adhar);
+      UserSharedPreferences.setString(title: 'adhar', data: adhar);
     }
     if (email != null) {
-      TeacherSharedPreferences.setString(title: 'email', data: email);
+      UserSharedPreferences.setString(title: 'email', data: email);
     }
     if (dateOfBirth != null) {
-      TeacherSharedPreferences.setString(
-          title: 'dateOfBirth', data: dateOfBirth);
+      UserSharedPreferences.setString(title: 'dateOfBirth', data: dateOfBirth);
     }
     if (qualification != null) {
-      TeacherSharedPreferences.setString(
-          title: 'qualification', data: qualification);
+      UserSharedPreferences.setString(title: 'qualification', data: qualification);
     }
     if (address != null) {
-      TeacherSharedPreferences.setString(title: 'address', data: address);
+      UserSharedPreferences.setString(title: 'address', data: address);
     }
     if (photoUrl != null) {
-      TeacherSharedPreferences.setString(
-          title: 'photoUrl', data: photoUrl.toString());
+      UserSharedPreferences.setString(title: 'photoUrl', data: photoUrl.toString());
     }
     if (name != null) {
-      TeacherSharedPreferences.setString(title: 'name', data: name);
+      UserSharedPreferences.setString(title: 'name', data: name);
     }
     if (phoneNumber != null) {
-      TeacherSharedPreferences.setString(
-          title: 'phoneNumber', data: phoneNumber);
+      UserSharedPreferences.setString(title: 'phoneNumber', data: phoneNumber);
     }
     if (uid != null) {
-      TeacherSharedPreferences.setString(title: 'uid', data: uid);
+      UserSharedPreferences.setString(title: 'uid', data: uid);
+    }
+    if (id != null) {
+      UserSharedPreferences.setString(title: 'id', data: id);
+    }
+    if (year != null) {
+      UserSharedPreferences.setString(title: 'year', data: year);
+    }
+    if (motherName != null) {
+      UserSharedPreferences.setString(title: 'motherName', data: motherName);
+    }
+    if (fatherName != null) {
+      UserSharedPreferences.setString(title: 'fatherName', data: fatherName);
     }
   }
 }

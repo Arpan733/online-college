@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../consts/dashboard_lists.dart';
-import '../consts/route_name.dart';
-import '../repositories/user_shared_preferences.dart';
+import '../../consts/dashboard_lists.dart';
+import '../../consts/route_name.dart';
+import '../../consts/user_shared_preferences.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({Key? key}) : super(key: key);

@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:online_college/model/holiday_model.dart';
 import 'package:text_scroll/text_scroll.dart';
 
-import '../repositories/user_shared_preferences.dart';
+import 'user_shared_preferences.dart';
 
 class Utils {
   bool isValidEmail(String email) {

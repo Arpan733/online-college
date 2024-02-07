@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:online_college/model/teacher_user_model.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/all_user_provider.dart';
-import '../widgets/bottom_sheet_for_teacher.dart';
+import '../../providers/all_user_provider.dart';
+import '../../widgets/bottom_sheet_for_teacher.dart';
 
 class ProfessorListScreen extends StatefulWidget {
   const ProfessorListScreen({Key? key}) : super(key: key);

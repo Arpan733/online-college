@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/providers/holiday_provider.dart';
 import 'package:online_college/providers/sign_in_provider.dart';
 import 'package:online_college/providers/student_data_firestore_provider.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
-import 'package:online_college/repositories/user_shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 import 'consts/route_name.dart';

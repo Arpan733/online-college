@@ -1,4 +1,4 @@
-import 'package:online_college/repositories/user_shared_preferences.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 
 class UserRepository {
   static Future saveUserPref(
@@ -10,6 +10,7 @@ class UserRepository {
       String? id,
       String? motherName,
       String? fatherName,
+      String? rollNo,
       String? address,
       String? photoUrl,
       String? name,
@@ -32,7 +33,7 @@ class UserRepository {
       await UserSharedPreferences.setString(title: 'address', data: address);
     }
     if (photoUrl != null) {
-      await UserSharedPreferences.setString(title: 'photoUrl', data: photoUrl.toString());
+      await UserSharedPreferences.setString(title: 'photoUrl', data: photoUrl);
     }
     if (name != null) {
       await UserSharedPreferences.setString(title: 'name', data: name);
@@ -57,6 +58,9 @@ class UserRepository {
     }
     if (role != null) {
       await UserSharedPreferences.setString(title: 'role', data: role);
+    }
+    if (rollNo != null) {
+      await UserSharedPreferences.setString(title: 'rollNo', data: rollNo);
     }
   }
 }

@@ -7,8 +7,8 @@ import 'package:online_college/providers/holiday_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../repositories/user_shared_preferences.dart';
-import '../widgets/bottom_sheet.dart';
+import '../../consts/user_shared_preferences.dart';
+import '../../widgets/bottom_sheet.dart';
 
 class SchoolHolidayScreen extends StatefulWidget {
   const SchoolHolidayScreen({Key? key}) : super(key: key);

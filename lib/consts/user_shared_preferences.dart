@@ -31,9 +31,11 @@ class UserSharedPreferences {
 
   static String get year => UserSharedPreferences().get('year');
 
+  static String get rollNo => UserSharedPreferences().get('rollNo');
+
   static String get motherName => UserSharedPreferences().get('motherName');
 
-  static String get fatherName => UserSharedPreferences().get('role');
+  static String get fatherName => UserSharedPreferences().get('fatherName');
 
   static Future setString({required String title, required String data}) async {
     await preferences?.setString(title, data);

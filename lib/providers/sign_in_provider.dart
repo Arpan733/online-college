@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:online_college/providers/all_user_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:online_college/providers/student_data_firestore_provider.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
 import 'package:online_college/repositories/sign_in_firebase.dart';
@@ -9,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../consts/route_name.dart';
 import '../consts/utils.dart';
 import '../repositories/user_repository.dart';
+import 'all_user_provider.dart';
 
 class SignInProvider extends ChangeNotifier {
   bool _enableOTPField = false;
@@ -110,6 +110,7 @@ class SignInProvider extends ChangeNotifier {
             fatherName: studentFireStore.studentData?.motherName,
             motherName: studentFireStore.studentData?.fatherName,
             role: studentFireStore.studentData?.role,
+            rollNo: studentFireStore.studentData?.rollNo,
           );
         }
 

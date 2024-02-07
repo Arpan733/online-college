@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/consts/utils.dart';
+import 'package:online_college/providers/student_data_firestore_provider.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
-import 'package:online_college/repositories/user_shared_preferences.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -21,12 +22,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final addressController = TextEditingController();
   final qualificationController = TextEditingController();
   final emailController = TextEditingController();
+  final motherNameController = TextEditingController();
+  final fatherNameController = TextEditingController();
 
   String adharNo = '';
   String dateOfBirth = '';
   String address = '';
   String qualification = '';
   String email = '';
+  String motherName = '';
+  String fatherName = '';
   String url = '';
 
   DateTime dateTime = DateTime.now();
@@ -39,6 +44,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     addressController.text = UserSharedPreferences.address;
     qualificationController.text = UserSharedPreferences.qualification;
     emailController.text = UserSharedPreferences.email;
+    motherNameController.text = UserSharedPreferences.motherName;
+    fatherNameController.text = UserSharedPreferences.fatherName;
     userUrl = UserSharedPreferences.photoUrl;
 
     adharNo = adharNoController.text;
@@ -46,6 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     address = addressController.text;
     qualification = qualificationController.text;
     email = emailController.text;
+    motherName = motherNameController.text;
+    fatherName = fatherNameController.text;
     url = userUrl;
 
     dateTime = dateOfBirthController.text.isEmpty
@@ -59,8 +68,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Consumer<TeacherDataFireStoreProvider>(
-        builder: (context, fireStore, _) => CustomScrollView(
+      body: Consumer2<TeacherDataFireStoreProvider, StudentDataFireStoreProvider>(
+        builder: (context, fireStoreTeacher, fireStoreStudent, _) => CustomScrollView(
           slivers: [
             SliverAppBar(
               foregroundColor: Colors.white,
@@ -99,47 +108,105 @@ class _ProfileScreenState extends State<ProfileScreen> {
               actions: [
                 GestureDetector(
                   onTap: () {
-                    if (adharNoController.text != '' && adharNoController.text != adharNo) {
-                      UserSharedPreferences.setString(title: 'adhar', data: adharNoController.text);
-                      fireStore.updateTeacherAdhar(
-                          adhar: adharNoController.text.trim(), id: UserSharedPreferences.id);
-                    }
+                    if (UserSharedPreferences.role == 'student') {
+                      if (adharNoController.text != '' && adharNoController.text != adharNo) {
+                        UserSharedPreferences.setString(
+                            title: 'adhar', data: adharNoController.text);
+                        fireStoreStudent.updateStudentAdhar(
+                            adhar: adharNoController.text.trim(), id: UserSharedPreferences.id);
+                      }
 
-                    if (emailController.text != '' && emailController.text != email) {
-                      UserSharedPreferences.setString(title: 'email', data: emailController.text);
-                      fireStore.updateTeacherEmail(
-                          email: emailController.text.trim(), id: UserSharedPreferences.id);
-                    }
+                      if (emailController.text != '' && emailController.text != email) {
+                        UserSharedPreferences.setString(title: 'email', data: emailController.text);
+                        fireStoreStudent.updateStudentEmail(
+                            email: emailController.text.trim(), id: UserSharedPreferences.id);
+                      }
 
-                    if (dateOfBirthController.text != '' &&
-                        dateOfBirthController.text != dateOfBirth) {
-                      UserSharedPreferences.setString(
-                          title: 'dateOfBirth', data: dateOfBirthController.text);
-                      fireStore.updateTeacherDateOfBirth(
-                          dateOfBirth: dateOfBirthController.text.trim(),
-                          id: UserSharedPreferences.id);
-                    }
+                      if (dateOfBirthController.text != '' &&
+                          dateOfBirthController.text != dateOfBirth) {
+                        UserSharedPreferences.setString(
+                            title: 'dateOfBirth', data: dateOfBirthController.text);
+                        fireStoreStudent.updateStudentDateOfBirth(
+                            dateOfBirth: dateOfBirthController.text.trim(),
+                            id: UserSharedPreferences.id);
+                      }
 
-                    if (qualificationController.text != '' &&
-                        qualificationController.text != qualification) {
-                      UserSharedPreferences.setString(
-                          title: 'qualification', data: qualificationController.text);
-                      fireStore.updateTeacherQualification(
-                          qualification: qualificationController.text,
-                          id: UserSharedPreferences.id);
-                    }
+                      if (addressController.text != '' && addressController.text != address) {
+                        UserSharedPreferences.setString(
+                            title: 'address', data: addressController.text);
+                        fireStoreStudent.updateStudentAddress(
+                            address: addressController.text, id: UserSharedPreferences.id);
+                      }
 
-                    if (addressController.text != '' && addressController.text != address) {
-                      UserSharedPreferences.setString(
-                          title: 'address', data: addressController.text);
-                      fireStore.updateTeacherAddress(
-                          address: addressController.text, id: UserSharedPreferences.id);
-                    }
+                      if (userUrl != '' && userUrl != url) {
+                        UserSharedPreferences.setString(
+                            title: 'photoUrl', data: userUrl.toString());
+                        fireStoreStudent.updateStudentPhotoUrl(
+                            photoUrl: userUrl.trim(), id: UserSharedPreferences.id);
+                      }
 
-                    if (userUrl != '' && userUrl != url) {
-                      UserSharedPreferences.setString(title: 'photoUrl', data: userUrl.toString());
-                      fireStore.updateTeacherPhotoUrl(
-                          photoUrl: userUrl.trim(), id: UserSharedPreferences.id);
+                      if (motherNameController.text != '' &&
+                          motherNameController.text != motherName) {
+                        UserSharedPreferences.setString(
+                            title: 'motherName', data: motherNameController.text);
+                        fireStoreStudent.updateStudentMotherName(
+                            motherName: motherNameController.text.trim(),
+                            id: UserSharedPreferences.id);
+                      }
+
+                      if (fatherNameController.text != '' &&
+                          fatherNameController.text != fatherName) {
+                        UserSharedPreferences.setString(
+                            title: 'fatherName', data: fatherNameController.text);
+                        fireStoreStudent.updateStudentFatherName(
+                            fatherName: fatherNameController.text.trim(),
+                            id: UserSharedPreferences.id);
+                      }
+                    } else if (UserSharedPreferences.role == 'teacher') {
+                      if (adharNoController.text != '' && adharNoController.text != adharNo) {
+                        UserSharedPreferences.setString(
+                            title: 'adhar', data: adharNoController.text);
+                        fireStoreTeacher.updateTeacherAdhar(
+                            adhar: adharNoController.text.trim(), id: UserSharedPreferences.id);
+                      }
+
+                      if (emailController.text != '' && emailController.text != email) {
+                        UserSharedPreferences.setString(title: 'email', data: emailController.text);
+                        fireStoreTeacher.updateTeacherEmail(
+                            email: emailController.text.trim(), id: UserSharedPreferences.id);
+                      }
+
+                      if (dateOfBirthController.text != '' &&
+                          dateOfBirthController.text != dateOfBirth) {
+                        UserSharedPreferences.setString(
+                            title: 'dateOfBirth', data: dateOfBirthController.text);
+                        fireStoreTeacher.updateTeacherDateOfBirth(
+                            dateOfBirth: dateOfBirthController.text.trim(),
+                            id: UserSharedPreferences.id);
+                      }
+
+                      if (qualificationController.text != '' &&
+                          qualificationController.text != qualification) {
+                        UserSharedPreferences.setString(
+                            title: 'qualification', data: qualificationController.text);
+                        fireStoreTeacher.updateTeacherQualification(
+                            qualification: qualificationController.text,
+                            id: UserSharedPreferences.id);
+                      }
+
+                      if (addressController.text != '' && addressController.text != address) {
+                        UserSharedPreferences.setString(
+                            title: 'address', data: addressController.text);
+                        fireStoreTeacher.updateTeacherAddress(
+                            address: addressController.text, id: UserSharedPreferences.id);
+                      }
+
+                      if (userUrl != '' && userUrl != url) {
+                        UserSharedPreferences.setString(
+                            title: 'photoUrl', data: userUrl.toString());
+                        fireStoreTeacher.updateTeacherPhotoUrl(
+                            photoUrl: userUrl.trim(), id: UserSharedPreferences.id);
+                      }
                     }
                   },
                   child: Container(
@@ -220,13 +287,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             width: 10,
                           ),
                           Expanded(
-                            child: Text(
-                              UserSharedPreferences.name,
-                              style: GoogleFonts.rubik(
-                                color: Colors.black87,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  UserSharedPreferences.name,
+                                  style: GoogleFonts.rubik(
+                                    color: Colors.black87,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  UserSharedPreferences.role == 'student'
+                                      ? '${UserSharedPreferences.year} | Roll no: ${UserSharedPreferences.rollNo}'
+                                      : '',
+                                  style: GoogleFonts.rubik(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
@@ -239,10 +322,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               if (result != null) {
                                 PlatformFile pickedFile = result.files.first;
 
-                                await fireStore.uploadProfilePhoto(pickedFile: pickedFile);
+                                await fireStoreTeacher.uploadProfilePhoto(pickedFile: pickedFile);
 
                                 setState(() {
-                                  userUrl = fireStore.photoUrl ?? '';
+                                  userUrl = fireStoreTeacher.photoUrl ?? '';
                                 });
                               }
                             },
@@ -404,35 +487,101 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      controller: qualificationController,
-                      validator: (value) {
-                        if (value != '') {
-                          return 'Enter your qualification';
-                        }
+                    UserSharedPreferences.role == 'teacher'
+                        ? TextFormField(
+                            controller: qualificationController,
+                            validator: (value) {
+                              if (value != '') {
+                                return 'Enter your qualification';
+                              }
 
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'Qualification',
-                        labelStyle: GoogleFonts.rubik(
-                          color: Colors.black54,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        hintText: 'B. E.',
-                        hintStyle: GoogleFonts.rubik(
-                          color: Colors.black54,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      style: GoogleFonts.rubik(
-                        color: const Color(0xFF323643),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Qualification',
+                              labelStyle: GoogleFonts.rubik(
+                                color: Colors.black54,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              hintText: 'B. E.',
+                              hintStyle: GoogleFonts.rubik(
+                                color: Colors.black54,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            style: GoogleFonts.rubik(
+                              color: const Color(0xFF323643),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              TextFormField(
+                                controller: motherNameController,
+                                validator: (value) {
+                                  if (value != '') {
+                                    return 'Enter your mother name';
+                                  }
+
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Mother Name',
+                                  labelStyle: GoogleFonts.rubik(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  hintText: 'Mother Name',
+                                  hintStyle: GoogleFonts.rubik(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                style: GoogleFonts.rubik(
+                                  color: const Color(0xFF323643),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                controller: fatherNameController,
+                                validator: (value) {
+                                  if (value != '') {
+                                    return 'Enter your father name';
+                                  }
+
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  labelText: 'Father Name',
+                                  labelStyle: GoogleFonts.rubik(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  hintText: 'Father Name',
+                                  hintStyle: GoogleFonts.rubik(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                style: GoogleFonts.rubik(
+                                  color: const Color(0xFF323643),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
                     const SizedBox(
                       height: 10,
                     ),

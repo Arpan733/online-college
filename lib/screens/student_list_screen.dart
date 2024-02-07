@@ -3,8 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:online_college/model/student_user_model.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../consts/bottom_sheet_for_student.dart';
+import '../widgets/bottom_sheet_for_student.dart';
 
 class StudentListScreen extends StatefulWidget {
   const StudentListScreen({Key? key}) : super(key: key);
@@ -18,7 +17,9 @@ class _StudentListScreenState extends State<StudentListScreen> {
 
   @override
   void initState() {
-    Provider.of<AllUserProvider>(context, listen: false).getAllUser();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<AllUserProvider>(context, listen: false).getAllUser();
+    });
 
     super.initState();
   }
@@ -189,6 +190,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
 
                                         return Container(
                                           height: 80,
+                                          padding: const EdgeInsets.all(10),
                                           margin: const EdgeInsets.only(bottom: 20),
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
@@ -199,21 +201,27 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                               width: 1,
                                             ),
                                           ),
-                                          child: ListTile(
-                                            leading: Container(
-                                              height: 50,
-                                              width: 50,
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                gradient: LinearGradient(
-                                                  begin: Alignment.centerRight,
-                                                  end: Alignment.centerLeft,
-                                                  colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
-                                                ),
-                                              ),
-                                              child: ClipOval(
-                                                child: Hero(
-                                                  tag: su.id!,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Hero(
+                                                tag: su.id!,
+                                                child: Container(
+                                                  height: 60,
+                                                  width: 60,
+                                                  decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.centerRight,
+                                                      end: Alignment.centerLeft,
+                                                      colors: [
+                                                        Color(0xFF2855AE),
+                                                        Color(0xFF7292CF)
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  clipBehavior: Clip.antiAlias,
                                                   child: Image.network(
                                                     su.photoUrl ?? '',
                                                     fit: BoxFit.fitHeight,
@@ -226,31 +234,45 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            title: Text(
-                                              su.name!,
-                                              style: GoogleFonts.rubik(
-                                                color: Colors.black87,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
+                                              const SizedBox(
+                                                width: 10,
                                               ),
-                                            ),
-                                            subtitle: Text(
-                                              '+91 ${su.phoneNumber!}',
-                                              style: GoogleFonts.rubik(
-                                                color: Colors.black54,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      su.name!,
+                                                      style: GoogleFonts.rubik(
+                                                        color: Colors.black87,
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '+91 ${su.phoneNumber!}',
+                                                      style: GoogleFonts.rubik(
+                                                        color: Colors.black54,
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            trailing: Text(
-                                              su.rollNo!,
-                                              style: GoogleFonts.rubik(
-                                                color: Colors.black87,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
+                                              const SizedBox(
+                                                width: 10,
                                               ),
-                                            ),
+                                              Text(
+                                                su.rollNo!,
+                                                style: GoogleFonts.rubik(
+                                                  color: Colors.black87,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         );
                                       },

@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:online_college/model/teacher_user_model.dart';
 import 'package:provider/provider.dart';
 
-import '../consts/bottom_sheet_for_teacher.dart';
 import '../providers/all_user_provider.dart';
+import '../widgets/bottom_sheet_for_teacher.dart';
 
 class ProfessorListScreen extends StatefulWidget {
   const ProfessorListScreen({Key? key}) : super(key: key);
@@ -14,6 +14,15 @@ class ProfessorListScreen extends StatefulWidget {
 }
 
 class _ProfessorListScreenState extends State<ProfessorListScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<AllUserProvider>(context, listen: false).getAllUser();
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +70,7 @@ class _ProfessorListScreenState extends State<ProfessorListScreen> {
                       ),
                     ),
                     title: Text(
-                      'Students',
+                      'Professors',
                       style: GoogleFonts.rubik(
                         color: Colors.white,
                         fontSize: 22,
@@ -89,10 +98,11 @@ class _ProfessorListScreenState extends State<ProfessorListScreen> {
                                       padding: EdgeInsets.zero,
                                       itemCount: u.length,
                                       itemBuilder: (context, index) {
-                                        TeacherUserModel su = u[index];
+                                        TeacherUserModel tu = u[index];
 
                                         return Container(
                                           height: 80,
+                                          padding: const EdgeInsets.all(10),
                                           margin: const EdgeInsets.only(bottom: 20),
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
@@ -103,23 +113,29 @@ class _ProfessorListScreenState extends State<ProfessorListScreen> {
                                               width: 1,
                                             ),
                                           ),
-                                          child: ListTile(
-                                            leading: Container(
-                                              height: 50,
-                                              width: 50,
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                gradient: LinearGradient(
-                                                  begin: Alignment.centerRight,
-                                                  end: Alignment.centerLeft,
-                                                  colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
-                                                ),
-                                              ),
-                                              child: ClipOval(
-                                                child: Hero(
-                                                  tag: su.id!,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Hero(
+                                                tag: tu.id!,
+                                                child: Container(
+                                                  height: 60,
+                                                  width: 60,
+                                                  decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.centerRight,
+                                                      end: Alignment.centerLeft,
+                                                      colors: [
+                                                        Color(0xFF2855AE),
+                                                        Color(0xFF7292CF)
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  clipBehavior: Clip.antiAlias,
                                                   child: Image.network(
-                                                    su.photoUrl ?? '',
+                                                    tu.photoUrl ?? '',
                                                     fit: BoxFit.fitHeight,
                                                     errorBuilder: (BuildContext context,
                                                         Object error, StackTrace? stackTrace) {
@@ -130,23 +146,34 @@ class _ProfessorListScreenState extends State<ProfessorListScreen> {
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            title: Text(
-                                              su.name!,
-                                              style: GoogleFonts.rubik(
-                                                color: Colors.black87,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
+                                              const SizedBox(
+                                                width: 10,
                                               ),
-                                            ),
-                                            subtitle: Text(
-                                              '+91 ${su.phoneNumber!}',
-                                              style: GoogleFonts.rubik(
-                                                color: Colors.black54,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
+                                              Expanded(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      tu.name!,
+                                                      style: GoogleFonts.rubik(
+                                                        color: Colors.black87,
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '+91 ${tu.phoneNumber!}',
+                                                      style: GoogleFonts.rubik(
+                                                        color: Colors.black54,
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w400,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           ),
                                         );
                                       },

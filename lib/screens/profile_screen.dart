@@ -48,7 +48,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     email = emailController.text;
     url = userUrl;
 
-    dateTime = DateFormat('dd MMM yyyy').parse(dateOfBirthController.text);
+    dateTime = dateOfBirthController.text.isEmpty
+        ? DateTime.now()
+        : DateFormat('dd MMM yyyy').parse(dateOfBirthController.text);
 
     super.initState();
   }
@@ -99,12 +101,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     if (adharNoController.text != '' && adharNoController.text != adharNo) {
                       UserSharedPreferences.setString(title: 'adhar', data: adharNoController.text);
-                      fireStore.updateTeacherAdhar(adhar: adharNoController.text.trim());
+                      fireStore.updateTeacherAdhar(
+                          adhar: adharNoController.text.trim(), id: UserSharedPreferences.id);
                     }
 
                     if (emailController.text != '' && emailController.text != email) {
                       UserSharedPreferences.setString(title: 'email', data: emailController.text);
-                      fireStore.updateTeacherEmail(email: emailController.text.trim());
+                      fireStore.updateTeacherEmail(
+                          email: emailController.text.trim(), id: UserSharedPreferences.id);
                     }
 
                     if (dateOfBirthController.text != '' &&
@@ -112,7 +116,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       UserSharedPreferences.setString(
                           title: 'dateOfBirth', data: dateOfBirthController.text);
                       fireStore.updateTeacherDateOfBirth(
-                          dateOfBirth: dateOfBirthController.text.trim());
+                          dateOfBirth: dateOfBirthController.text.trim(),
+                          id: UserSharedPreferences.id);
                     }
 
                     if (qualificationController.text != '' &&
@@ -120,18 +125,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       UserSharedPreferences.setString(
                           title: 'qualification', data: qualificationController.text);
                       fireStore.updateTeacherQualification(
-                          qualification: qualificationController.text);
+                          qualification: qualificationController.text,
+                          id: UserSharedPreferences.id);
                     }
 
                     if (addressController.text != '' && addressController.text != address) {
                       UserSharedPreferences.setString(
                           title: 'address', data: addressController.text);
-                      fireStore.updateTeacherAddress(address: addressController.text);
+                      fireStore.updateTeacherAddress(
+                          address: addressController.text, id: UserSharedPreferences.id);
                     }
 
                     if (userUrl != '' && userUrl != url) {
                       UserSharedPreferences.setString(title: 'photoUrl', data: userUrl.toString());
-                      fireStore.updateTeacherPhotoUrl(photoUrl: userUrl.trim());
+                      fireStore.updateTeacherPhotoUrl(
+                          photoUrl: userUrl.trim(), id: UserSharedPreferences.id);
                     }
                   },
                   child: Container(

@@ -15,44 +15,47 @@ class StudentDataFireStoreProvider extends ChangeNotifier {
 
   User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> getStudentData() async {
-    _studentData = await UserDataFireStore().getStudentData();
+  Future<void> getStudentData({required String id}) async {
+    _studentData = await UserDataFireStore().getStudentData(id: id);
   }
 
   Future<void> uploadProfilePhoto({required PlatformFile pickedFile}) async {
     _photoUrl = await UserDataFireStore().uploadProfilePhoto(pickedFile: pickedFile);
   }
 
-  Future<void> updateStudentName({required String name}) =>
-      UserDataFireStore().updateUser(title: 'name', data: name);
+  Future<void> updateStudentName({required String name, required String id}) =>
+      UserDataFireStore().updateUser(title: 'name', data: name, id: id);
 
-  Future<void> updateStudentRole({required String role}) =>
-      UserDataFireStore().updateUser(title: 'role', data: role);
+  Future<void> updateStudentRole({required String role, required String id}) =>
+      UserDataFireStore().updateUser(title: 'role', data: role, id: id);
 
-  Future<void> updateStudentAdhar({required String adhar}) =>
-      UserDataFireStore().updateUser(title: 'adhar', data: adhar);
+  Future<void> updateStudentUid({required String uid, required String id}) =>
+      UserDataFireStore().updateUser(title: 'uid', data: uid, id: id);
 
-  Future<void> updateStudentDateOfBirth({required String dateOfBirth}) =>
-      UserDataFireStore().updateUser(title: 'dateOfBirth', data: dateOfBirth);
+  Future<void> updateStudentAdhar({required String adhar, required String id}) =>
+      UserDataFireStore().updateUser(title: 'adhar', data: adhar, id: id);
 
-  Future<void> updateStudentEmail({required String email}) =>
-      UserDataFireStore().updateUser(title: 'email', data: email);
+  Future<void> updateStudentDateOfBirth({required String dateOfBirth, required String id}) =>
+      UserDataFireStore().updateUser(title: 'dateOfBirth', data: dateOfBirth, id: id);
 
-  Future<void> updateStudentYear({required String year}) =>
-      UserDataFireStore().updateUser(title: 'year', data: year);
+  Future<void> updateStudentEmail({required String email, required String id}) =>
+      UserDataFireStore().updateUser(title: 'email', data: email, id: id);
 
-  Future<void> updateStudentRollNo({required String rollNo}) =>
-      UserDataFireStore().updateUser(title: 'rollNo', data: rollNo);
+  Future<void> updateStudentYear({required String year, required String id}) =>
+      UserDataFireStore().updateUser(title: 'year', data: year, id: id);
 
-  Future<void> updateStudentMotherName({required String motherName}) =>
-      UserDataFireStore().updateUser(title: 'motherName', data: motherName);
+  Future<void> updateStudentRollNo({required String rollNo, required String id}) =>
+      UserDataFireStore().updateUser(title: 'rollNo', data: rollNo, id: id);
 
-  Future<void> updateStudentFatherName({required String fatherName}) =>
-      UserDataFireStore().updateUser(title: 'fatherName', data: fatherName);
+  Future<void> updateStudentMotherName({required String motherName, required String id}) =>
+      UserDataFireStore().updateUser(title: 'motherName', data: motherName, id: id);
 
-  Future<void> updateStudentAddress({required String address}) =>
-      UserDataFireStore().updateUser(title: 'address', data: address);
+  Future<void> updateStudentFatherName({required String fatherName, required String id}) =>
+      UserDataFireStore().updateUser(title: 'fatherName', data: fatherName, id: id);
 
-  Future<void> updateStudentPhotoUrl({required String photoUrl}) =>
-      UserDataFireStore().updateUser(title: 'photoUrl', data: photoUrl);
+  Future<void> updateStudentAddress({required String address, required String id}) =>
+      UserDataFireStore().updateUser(title: 'address', data: address, id: id);
+
+  Future<void> updateStudentPhotoUrl({required String photoUrl, required String id}) =>
+      UserDataFireStore().updateUser(title: 'photoUrl', data: photoUrl, id: id);
 }

@@ -7,8 +7,8 @@ import 'package:online_college/providers/holiday_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../consts/bottom_sheet.dart';
 import '../repositories/user_shared_preferences.dart';
+import '../widgets/bottom_sheet.dart';
 
 class SchoolHolidayScreen extends StatefulWidget {
   const SchoolHolidayScreen({Key? key}) : super(key: key);
@@ -23,7 +23,9 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
 
   @override
   void initState() {
-    getHolidayProvider(context).getHolidayList();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<HolidayProvider>(context, listen: false).getHolidayList();
+    });
 
     super.initState();
   }

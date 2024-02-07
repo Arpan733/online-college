@@ -43,4 +43,9 @@ class AllUserProvider extends ChangeNotifier {
     await AllUserFireStore().addStudentUser(studentUserModel: studentUserModel);
     await getAllUser();
   }
+
+  Future<void> addTeacherUser({required TeacherUserModel teacherUserModel}) async {
+    await AllUserFireStore().addTeacherUser(teacherUserModel: teacherUserModel);
+    await getAllUser();
+  }
 }

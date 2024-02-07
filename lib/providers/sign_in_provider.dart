@@ -71,14 +71,14 @@ class SignInProvider extends ChangeNotifier {
       String role = '';
 
       if (!context.mounted) return;
-      Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
+      Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((element) {
         if (element.phoneNumber == firebaseAuth.currentUser!.phoneNumber.toString().substring(3)) {
           id = element.id!;
           role = element.role!;
         }
       });
 
-      if (id.isNotEmpty && role.isNotEmpty) {
+      if (id.isEmpty && role.isEmpty) {
         if (!context.mounted) return;
         Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
           if (element.phoneNumber ==
@@ -92,12 +92,13 @@ class SignInProvider extends ChangeNotifier {
       if (role == 'student') {
         StudentDataFireStoreProvider studentFireStore = StudentDataFireStoreProvider();
 
-        await studentFireStore.getStudentData();
+        studentFireStore.updateStudentUid(uid: firebaseAuth.currentUser!.uid, id: id);
+        await studentFireStore.getStudentData(id: id);
 
         if (studentFireStore.studentData != null) {
-          UserRepository.saveUserPref(
-            phoneNumber: studentFireStore.studentData?.phoneNumber,
-            uid: studentFireStore.studentData?.uid,
+          await UserRepository.saveUserPref(
+            phoneNumber: firebaseAuth.currentUser?.phoneNumber,
+            uid: firebaseAuth.currentUser?.uid,
             address: studentFireStore.studentData?.address,
             adhar: studentFireStore.studentData?.adhar,
             dateOfBirth: studentFireStore.studentData?.dateOfBirth,
@@ -108,10 +109,12 @@ class SignInProvider extends ChangeNotifier {
             year: studentFireStore.studentData?.year,
             fatherName: studentFireStore.studentData?.motherName,
             motherName: studentFireStore.studentData?.fatherName,
+            role: studentFireStore.studentData?.role,
           );
         }
 
         _isLoginLoading = false;
+        _enableOTPField = false;
         notifyListeners();
 
         if (!context.mounted) return;
@@ -123,12 +126,13 @@ class SignInProvider extends ChangeNotifier {
       } else if (role == 'teacher') {
         TeacherDataFireStoreProvider teacherFireStore = TeacherDataFireStoreProvider();
 
-        await teacherFireStore.getTeacherData();
+        teacherFireStore.updateTeacherUid(uid: firebaseAuth.currentUser!.uid, id: id);
+        await teacherFireStore.getTeacherData(id: id);
 
         if (teacherFireStore.teacherData != null) {
-          UserRepository.saveUserPref(
-            phoneNumber: teacherFireStore.teacherData?.phoneNumber,
-            uid: teacherFireStore.teacherData?.uid,
+          await UserRepository.saveUserPref(
+            phoneNumber: firebaseAuth.currentUser?.phoneNumber,
+            uid: firebaseAuth.currentUser?.uid,
             address: teacherFireStore.teacherData?.address,
             adhar: teacherFireStore.teacherData?.adhar,
             dateOfBirth: teacherFireStore.teacherData?.dateOfBirth,
@@ -136,10 +140,13 @@ class SignInProvider extends ChangeNotifier {
             name: teacherFireStore.teacherData?.name,
             qualification: teacherFireStore.teacherData?.qualification,
             photoUrl: teacherFireStore.teacherData?.photoUrl,
+            role: teacherFireStore.teacherData?.role,
+            id: teacherFireStore.teacherData?.id,
           );
         }
 
         _isLoginLoading = false;
+        _enableOTPField = false;
         notifyListeners();
 
         if (!context.mounted) return;
@@ -150,8 +157,5 @@ class SignInProvider extends ChangeNotifier {
         );
       }
     }
-
-    _isLoginLoading = false;
-    notifyListeners();
   }
 }

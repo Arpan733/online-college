@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:online_college/consts/utils.dart';
 import 'package:online_college/model/student_user_model.dart';
 
+import '../model/teacher_user_model.dart';
+
 class AllUserFireStore {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -19,6 +21,15 @@ class AllUserFireStore {
     try {
       await firestore.collection('users').doc(studentUserModel.id).set(studentUserModel.toJson());
       Utils().showToast('Student Added');
+    } catch (e) {
+      Utils().showToast(e.toString());
+    }
+  }
+
+  Future<void> addTeacherUser({required TeacherUserModel teacherUserModel}) async {
+    try {
+      await firestore.collection('users').doc(teacherUserModel.id).set(teacherUserModel.toJson());
+      Utils().showToast('Teacher Added');
     } catch (e) {
       Utils().showToast(e.toString());
     }

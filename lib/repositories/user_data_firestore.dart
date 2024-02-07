@@ -13,21 +13,21 @@ class UserDataFireStore {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> updateUser({required String title, required String data}) async {
+  Future<void> updateUser({required String title, required String data, required String id}) async {
     try {
       Map<String, String> userdata = {
         title: data,
       };
 
-      await firestore.collection('users').doc(user?.uid).update(userdata);
+      await firestore.collection('users').doc(id).update(userdata);
     } catch (e) {
       Utils().showToast(e.toString());
     }
   }
 
-  Future<TeacherUserModel?> getTeacherData() async {
+  Future<TeacherUserModel?> getTeacherData({required String id}) async {
     try {
-      DocumentSnapshot snapshot = await firestore.collection("users").doc(user?.uid).get();
+      DocumentSnapshot snapshot = await firestore.collection("users").doc(id).get();
 
       if (snapshot.exists) {
         TeacherUserModel? data = TeacherUserModel.fromJson(snapshot.data() as Map<String, dynamic>);
@@ -41,9 +41,9 @@ class UserDataFireStore {
     return null;
   }
 
-  Future<StudentUserModel?> getStudentData() async {
+  Future<StudentUserModel?> getStudentData({required String id}) async {
     try {
-      DocumentSnapshot snapshot = await firestore.collection("users").doc(user?.uid).get();
+      DocumentSnapshot snapshot = await firestore.collection("users").doc(id).get();
 
       if (snapshot.exists) {
         StudentUserModel? data = StudentUserModel.fromJson(snapshot.data() as Map<String, dynamic>);

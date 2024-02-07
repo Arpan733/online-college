@@ -7,11 +7,11 @@ import 'package:online_college/providers/all_user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/v4.dart';
 
-bool checkRollNo({required BuildContext context, required String rollNo}) {
+bool checkRollNo({required BuildContext context, required String rollNo, required String year}) {
   int t = 0;
 
   Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((element) {
-    if (element.rollNo == rollNo) {
+    if (element.year == year && element.rollNo == rollNo) {
       t++;
     }
   });
@@ -322,7 +322,10 @@ bottomSheetForStudent({
                         } else if (checkPhoneNumber(
                             context: context, phoneNumber: phoneNumberController.text)) {
                           Utils().showToast('Please fill unique phone number for the student');
-                        } else if (checkRollNo(context: context, rollNo: rollNoController.text)) {
+                        } else if (checkRollNo(
+                            context: context,
+                            rollNo: rollNoController.text,
+                            year: yearController.text)) {
                           Utils().showToast('Please fill unique roll no for the student');
                         } else {
                           StudentUserModel studentUserModel = StudentUserModel(

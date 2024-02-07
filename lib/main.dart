@@ -6,6 +6,7 @@ import 'package:online_college/providers/holiday_provider.dart';
 import 'package:online_college/providers/sign_in_provider.dart';
 import 'package:online_college/providers/student_data_firestore_provider.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
+import 'package:online_college/repositories/fee_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'consts/route_name.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => StudentDataFireStoreProvider()),
         ChangeNotifierProvider(create: (context) => HolidayProvider()),
         ChangeNotifierProvider(create: (context) => AllUserProvider()),
+        ChangeNotifierProvider(create: (context) => FeeProvider()),
       ],
       child: const MaterialApp(
         title: 'Online College',

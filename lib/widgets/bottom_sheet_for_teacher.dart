@@ -183,7 +183,7 @@ bottomSheetForTeacher({
                             name: nameController.text,
                             phoneNumber: phoneNumberController.text,
                             id: const UuidV4().generate().toString(),
-                            role: 'student',
+                            role: 'teacher',
                           );
 
                           await Provider.of<AllUserProvider>(context, listen: false)

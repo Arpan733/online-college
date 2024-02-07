@@ -19,6 +19,20 @@ List<Map<String, dynamic>> functionalityListTeacher = [
     },
   },
   {
+    'name': 'Fees',
+    'image': 'assets/icons/fees.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, RoutesName.fees);
+    },
+  },
+  {
+    'name': 'Results',
+    'image': 'assets/icons/result.png',
+    'onTap': (BuildContext context) {
+      // Navigator.pushNamed(context, RoutesName.professorList);
+    },
+  },
+  {
     'name': 'Assignments',
     'image': 'assets/icons/assignment.png',
     'onTap': (BuildContext context) {
@@ -106,6 +120,20 @@ List<Map<String, dynamic>> functionalityListStudent = [
     'image': 'assets/icons/timetable.png',
     'onTap': (BuildContext context) {
       Navigator.pushNamed(context, RoutesName.timetable);
+    },
+  },
+  {
+    'name': 'Fees',
+    'image': 'assets/icons/fees.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, RoutesName.fees);
+    },
+  },
+  {
+    'name': 'Results',
+    'image': 'assets/icons/result.png',
+    'onTap': (BuildContext context) {
+      // Navigator.pushNamed(context, RoutesName.professorList);
     },
   },
   {

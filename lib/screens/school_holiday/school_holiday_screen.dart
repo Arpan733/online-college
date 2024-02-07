@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../consts/user_shared_preferences.dart';
-import '../../widgets/bottom_sheet.dart';
+import '../../widgets/bottom_sheet_for_holiday.dart';
 
 class SchoolHolidayScreen extends StatefulWidget {
   const SchoolHolidayScreen({Key? key}) : super(key: key);
@@ -297,7 +297,7 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
                                                     if (!context.mounted) return;
                                                     Navigator.pop(context);
 
-                                                    await bottomSheet(
+                                                    await bottomSheetForHoliday(
                                                       context: context,
                                                       title: hc.title!,
                                                       description: hc.description!,
@@ -411,7 +411,7 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
       floatingActionButton: UserSharedPreferences.role == 'teacher'
           ? GestureDetector(
               onTap: () async {
-                await bottomSheet(
+                await bottomSheetForHoliday(
                   context: context,
                 );
               },

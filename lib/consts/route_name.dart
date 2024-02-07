@@ -12,4 +12,8 @@ class RoutesName {
   static const String schoolHoliday = 'schoolHoliday';
   static const String studentList = 'studentList';
   static const String timetable = 'timetable';
+  static const String fees = 'fees';
+  static const String addEditFees = 'addEditFees';
+  static const String feeDetail = 'feeDetail';
+  static const String feePay = 'feePay';
 }

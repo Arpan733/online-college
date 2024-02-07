@@ -5,7 +5,7 @@ import 'package:online_college/consts/utils.dart';
 
 import '../providers/holiday_provider.dart';
 
-bottomSheet({
+bottomSheetForHoliday({
   bool isEdit = false,
   String title = '',
   String description = '',

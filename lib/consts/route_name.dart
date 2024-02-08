@@ -16,4 +16,5 @@ class RoutesName {
   static const String addEditFees = 'addEditFees';
   static const String feeDetail = 'feeDetail';
   static const String feePay = 'feePay';
+  static const String feeReceipt = 'feeReceipt';
 }

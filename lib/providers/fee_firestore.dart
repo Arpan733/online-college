@@ -15,6 +15,20 @@ class FeeFireStore {
     }
   }
 
+  Future<void> addStudentToFireStoreFeeList(
+      {required String refNo, required String sid, required FeeModel feeModel}) async {
+    try {
+      PaidStudent data = PaidStudent(paidTime: DateTime.now().toString(), refNo: refNo, sid: sid);
+
+      feeModel.paidStudents?.add(data);
+
+      await firestore.collection('fees').doc(feeModel.fid).update(feeModel.toJson());
+      Utils().showToast('Fee Paid');
+    } catch (e) {
+      Utils().showToast(e.toString());
+    }
+  }
+
   Future<void> updateFeeAtFireStore({required FeeModel feeModel}) async {
     try {
       await firestore.collection('fees').doc(feeModel.fid).update(feeModel.toJson());

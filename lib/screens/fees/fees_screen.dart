@@ -180,7 +180,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                         ),
                                       ),
                                       Text(
-                                        f.totalAmount!,
+                                        '₹${f.totalAmount!}',
                                         style: GoogleFonts.rubik(
                                           color: Colors.black87,
                                           fontSize: 16,
@@ -216,6 +216,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                 ),
                                 const Divider(),
                                 ListView(
+                                  physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   padding: EdgeInsets.zero,
                                   children: f.feeDescription!.map((fee) {
@@ -233,7 +234,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                             ),
                                           ),
                                           Text(
-                                            fee.amount!,
+                                            '₹${fee.amount!}',
                                             style: GoogleFonts.rubik(
                                               color: Colors.black87,
                                               fontSize: 16,
@@ -249,7 +250,8 @@ class _FeesScreenState extends State<FeesScreen> {
                                   height: 10,
                                 ),
                                 GestureDetector(
-                                  onTap: () => Navigator.pushNamed(context, RoutesName.feePay),
+                                  onTap: () =>
+                                      Navigator.pushNamed(context, arguments: f, RoutesName.feePay),
                                   child: Container(
                                     height: 50,
                                     decoration: const BoxDecoration(
@@ -263,7 +265,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Pay Now',
+                                          'About Fee',
                                           style: GoogleFonts.rubik(
                                             color: Colors.white,
                                             fontSize: 16,

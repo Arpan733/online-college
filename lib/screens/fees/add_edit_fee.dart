@@ -75,6 +75,13 @@ class _AddEditFeesState extends State<AddEditFees> {
 
   @override
   void initState() {
+    yearController.text = '1st Year';
+    amount1Controller.text = '0';
+    amount2Controller.text = '0';
+    amount3Controller.text = '0';
+    amount4Controller.text = '0';
+    amount5Controller.text = '0';
+
     if (widget.feeModel != null) {
       isEdit = true;
       titleController.text = widget.feeModel?.title ?? "";
@@ -98,12 +105,6 @@ class _AddEditFeesState extends State<AddEditFees> {
       });
     } else {
       lastDateController.text = DateFormat('dd/MM/yyyy').format(dateTime);
-      yearController.text = '1st Year';
-      amount1Controller.text = '0';
-      amount2Controller.text = '0';
-      amount3Controller.text = '0';
-      amount4Controller.text = '0';
-      amount5Controller.text = '0';
       totalAmountController();
     }
 
@@ -588,8 +589,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                                                       getTitleController(i: i).text =
                                                           getTitleController(i: i + 1).text;
                                                       getAmountController(i: i).text =
-                                                          (getAmountController(i: i + 1).text ??
-                                                              '0');
+                                                          (getAmountController(i: i + 1).text);
                                                     } else {
                                                       getTitleController(i: i).text = '';
                                                       getAmountController(i: i).text = '0';
@@ -634,7 +634,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                                                     getTitleController(i: i).text =
                                                         getTitleController(i: i + 1).text;
                                                     getAmountController(i: i).text =
-                                                        (getAmountController(i: i + 1).text ?? '0');
+                                                        (getAmountController(i: i + 1).text);
                                                   } else {
                                                     getTitleController(i: i).text = '';
                                                     getAmountController(i: i).text = '0';

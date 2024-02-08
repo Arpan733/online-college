@@ -18,6 +18,7 @@ import 'package:online_college/screens/timetable/timetable_screen.dart';
 
 import '../model/fee_model.dart';
 import '../screens/fees/add_edit_fee.dart';
+import '../screens/fees/fee_receipt_screen.dart';
 import '../screens/professor_list/professor_list_screen.dart';
 
 class Routes {
@@ -60,7 +61,13 @@ class Routes {
             builder: (BuildContext context) =>
                 FeeDetailScreen(fee: settings.arguments as FeeModel));
       case RoutesName.feePay:
-        return MaterialPageRoute(builder: (BuildContext context) => const FeePayScreen());
+        return MaterialPageRoute(
+            builder: (BuildContext context) =>
+                FeePayScreen(feeModel: settings.arguments as FeeModel));
+      case RoutesName.feeReceipt:
+        return MaterialPageRoute(
+            builder: (BuildContext context) =>
+                FeeReceiptScreen(feeModel: settings.arguments as FeeModel));
       default:
         return MaterialPageRoute(
           builder: (_) {

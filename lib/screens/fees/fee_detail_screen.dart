@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_college/consts/route_name.dart';
+import 'package:online_college/model/student_user_model.dart';
 import 'package:online_college/repositories/fee_provider.dart';
+import 'package:online_college/repositories/user_data_firestore.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/fee_model.dart';
@@ -16,6 +18,39 @@ class FeeDetailScreen extends StatefulWidget {
 }
 
 class _FeeDetailScreenState extends State<FeeDetailScreen> {
+  bool isLoading = false;
+  List<StudentUserModel> paidStudentsData = [];
+
+  @override
+  void initState() {
+    getStudents();
+
+    super.initState();
+  }
+
+  getStudents() async {
+    paidStudentsData = [];
+    setState(() {
+      isLoading = true;
+    });
+
+    if (widget.fee.paidStudents != null) {
+      for (var element in widget.fee.paidStudents!) {
+        StudentUserModel? s = await UserDataFireStore().getStudentData(id: element.sid!);
+
+        if (s != null) {
+          setState(() {
+            paidStudentsData.add(s);
+          });
+        }
+      }
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -278,35 +313,122 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          ListView(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.zero,
-                            children: widget.fee.feeDescription!.map((feeDescription) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      feeDescription.title!,
-                                      style: GoogleFonts.rubik(
-                                        color: Colors.black54,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: 575,
+                            child: isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Color(0xFF2855AE),
                                     ),
-                                    Text(
-                                      feeDescription.amount!,
-                                      style: GoogleFonts.rubik(
-                                        color: Colors.black87,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
+                                  )
+                                : paidStudentsData.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'No one has paid fees.',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.rubik(
+                                            color: Colors.black54,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        shrinkWrap: true,
+                                        padding: EdgeInsets.zero,
+                                        itemCount: paidStudentsData.length,
+                                        itemBuilder: (context, index) {
+                                          StudentUserModel su = paidStudentsData[index];
+
+                                          return Container(
+                                            height: 80,
+                                            padding: const EdgeInsets.all(10),
+                                            margin: const EdgeInsets.only(bottom: 20),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Colors.black38,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  height: 60,
+                                                  width: 60,
+                                                  decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.centerRight,
+                                                      end: Alignment.centerLeft,
+                                                      colors: [
+                                                        Color(0xFF2855AE),
+                                                        Color(0xFF7292CF)
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  clipBehavior: Clip.antiAlias,
+                                                  child: Image.network(
+                                                    su.photoUrl ?? '',
+                                                    fit: BoxFit.fitHeight,
+                                                    errorBuilder: (BuildContext context,
+                                                        Object error, StackTrace? stackTrace) {
+                                                      return Image.asset(
+                                                        'assets/images/student.png',
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        su.name!,
+                                                        style: GoogleFonts.rubik(
+                                                          color: Colors.black87,
+                                                          fontSize: 18,
+                                                          fontWeight: FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '+91 ${su.phoneNumber!}',
+                                                        style: GoogleFonts.rubik(
+                                                          color: Colors.black54,
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  su.rollNo!,
+                                                  style: GoogleFonts.rubik(
+                                                    color: Colors.black87,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
                           ),
                         ],
                       ),

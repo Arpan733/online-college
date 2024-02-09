@@ -67,7 +67,7 @@ class ResultProvider extends ChangeNotifier {
     return ((a / (l * 10)) + 0.05).toString().substring(0, 4);
   }
 
-  List<Row> buildRow({required List<String> sub, required getMarkController}) {
+  List<Row> buildRow({required List<String> sub, required getMarkController, required onChange}) {
     List<Row> rows = [];
 
     for (int i = 0; i < sub.length; i++) {
@@ -108,11 +108,7 @@ class ResultProvider extends ChangeNotifier {
                   FilteringTextInputFormatter.digitsOnly,
                 ],
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    makeSPI(l: sub.length, getMarkController: getMarkController);
-                  }
-                },
+                onChanged: onChange,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Enter the Marks for ${sub[i]} subject';

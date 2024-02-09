@@ -287,7 +287,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                                   width: 15,
                                 ),
                                 Text(
-                                  sum.name!,
+                                  '${sum.name} - ${sum.year}',
                                   style: GoogleFonts.rubik(
                                     color: Colors.black87,
                                     fontSize: 18,
@@ -310,7 +310,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                                       ),
                                     ),
                                     Text(
-                                      '9.00',
+                                      resultModel.cpi!,
                                       style: GoogleFonts.rubik(
                                         color: Colors.black87,
                                         fontSize: 16,

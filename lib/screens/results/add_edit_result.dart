@@ -57,8 +57,16 @@ class _AddEditResultState extends State<AddEditResult> {
     } else {
       sub =
           Provider.of<ResultProvider>(context, listen: false).getSubject(year: yearController.text);
-      rows = Provider.of<ResultProvider>(context, listen: false)
-          .buildRow(sub: sub, getMarkController: getMarkController);
+      rows = Provider.of<ResultProvider>(context, listen: false).buildRow(
+          sub: sub,
+          getMarkController: getMarkController,
+          onChange: (value) {
+            if (value.isNotEmpty) {
+              spiController.text = Provider.of<ResultProvider>(context, listen: false)
+                  .makeSPI(l: sub.length, getMarkController: getMarkController);
+              setState(() {});
+            }
+          });
       getStudent();
     }
 
@@ -76,17 +84,26 @@ class _AddEditResultState extends State<AddEditResult> {
     sub = Provider.of<ResultProvider>(context, listen: false).getSubject(year: yearController.text);
     spiController.text = Provider.of<ResultProvider>(context, listen: false)
         .makeSPI(l: sub.length, getMarkController: getMarkController);
-    rows = Provider.of<ResultProvider>(context, listen: false)
-        .buildRow(sub: sub, getMarkController: getMarkController);
+    setState(() {});
+    rows = Provider.of<ResultProvider>(context, listen: false).buildRow(
+        sub: sub,
+        getMarkController: getMarkController,
+        onChange: (value) {
+          if (value.isNotEmpty) {
+            spiController.text = Provider.of<ResultProvider>(context, listen: false)
+                .makeSPI(l: sub.length, getMarkController: getMarkController);
+            setState(() {});
+          }
+        });
 
     StudentUserModel? stu = await UserDataFireStore().getStudentData(id: widget.resultModel!.sid!);
     sm.add(stu!);
 
     sd.add(
       DropdownMenuItem(
-        value: '${stu.rollNo} - ${stu.name}',
+        value: '${stu.rollNo} - ${stu.year} - ${stu.name}',
         child: Text(
-          '${stu.rollNo} - ${stu.name}',
+          '${stu.rollNo} - ${stu.year} - ${stu.name}',
           style: GoogleFonts.rubik(
             color: Colors.black87,
             fontSize: 18,
@@ -95,7 +112,7 @@ class _AddEditResultState extends State<AddEditResult> {
         ),
       ),
     );
-    rollNoController.text = '${stu.rollNo} - ${stu.name}';
+    rollNoController.text = '${stu.rollNo} - ${stu.year} - ${stu.name}';
 
     sd.removeWhere((element) => element.value == 'No Student');
 
@@ -124,13 +141,18 @@ class _AddEditResultState extends State<AddEditResult> {
 
     Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach(
       (element) {
-        if (element.year == yearController.text) {
+        if (element.year == yearController.text ||
+            (element.year == '4th Year' &&
+                ['1st Year', '2nd Year', '3rd Year'].contains(yearController.text)) ||
+            (element.year == '3rd Year' &&
+                ['1st Year', '2nd Year'].contains(yearController.text)) ||
+            (element.year == '2nd Year' && '1st Year' == yearController.text)) {
           sm.add(element);
           sd.add(
             DropdownMenuItem(
-              value: '${element.rollNo} - ${element.name}',
+              value: '${element.rollNo} - ${element.year} - ${element.name}',
               child: Text(
-                '${element.rollNo} - ${element.name}',
+                '${element.rollNo} - ${element.year} - ${element.name}',
                 style: GoogleFonts.rubik(
                   color: Colors.black87,
                   fontSize: 18,
@@ -164,7 +186,7 @@ class _AddEditResultState extends State<AddEditResult> {
       for (var s in sm) {
         if (s.id == r.sid) {
           for (var element in r.result!) {
-            if (s.year == element.year) {
+            if (element.year == yearController.text) {
               ism.add(s.id!);
               isd.add(sd[sm.indexOf(s)].value!);
             }
@@ -200,6 +222,7 @@ class _AddEditResultState extends State<AddEditResult> {
     }
 
     rollNoController.text = sd[0].value!;
+    setState(() {});
   }
 
   int extractIntegerFromLabel(String label) {
@@ -270,8 +293,41 @@ class _AddEditResultState extends State<AddEditResult> {
                     isEdit
                         ? GestureDetector(
                             onTap: () async {
-                              await Provider.of<ResultProvider>(context, listen: false)
-                                  .deleteResult(sid: widget.resultModel!.sid!);
+                              ResultModel resultModel = widget.resultModel!;
+                              List<Result> re = widget.resultModel!.result!;
+                              Result ree = widget.result!;
+
+                              if (re.length == 1) {
+                                await Provider.of<ResultProvider>(context, listen: false)
+                                    .deleteResult(
+                                  sid: resultModel.sid!,
+                                );
+                              } else if (re.length == 2) {
+                                re.remove(ree);
+
+                                resultModel.cpi = re[0].spi;
+                                resultModel.result = re;
+
+                                await Provider.of<ResultProvider>(context, listen: false)
+                                    .updateResult(resultModel: resultModel);
+                              } else {
+                                String cpi =
+                                    (double.parse(resultModel.cpi!) * re.length).toString();
+
+                                re.remove(ree);
+                                cpi = (double.parse(cpi) - double.parse(ree.spi!)).toString();
+                                cpi = (double.parse(cpi) / re.length).toString().substring(0, 4);
+
+                                resultModel.result = re;
+                                resultModel.cpi = cpi;
+
+                                if (cpi.length > 4) {
+                                  cpi = cpi.substring(0, 4);
+                                }
+
+                                await Provider.of<ResultProvider>(context, listen: false)
+                                    .updateResult(resultModel: resultModel);
+                              }
 
                               if (!mounted) return;
                               Navigator.pop(context);
@@ -298,27 +354,45 @@ class _AddEditResultState extends State<AddEditResult> {
                           if (key.currentState != null && key.currentState!.validate()) {
                             if (isEdit) {
                               List<Datum> datum = [];
+                              List<Result> re = widget.resultModel!.result!;
+                              String? cpi = '0.0';
+
+                              re.remove(widget.result!);
 
                               for (int i = 0; i < sub.length; i++) {
                                 datum.add(
                                     Datum(subject: sub[i], marks: getMarkController(i: i).text));
                               }
 
+                              re.add(
+                                Result(
+                                  year: yearController.text,
+                                  spi: spiController.text,
+                                  data: datum,
+                                ),
+                              );
+
+                              for (var element in re) {
+                                cpi = (double.parse(cpi!) + double.parse(element.spi!)).toString();
+                              }
+
+                              cpi = (double.parse(cpi!) / re.length.toDouble()).toString();
+
+                              if (cpi.length > 4) {
+                                cpi = cpi.substring(0, 4);
+                              }
+
                               ResultModel resultModel = ResultModel(
-                                cpi: spiController.text,
+                                cpi: cpi,
                                 sid: widget.resultModel!.sid,
-                                result: [
-                                  Result(
-                                    year: yearController.text,
-                                    spi: spiController.text,
-                                    data: datum,
-                                  ),
-                                ],
+                                result: re,
                               );
 
                               Provider.of<ResultProvider>(context, listen: false)
                                   .updateResult(resultModel: resultModel);
                               Navigator.pop(context);
+
+                              re.clear();
                             } else {
                               List<Datum> datum = [];
                               int c = 0;
@@ -334,21 +408,48 @@ class _AddEditResultState extends State<AddEditResult> {
                                     Datum(subject: sub[i], marks: getMarkController(i: i).text));
                               }
 
+                              ResultModel? remo;
+
+                              for (var element in results) {
+                                if (element.sid == sm[c].id) {
+                                  remo = element;
+                                }
+                              }
+
+                              String cpi = '0.0';
+                              List<Result> re = remo?.result ?? [];
+
+                              re.add(
+                                Result(
+                                  year: yearController.text,
+                                  spi: spiController.text,
+                                  data: datum,
+                                ),
+                              );
+
+                              if (re.length != 1) {
+                                for (var element in re) {
+                                  cpi = (double.parse(cpi) + double.parse(element.spi!)).toString();
+                                }
+                              }
+
+                              cpi = (double.parse(cpi) / re.length).toString();
+
+                              if (cpi.length > 4) {
+                                cpi = cpi.substring(0, 4);
+                              }
+
                               ResultModel resultModel = ResultModel(
-                                cpi: spiController.text,
+                                cpi: cpi,
                                 sid: sm[c].id!,
-                                result: [
-                                  Result(
-                                    year: yearController.text,
-                                    spi: spiController.text,
-                                    data: datum,
-                                  ),
-                                ],
+                                result: re,
                               );
 
                               Provider.of<ResultProvider>(context, listen: false)
                                   .addResult(resultModel: resultModel);
                               Navigator.pop(context);
+
+                              re.clear();
                             }
                           }
                         }
@@ -482,8 +583,21 @@ class _AddEditResultState extends State<AddEditResult> {
                                   getStudent();
                                   sub = Provider.of<ResultProvider>(context, listen: false)
                                       .getSubject(year: yearController.text);
-                                  rows = Provider.of<ResultProvider>(context, listen: false)
-                                      .buildRow(sub: sub, getMarkController: getMarkController);
+                                  rows =
+                                      Provider.of<ResultProvider>(context, listen: false).buildRow(
+                                          sub: sub,
+                                          getMarkController: getMarkController,
+                                          onChange: (value) {
+                                            if (value.isNotEmpty) {
+                                              spiController.text = Provider.of<ResultProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .makeSPI(
+                                                      l: sub.length,
+                                                      getMarkController: getMarkController);
+                                              setState(() {});
+                                            }
+                                          });
                                   setState(() {});
                                 }
                               },

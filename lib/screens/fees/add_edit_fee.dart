@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/model/fee_model.dart';
-import 'package:online_college/repositories/fee_provider.dart';
+import 'package:online_college/providers/fee_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/v4.dart';
 
@@ -155,6 +155,36 @@ class _AddEditFeesState extends State<AddEditFees> {
               ),
               actions: [
                 GestureDetector(
+                  child: Container(
+                    height: 30,
+                    width: 90,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    margin: const EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Icon(
+                          Icons.check_outlined,
+                          color: Color(0xFF6688CA),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          isEdit ? 'Edit' : 'Add',
+                          style: GoogleFonts.rubik(
+                            color: const Color(0xFF6688CA),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                   onTap: () async {
                     if (key.currentState != null && key.currentState!.validate()) {
                       if (isEdit) {
@@ -211,36 +241,6 @@ class _AddEditFeesState extends State<AddEditFees> {
                       }
                     }
                   },
-                  child: Container(
-                    height: 30,
-                    width: 90,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Icon(
-                          Icons.check_outlined,
-                          color: Color(0xFF6688CA),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          'Done',
-                          style: GoogleFonts.rubik(
-                            color: const Color(0xFF6688CA),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
                 ),
               ],
             ),

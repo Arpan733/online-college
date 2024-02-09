@@ -5,11 +5,17 @@ import 'package:online_college/screens/dashboard/dashboard_screen.dart';
 import 'package:online_college/screens/dashboard/profile_screen.dart';
 import 'package:online_college/screens/doubts/doubts_screen.dart';
 import 'package:online_college/screens/events/events_screen.dart';
+import 'package:online_college/screens/fees/add_edit_fee.dart';
 import 'package:online_college/screens/fees/fee_detail_screen.dart';
 import 'package:online_college/screens/fees/fee_pay_screen.dart';
+import 'package:online_college/screens/fees/fee_receipt_screen.dart';
 import 'package:online_college/screens/fees/fees_screen.dart';
 import 'package:online_college/screens/leave_application/leave_application_screen.dart';
 import 'package:online_college/screens/login/login_screen.dart';
+import 'package:online_college/screens/professor_list/professor_list_screen.dart';
+import 'package:online_college/screens/results/add_edit_result.dart';
+import 'package:online_college/screens/results/result_screen_for_student.dart';
+import 'package:online_college/screens/results/result_screen_for_teacher.dart';
 import 'package:online_college/screens/school_gallery/school_gallery_screen.dart';
 import 'package:online_college/screens/school_holiday/school_holiday_screen.dart';
 import 'package:online_college/screens/splash_screen.dart';
@@ -17,9 +23,7 @@ import 'package:online_college/screens/student_list/student_list_screen.dart';
 import 'package:online_college/screens/timetable/timetable_screen.dart';
 
 import '../model/fee_model.dart';
-import '../screens/fees/add_edit_fee.dart';
-import '../screens/fees/fee_receipt_screen.dart';
-import '../screens/professor_list/professor_list_screen.dart';
+import '../model/result_model.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -68,6 +72,28 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) =>
                 FeeReceiptScreen(feeModel: settings.arguments as FeeModel));
+      case RoutesName.resultTeacher:
+        return MaterialPageRoute(builder: (BuildContext context) => const ResultScreenForTeacher());
+      case RoutesName.resultStudent:
+        return MaterialPageRoute(builder: (BuildContext context) => const ResultScreenForStudent());
+      case RoutesName.addEditResult:
+        return MaterialPageRoute(builder: (BuildContext context) {
+          final arguments = settings.arguments as Map<dynamic, dynamic>?;
+
+          // Provide default values if arguments is null or not a map
+          final resultModel = (arguments?['resultModel'] as ResultModel?) ?? ResultModel();
+          final result = (arguments?['result'] as Result?) ?? Result();
+
+          // Navigate to the AddEditResult screen with the default values
+          return AddEditResult(
+            resultModel: resultModel,
+            result: result,
+          );
+
+          // return AddEditResult(
+          //     resultModel: (settings.arguments?['resultModel'] as ResultModel?) ?? ResultModel(),
+          //     result: (settings.arguments?['result'] as Result?) ?? Result());
+        });
       default:
         return MaterialPageRoute(
           builder: (_) {

@@ -29,7 +29,7 @@ List<Map<String, dynamic>> functionalityListTeacher = [
     'name': 'Results',
     'image': 'assets/icons/result.png',
     'onTap': (BuildContext context) {
-      // Navigator.pushNamed(context, RoutesName.professorList);
+      Navigator.pushNamed(context, RoutesName.resultTeacher);
     },
   },
   {
@@ -133,7 +133,7 @@ List<Map<String, dynamic>> functionalityListStudent = [
     'name': 'Results',
     'image': 'assets/icons/result.png',
     'onTap': (BuildContext context) {
-      // Navigator.pushNamed(context, RoutesName.professorList);
+      Navigator.pushNamed(context, RoutesName.resultStudent);
     },
   },
   {

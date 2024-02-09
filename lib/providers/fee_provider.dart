@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/consts/utils.dart';
-import 'package:online_college/providers/fee_firestore.dart';
+import 'package:online_college/repositories/fee_firestore.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../model/fee_model.dart';

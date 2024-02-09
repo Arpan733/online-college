@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
-import 'package:online_college/repositories/fee_provider.dart';
+import 'package:online_college/providers/fee_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';

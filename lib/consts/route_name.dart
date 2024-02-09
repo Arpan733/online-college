@@ -17,4 +17,7 @@ class RoutesName {
   static const String feeDetail = 'feeDetail';
   static const String feePay = 'feePay';
   static const String feeReceipt = 'feeReceipt';
+  static const String resultTeacher = 'resultTeacher';
+  static const String resultStudent = 'resultStudent';
+  static const String addEditResult = 'addEditResult';
 }

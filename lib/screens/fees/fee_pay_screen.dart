@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../consts/user_shared_preferences.dart';
 import '../../model/fee_model.dart';
-import '../../repositories/fee_provider.dart';
+import '../../providers/fee_provider.dart';
 
 class FeePayScreen extends StatefulWidget {
   final FeeModel feeModel;

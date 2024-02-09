@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_college/consts/route_name.dart';
-import 'package:online_college/repositories/fee_provider.dart';
+import 'package:online_college/providers/fee_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../consts/user_shared_preferences.dart';

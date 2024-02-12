@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:online_college/consts/route_name.dart';
+import 'package:online_college/consts/routes.dart';
 import 'package:online_college/providers/fee_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -251,7 +251,7 @@ class _FeesScreenState extends State<FeesScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () =>
-                                      Navigator.pushNamed(context, arguments: f, RoutesName.feePay),
+                                      Navigator.pushNamed(context, arguments: f, Routes.feePay),
                                   child: Container(
                                     height: 50,
                                     decoration: const BoxDecoration(
@@ -287,7 +287,7 @@ class _FeesScreenState extends State<FeesScreen> {
                         } else {
                           return GestureDetector(
                             onTap: () =>
-                                Navigator.pushNamed(context, arguments: f, RoutesName.feeDetail),
+                                Navigator.pushNamed(context, arguments: f, Routes.feeDetail),
                             child: Container(
                               margin: const EdgeInsets.only(bottom: 20),
                               alignment: Alignment.center,
@@ -422,7 +422,7 @@ class _FeesScreenState extends State<FeesScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: UserSharedPreferences.role == 'teacher'
           ? GestureDetector(
-              onTap: () => Navigator.pushNamed(context, RoutesName.addEditFees),
+              onTap: () => Navigator.pushNamed(context, Routes.addEditFees),
               child: Container(
                 height: 60,
                 width: 60,

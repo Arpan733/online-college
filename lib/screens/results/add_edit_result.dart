@@ -41,7 +41,9 @@ class _AddEditResultState extends State<AddEditResult> {
 
   @override
   void initState() {
-    results = Provider.of<ResultProvider>(context, listen: false).results;
+    results = Provider
+        .of<ResultProvider>(context, listen: false)
+        .results;
     mark1Controller.text = '0';
     mark2Controller.text = '0';
     mark3Controller.text = '0';
@@ -56,7 +58,8 @@ class _AddEditResultState extends State<AddEditResult> {
       forIsEdit();
     } else {
       sub =
-          Provider.of<ResultProvider>(context, listen: false).getSubject(year: yearController.text);
+          Provider.of<ResultProvider>(context, listen: false).getSubject(
+              year: yearController.text);
       rows = Provider.of<ResultProvider>(context, listen: false).buildRow(
           sub: sub,
           getMarkController: getMarkController,
@@ -81,7 +84,8 @@ class _AddEditResultState extends State<AddEditResult> {
       getMarkController(i: i).text = widget.result!.data![i].marks!;
     }
 
-    sub = Provider.of<ResultProvider>(context, listen: false).getSubject(year: yearController.text);
+    sub = Provider.of<ResultProvider>(context, listen: false).getSubject(
+        year: yearController.text);
     spiController.text = Provider.of<ResultProvider>(context, listen: false)
         .makeSPI(l: sub.length, getMarkController: getMarkController);
     setState(() {});
@@ -125,22 +129,25 @@ class _AddEditResultState extends State<AddEditResult> {
     return i == 0
         ? mark1Controller
         : i == 1
-            ? mark2Controller
-            : i == 2
-                ? mark3Controller
-                : i == 4
-                    ? mark4Controller
-                    : i == 5
-                        ? mark5Controller
-                        : mark6Controller;
+        ? mark2Controller
+        : i == 2
+        ? mark3Controller
+        : i == 4
+        ? mark4Controller
+        : i == 5
+        ? mark5Controller
+        : mark6Controller;
   }
 
   getStudent() {
     sd = [];
     sm = [];
 
-    Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach(
-      (element) {
+    Provider
+        .of<AllUserProvider>(context, listen: false)
+        .studentsList
+        .forEach(
+          (element) {
         if (element.year == yearController.text ||
             (element.year == '4th Year' &&
                 ['1st Year', '2nd Year', '3rd Year'].contains(yearController.text)) ||
@@ -166,7 +173,7 @@ class _AddEditResultState extends State<AddEditResult> {
     );
 
     sm.sort(
-      (a, b) {
+          (a, b) {
         int aRoll = int.parse(a.rollNo!);
         int bRoll = int.parse(b.rollNo!);
         return aRoll.compareTo(bRoll);
@@ -245,7 +252,10 @@ class _AddEditResultState extends State<AddEditResult> {
         children: [
           Positioned(
             bottom: 0,
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             child: Image.asset(
               'assets/images/background 1.png',
               fit: BoxFit.fitWidth,
@@ -270,10 +280,16 @@ class _AddEditResultState extends State<AddEditResult> {
                     ),
                   ),
                   bottom: PreferredSize(
-                    preferredSize: Size(MediaQuery.of(context).size.width, 40),
+                    preferredSize: Size(MediaQuery
+                        .of(context)
+                        .size
+                        .width, 40),
                     child: Container(
                       height: 40,
-                      width: MediaQuery.of(context).size.width,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(40), topLeft: Radius.circular(40)),
@@ -292,61 +308,61 @@ class _AddEditResultState extends State<AddEditResult> {
                   actions: [
                     isEdit
                         ? GestureDetector(
-                            onTap: () async {
-                              ResultModel resultModel = widget.resultModel!;
-                              List<Result> re = widget.resultModel!.result!;
-                              Result ree = widget.result!;
+                      onTap: () async {
+                        ResultModel resultModel = widget.resultModel!;
+                        List<Result> re = widget.resultModel!.result!;
+                        Result ree = widget.result!;
 
-                              if (re.length == 1) {
-                                await Provider.of<ResultProvider>(context, listen: false)
-                                    .deleteResult(
-                                  sid: resultModel.sid!,
-                                );
-                              } else if (re.length == 2) {
-                                re.remove(ree);
+                        if (re.length == 1) {
+                          await Provider.of<ResultProvider>(context, listen: false)
+                              .deleteResult(
+                            sid: resultModel.sid!,
+                          );
+                        } else if (re.length == 2) {
+                          re.remove(ree);
 
-                                resultModel.cpi = re[0].spi;
-                                resultModel.result = re;
+                          resultModel.cpi = re[0].spi;
+                          resultModel.result = re;
 
-                                await Provider.of<ResultProvider>(context, listen: false)
-                                    .updateResult(resultModel: resultModel);
-                              } else {
-                                String cpi =
-                                    (double.parse(resultModel.cpi!) * re.length).toString();
+                          await Provider.of<ResultProvider>(context, listen: false)
+                              .updateResult(resultModel: resultModel);
+                        } else {
+                          String cpi =
+                          (double.parse(resultModel.cpi!) * re.length).toString();
 
-                                re.remove(ree);
-                                cpi = (double.parse(cpi) - double.parse(ree.spi!)).toString();
-                                cpi = (double.parse(cpi) / re.length).toString().substring(0, 4);
+                          re.remove(ree);
+                          cpi = (double.parse(cpi) - double.parse(ree.spi!)).toString();
+                          cpi = (double.parse(cpi) / re.length).toString().substring(0, 4);
 
-                                resultModel.result = re;
-                                resultModel.cpi = cpi;
+                          resultModel.result = re;
+                          resultModel.cpi = cpi;
 
-                                if (cpi.length > 4) {
-                                  cpi = cpi.substring(0, 4);
-                                }
+                          if (cpi.length > 4) {
+                            cpi = cpi.substring(0, 4);
+                          }
 
-                                await Provider.of<ResultProvider>(context, listen: false)
-                                    .updateResult(resultModel: resultModel);
-                              }
+                          await Provider.of<ResultProvider>(context, listen: false)
+                              .updateResult(resultModel: resultModel);
+                        }
 
-                              if (!mounted) return;
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              height: 30,
-                              width: 40,
-                              margin: const EdgeInsets.only(right: 20),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: const Icon(
-                                Icons.delete_outline,
-                                color: Colors.red,
-                                size: 25,
-                              ),
-                            ),
-                          )
+                        if (!mounted) return;
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 40,
+                        margin: const EdgeInsets.only(right: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.red,
+                          size: 25,
+                        ),
+                      ),
+                    )
                         : Container(),
                     GestureDetector(
                       onTap: () {
@@ -427,10 +443,8 @@ class _AddEditResultState extends State<AddEditResult> {
                                 ),
                               );
 
-                              if (re.length != 1) {
-                                for (var element in re) {
-                                  cpi = (double.parse(cpi) + double.parse(element.spi!)).toString();
-                                }
+                              for (var element in re) {
+                                cpi = (double.parse(cpi) + double.parse(element.spi!)).toString();
                               }
 
                               cpi = (double.parse(cpi) / re.length).toString();
@@ -492,126 +506,125 @@ class _AddEditResultState extends State<AddEditResult> {
                     [
                       isEdit
                           ? DropdownButtonFormField<String>(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              value: yearController.text,
-                              items: [
-                                DropdownMenuItem(
-                                  value: yearController.text,
-                                  child: Text(
-                                    yearController.text,
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              onChanged: (value) {},
-                              dropdownColor: Colors.white,
-                              iconEnabledColor: Colors.white,
-                              decoration: const InputDecoration(
-                                suffixIcon: Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Color(0xFF2855AE),
-                                  size: 30,
-                                ),
-                                border: InputBorder.none,
-                              ),
-                            )
-                          : DropdownButtonFormField<String>(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              value: yearController.text,
-                              items: [
-                                DropdownMenuItem(
-                                  value: '1st Year',
-                                  child: Text(
-                                    '1st Year',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: '2nd Year',
-                                  child: Text(
-                                    '2nd Year',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: '3rd Year',
-                                  child: Text(
-                                    '3rd Year',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: '4th Year',
-                                  child: Text(
-                                    '4th Year',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              onChanged: (value) {
-                                if (isEdit) {
-                                } else if (value != null) {
-                                  mark1Controller.text = '0';
-                                  mark2Controller.text = '0';
-                                  mark3Controller.text = '0';
-                                  mark4Controller.text = '0';
-                                  mark5Controller.text = '0';
-                                  mark6Controller.text = '0';
-                                  spiController.text = '0.00';
-
-                                  yearController.text = value;
-                                  getStudent();
-                                  sub = Provider.of<ResultProvider>(context, listen: false)
-                                      .getSubject(year: yearController.text);
-                                  rows =
-                                      Provider.of<ResultProvider>(context, listen: false).buildRow(
-                                          sub: sub,
-                                          getMarkController: getMarkController,
-                                          onChange: (value) {
-                                            if (value.isNotEmpty) {
-                                              spiController.text = Provider.of<ResultProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .makeSPI(
-                                                      l: sub.length,
-                                                      getMarkController: getMarkController);
-                                              setState(() {});
-                                            }
-                                          });
-                                  setState(() {});
-                                }
-                              },
-                              dropdownColor: Colors.white,
-                              iconEnabledColor: Colors.white,
-                              decoration: const InputDecoration(
-                                suffixIcon: Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Color(0xFF2855AE),
-                                  size: 30,
-                                ),
-                                border: InputBorder.none,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        value: yearController.text,
+                        items: [
+                          DropdownMenuItem(
+                            value: yearController.text,
+                            child: Text(
+                              yearController.text,
+                              style: GoogleFonts.rubik(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
+                          ),
+                        ],
+                        onChanged: (value) {},
+                        dropdownColor: Colors.white,
+                        iconEnabledColor: Colors.white,
+                        decoration: const InputDecoration(
+                          suffixIcon: Icon(
+                            Icons.arrow_drop_down,
+                            color: Color(0xFF2855AE),
+                            size: 30,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      )
+                          : DropdownButtonFormField<String>(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        value: yearController.text,
+                        items: [
+                          DropdownMenuItem(
+                            value: '1st Year',
+                            child: Text(
+                              '1st Year',
+                              style: GoogleFonts.rubik(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: '2nd Year',
+                            child: Text(
+                              '2nd Year',
+                              style: GoogleFonts.rubik(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: '3rd Year',
+                            child: Text(
+                              '3rd Year',
+                              style: GoogleFonts.rubik(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: '4th Year',
+                            child: Text(
+                              '4th Year',
+                              style: GoogleFonts.rubik(
+                                color: Colors.black87,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          if (isEdit) {} else if (value != null) {
+                            mark1Controller.text = '0';
+                            mark2Controller.text = '0';
+                            mark3Controller.text = '0';
+                            mark4Controller.text = '0';
+                            mark5Controller.text = '0';
+                            mark6Controller.text = '0';
+                            spiController.text = '0.00';
+
+                            yearController.text = value;
+                            getStudent();
+                            sub = Provider.of<ResultProvider>(context, listen: false)
+                                .getSubject(year: yearController.text);
+                            rows =
+                                Provider.of<ResultProvider>(context, listen: false).buildRow(
+                                    sub: sub,
+                                    getMarkController: getMarkController,
+                                    onChange: (value) {
+                                      if (value.isNotEmpty) {
+                                        spiController.text = Provider.of<ResultProvider>(
+                                            context,
+                                            listen: false)
+                                            .makeSPI(
+                                            l: sub.length,
+                                            getMarkController: getMarkController);
+                                        setState(() {});
+                                      }
+                                    });
+                            setState(() {});
+                          }
+                        },
+                        dropdownColor: Colors.white,
+                        iconEnabledColor: Colors.white,
+                        decoration: const InputDecoration(
+                          suffixIcon: Icon(
+                            Icons.arrow_drop_down,
+                            color: Color(0xFF2855AE),
+                            size: 30,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
                       const SizedBox(
                         height: 20,
                       ),

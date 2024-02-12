@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../consts/dashboard_lists.dart';
-import '../../consts/route_name.dart';
+import '../../consts/routes.dart';
 import '../../consts/user_shared_preferences.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -62,7 +62,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, RoutesName.profile);
+                        Navigator.pushNamed(context, Routes.profile);
                       },
                       child: Container(
                         height: 70,

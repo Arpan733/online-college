@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:online_college/consts/route_name.dart';
 import 'package:online_college/screens/assignments/assignment_screen.dart';
 import 'package:online_college/screens/dashboard/dashboard_screen.dart';
 import 'package:online_college/screens/dashboard/profile_screen.dart';
@@ -14,6 +13,7 @@ import 'package:online_college/screens/leave_application/leave_application_scree
 import 'package:online_college/screens/login/login_screen.dart';
 import 'package:online_college/screens/professor_list/professor_list_screen.dart';
 import 'package:online_college/screens/results/add_edit_result.dart';
+import 'package:online_college/screens/results/result_print_screen.dart';
 import 'package:online_college/screens/results/result_screen_for_student.dart';
 import 'package:online_college/screens/results/result_screen_for_teacher.dart';
 import 'package:online_college/screens/school_gallery/school_gallery_screen.dart';
@@ -22,78 +22,106 @@ import 'package:online_college/screens/splash_screen.dart';
 import 'package:online_college/screens/student_list/student_list_screen.dart';
 import 'package:online_college/screens/timetable/timetable_screen.dart';
 
+import '../model/doubt_model.dart';
 import '../model/fee_model.dart';
 import '../model/result_model.dart';
+import '../screens/doubts/doubt_detail_screen.dart';
 
 class Routes {
+  static const String splash = 'splash';
+  static const String login = 'login';
+  static const String dashboard = 'dashboard';
+  static const String profile = 'profile';
+  static const String assignment = 'assignments';
+  static const String doubts = 'doubts';
+  static const String events = 'events';
+  static const String leaveApplication = 'leaveApplication';
+  static const String professorList = 'professorList';
+  static const String schoolGallery = 'schoolGallery';
+  static const String schoolHoliday = 'schoolHoliday';
+  static const String studentList = 'studentList';
+  static const String timetable = 'timetable';
+  static const String fees = 'fees';
+  static const String addEditFees = 'addEditFees';
+  static const String feeDetail = 'feeDetail';
+  static const String feePay = 'feePay';
+  static const String feeReceipt = 'feeReceipt';
+  static const String resultTeacher = 'resultTeacher';
+  static const String resultStudent = 'resultStudent';
+  static const String addEditResult = 'addEditResult';
+  static const String printResult = 'printResult';
+  static const String doubtDetail = 'doubtDetail';
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case RoutesName.splash:
+      case splash:
         return MaterialPageRoute(builder: (BuildContext context) => const SplashScreen());
-      case RoutesName.login:
+      case login:
         return MaterialPageRoute(builder: (BuildContext context) => const LoginScreen());
-      case RoutesName.dashboard:
+      case dashboard:
         return MaterialPageRoute(builder: (BuildContext context) => const DashBoardScreen());
-      case RoutesName.profile:
+      case profile:
         return MaterialPageRoute(builder: (BuildContext context) => const ProfileScreen());
-      case RoutesName.assignment:
+      case assignment:
         return MaterialPageRoute(builder: (BuildContext context) => const AssignmentScreen());
-      case RoutesName.doubts:
+      case doubts:
         return MaterialPageRoute(builder: (BuildContext context) => const DoubtScreen());
-      case RoutesName.events:
+      case events:
         return MaterialPageRoute(builder: (BuildContext context) => const EventScreen());
-      case RoutesName.leaveApplication:
+      case leaveApplication:
         return MaterialPageRoute(builder: (BuildContext context) => const LeaveApplicationScreen());
-      case RoutesName.schoolGallery:
+      case schoolGallery:
         return MaterialPageRoute(builder: (BuildContext context) => const SchoolGalleryScreen());
-      case RoutesName.schoolHoliday:
+      case schoolHoliday:
         return MaterialPageRoute(builder: (BuildContext context) => const SchoolHolidayScreen());
-      case RoutesName.studentList:
+      case studentList:
         return MaterialPageRoute(builder: (BuildContext context) => const StudentListScreen());
-      case RoutesName.professorList:
+      case professorList:
         return MaterialPageRoute(builder: (BuildContext context) => const ProfessorListScreen());
-      case RoutesName.timetable:
+      case timetable:
         return MaterialPageRoute(builder: (BuildContext context) => const TimeTableScreen());
-      case RoutesName.fees:
+      case fees:
         return MaterialPageRoute(builder: (BuildContext context) => const FeesScreen());
-      case RoutesName.addEditFees:
+      case addEditFees:
         return MaterialPageRoute(
             builder: (BuildContext context) =>
                 AddEditFees(feeModel: settings.arguments as FeeModel?));
-      case RoutesName.feeDetail:
+      case feeDetail:
         return MaterialPageRoute(
             builder: (BuildContext context) =>
                 FeeDetailScreen(fee: settings.arguments as FeeModel));
-      case RoutesName.feePay:
+      case feePay:
         return MaterialPageRoute(
             builder: (BuildContext context) =>
                 FeePayScreen(feeModel: settings.arguments as FeeModel));
-      case RoutesName.feeReceipt:
+      case feeReceipt:
         return MaterialPageRoute(
             builder: (BuildContext context) =>
                 FeeReceiptScreen(feeModel: settings.arguments as FeeModel));
-      case RoutesName.resultTeacher:
+      case resultTeacher:
         return MaterialPageRoute(builder: (BuildContext context) => const ResultScreenForTeacher());
-      case RoutesName.resultStudent:
+      case resultStudent:
         return MaterialPageRoute(builder: (BuildContext context) => const ResultScreenForStudent());
-      case RoutesName.addEditResult:
+      case addEditResult:
         return MaterialPageRoute(builder: (BuildContext context) {
           final arguments = settings.arguments as Map<dynamic, dynamic>?;
 
-          // Provide default values if arguments is null or not a map
           final resultModel = (arguments?['resultModel'] as ResultModel?) ?? ResultModel();
           final result = (arguments?['result'] as Result?) ?? Result();
 
-          // Navigate to the AddEditResult screen with the default values
           return AddEditResult(
             resultModel: resultModel,
             result: result,
           );
-
-          // return AddEditResult(
-          //     resultModel: (settings.arguments?['resultModel'] as ResultModel?) ?? ResultModel(),
-          //     result: (settings.arguments?['result'] as Result?) ?? Result());
         });
+      case printResult:
+        return MaterialPageRoute(
+            builder: (BuildContext context) =>
+                ResultPrintScreen(result: settings.arguments as Result));
+      case doubtDetail:
+        return MaterialPageRoute(
+            builder: (BuildContext context) =>
+                DoubtDetailScreen(doubtModel: settings.arguments as DoubtModel));
       default:
         return MaterialPageRoute(
           builder: (_) {

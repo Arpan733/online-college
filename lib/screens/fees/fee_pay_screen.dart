@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:online_college/consts/route_name.dart';
+import 'package:online_college/consts/routes.dart';
 import 'package:provider/provider.dart';
 
 import '../../consts/user_shared_preferences.dart';
@@ -73,18 +73,9 @@ class _FeePayScreenState extends State<FeePayScreen> {
           CustomScrollView(
             physics: const NeverScrollableScrollPhysics(),
             slivers: [
-              SliverAppBar(
+              const SliverAppBar(
                 backgroundColor: Colors.transparent,
                 foregroundColor: Colors.white,
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.share_outlined,
-                      size: 25,
-                    ),
-                  ),
-                ],
               ),
               SliverList(
                 delegate: SliverChildListDelegate(
@@ -211,7 +202,7 @@ class _FeePayScreenState extends State<FeePayScreen> {
                               if (Provider.of<FeeProvider>(context, listen: false)
                                   .checkPaid(sid: UserSharedPreferences.id, fee: widget.feeModel)) {
                                 Navigator.pushNamed(
-                                    context, arguments: widget.feeModel, RoutesName.feeReceipt);
+                                    context, arguments: widget.feeModel, Routes.feeReceipt);
                               } else {
                                 await Provider.of<FeeProvider>(context, listen: false)
                                     .createPayment(feeModel: widget.feeModel);

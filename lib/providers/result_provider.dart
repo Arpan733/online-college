@@ -15,6 +15,10 @@ class ResultProvider extends ChangeNotifier {
 
   List<ResultModel> get results => _results;
 
+  ResultModel _result = ResultModel();
+
+  ResultModel get result => _result;
+
   Future<void> addResult({required ResultModel resultModel}) async {
     await ResultFireStore().addResultToFireStore(resultModel: resultModel);
     await getResultList();
@@ -28,6 +32,21 @@ class ResultProvider extends ChangeNotifier {
   Future<void> deleteResult({required String sid}) async {
     await ResultFireStore().deleteResultFromFireStore(sid: sid);
     await getResultList();
+  }
+
+  Future<void> getResult() async {
+    _result = ResultModel();
+    _isLoading = true;
+    notifyListeners();
+
+    ResultModel? response = await ResultFireStore().getResultFromFireStore();
+
+    if (response != null) {
+      _result = response;
+    }
+
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> getResultList() async {

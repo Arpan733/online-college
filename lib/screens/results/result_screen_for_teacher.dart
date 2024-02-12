@@ -5,7 +5,7 @@ import 'package:online_college/model/student_user_model.dart';
 import 'package:online_college/providers/result_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../consts/route_name.dart';
+import '../../consts/routes.dart';
 import '../../consts/user_shared_preferences.dart';
 import '../../providers/all_user_provider.dart';
 
@@ -249,7 +249,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                             Navigator.pushNamed(
                                 context,
                                 arguments: {'resultModel': resultModel, 'result': res},
-                                RoutesName.addEditResult);
+                                Routes.addEditResult);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(10),
@@ -360,7 +360,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: UserSharedPreferences.role == 'teacher'
           ? GestureDetector(
-              onTap: () => Navigator.pushNamed(context, RoutesName.addEditResult),
+              onTap: () => Navigator.pushNamed(context, Routes.addEditResult),
               child: Container(
                 height: 60,
                 width: 60,

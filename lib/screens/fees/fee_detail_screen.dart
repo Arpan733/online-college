@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:online_college/consts/route_name.dart';
+import 'package:online_college/consts/routes.dart';
 import 'package:online_college/model/student_user_model.dart';
 import 'package:online_college/providers/fee_provider.dart';
 import 'package:online_college/repositories/user_data_firestore.dart';
@@ -127,7 +127,7 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                     GestureDetector(
                       onTap: () {
                         Navigator.popAndPushNamed(
-                            context, arguments: widget.fee, RoutesName.addEditFees);
+                            context, arguments: widget.fee, Routes.addEditFees);
                       },
                       child: Container(
                         height: 30,
@@ -316,7 +316,7 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Container(
+                          SizedBox(
                             height: 575,
                             child: isLoading
                                 ? const Center(

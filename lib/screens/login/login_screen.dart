@@ -60,8 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Expanded(
                       child: Container(
                         width: MediaQuery.of(context).size.width * 1,
-                        padding:
-                            const EdgeInsets.only(top: 70, left: 20, right: 20),
+                        padding: const EdgeInsets.only(top: 70, left: 20, right: 20),
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
@@ -93,8 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextFormField(
                               controller: phoneNumberController,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (value) {
                                 if (value?.length != 10) {
                                   return 'Phone number should be 10 digit';
@@ -124,11 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () {
                                     if (!signIn.isLoading &&
                                         showSendOTP &&
-                                        phoneNumberController.text.length ==
-                                            10) {
-                                      signIn.getOTP(
-                                          phoneNumber:
-                                              phoneNumberController.text);
+                                        phoneNumberController.text.length == 10) {
+                                      signIn.getOTP(phoneNumber: phoneNumberController.text);
 
                                       setState(() {
                                         showTimer = true;
@@ -157,9 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                   icon: Icon(
                                     Icons.send_to_mobile_outlined,
-                                    color: showSendOTP
-                                        ? Colors.black87
-                                        : Colors.black38,
+                                    color: showSendOTP ? Colors.black87 : Colors.black38,
                                     size: 25,
                                   ),
                                 ),
@@ -198,8 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextFormField(
                               controller: otpController,
                               enabled: signIn.enableOTPField,
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                               keyboardType: TextInputType.number,
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly,
@@ -215,16 +207,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.password_outlined,
-                                  color: signIn.enableOTPField
-                                      ? Colors.black87
-                                      : Colors.black54,
+                                  color: signIn.enableOTPField ? Colors.black87 : Colors.black54,
                                   size: 25,
                                 ),
                                 labelText: 'OTP',
                                 labelStyle: GoogleFonts.rubik(
-                                  color: signIn.enableOTPField
-                                      ? Colors.black87
-                                      : Colors.black54,
+                                  color: signIn.enableOTPField ? Colors.black87 : Colors.black54,
                                   fontSize: 16,
                                 ),
                                 hintText: 'OTP',
@@ -245,22 +233,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: GestureDetector(
                                 onTap: () {
                                   if (otpController.text.length == 6) {
-                                    signIn.checkOTP(
-                                        context: context,
-                                        smsCode: otpController.text);
+                                    signIn.checkOTP(context: context, smsCode: otpController.text);
                                   }
                                 },
                                 child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
+                                  width: MediaQuery.of(context).size.width * 0.8,
                                   height: 60,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
                                     gradient: const LinearGradient(
-                                      colors: [
-                                        Color(0xFF2855AE),
-                                        Color(0xFF7292CF)
-                                      ],
+                                      colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
                                       begin: Alignment.bottomLeft,
                                       end: Alignment.topRight,
                                     ),

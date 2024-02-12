@@ -1,39 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/consts/utils.dart';
-import 'package:online_college/providers/all_user_provider.dart';
+import 'package:online_college/providers/doubt_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/v4.dart';
 
-import '../model/teacher_user_model.dart';
+import '../model/doubt_model.dart';
 
-bool checkPhoneNumber({required BuildContext context, required String phoneNumber}) {
-  int t = 0;
-  Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
-    if (element.phoneNumber == phoneNumber) {
-      t++;
-    }
-  });
-
-  return t != 0;
-}
-
-bottomSheetForTeacher({
-  bool isEdit = false,
-  String name = '',
-  String phoneNumber = '',
-  String role = '',
-  String id = '',
+bottomSheetForChat({
+  required DoubtModel doubtModel,
   required BuildContext context,
 }) {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
-
-  if (name != '' && phoneNumber != '' && role != '' && id != '') {
-    nameController.text = name;
-    phoneNumberController.text = phoneNumber;
-  }
+  TextEditingController titleController = TextEditingController();
 
   showModalBottomSheet(
     enableDrag: true,
@@ -44,7 +22,7 @@ bottomSheetForTeacher({
         return Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
-            height: 270,
+            height: 160,
             width: double.infinity,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -73,7 +51,7 @@ bottomSheetForTeacher({
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: TextFormField(
-                    controller: nameController,
+                    controller: titleController,
                     cursorColor: const Color(0xFF6688CA),
                     cursorWidth: 3,
                     style: GoogleFonts.rubik(
@@ -81,57 +59,16 @@ bottomSheetForTeacher({
                     ),
                     decoration: InputDecoration(
                       prefixIcon: const Icon(
-                        Icons.person_outlined,
+                        Icons.description_outlined,
                         color: Color(0xFF6688CA),
                       ),
                       label: Text(
-                        'Name',
+                        'Description',
                         style: GoogleFonts.rubik(
                           color: const Color(0xFF6688CA),
                         ),
                       ),
-                      hintText: 'Name',
-                      hintStyle: GoogleFonts.rubik(
-                        color: const Color(0xFF6688CA),
-                      ),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextFormField(
-                    controller: phoneNumberController,
-                    cursorColor: const Color(0xFF6688CA),
-                    cursorWidth: 3,
-                    style: GoogleFonts.rubik(
-                      color: const Color(0xFF6688CA),
-                    ),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(10),
-                    ],
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(
-                        Icons.phone_outlined,
-                        color: Color(0xFF6688CA),
-                      ),
-                      label: Text(
-                        'Phone No',
-                        style: GoogleFonts.rubik(
-                          color: const Color(0xFF6688CA),
-                        ),
-                      ),
-                      hintText: 'Phone No',
+                      hintText: 'Description',
                       hintStyle: GoogleFonts.rubik(
                         color: const Color(0xFF6688CA),
                       ),
@@ -149,7 +86,7 @@ bottomSheetForTeacher({
                       child: Container(
                         height: 40,
                         width: 150,
-                        margin: const EdgeInsets.only(top: 30),
+                        margin: const EdgeInsets.only(top: 20),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -170,39 +107,42 @@ bottomSheetForTeacher({
                     ),
                     GestureDetector(
                       onTap: () async {
-                        if (nameController.text.isEmpty) {
-                          Utils().showToast('Please fill the name for the teacher');
-                        } else if (phoneNumberController.text.isEmpty) {
-                          Utils().showToast('Please fill the phone number for the teacher');
-                        } else if (checkPhoneNumber(
-                            context: context, phoneNumber: phoneNumberController.text)) {
-                          Utils().showToast('Please fill unique phone number for the teacher');
+                        if (titleController.text.isEmpty) {
+                          Utils().showToast('Enter the title for create a doubt');
                         } else {
-                          TeacherUserModel teacherUserModel = TeacherUserModel(
-                            name: nameController.text,
-                            phoneNumber: phoneNumberController.text,
-                            id: const UuidV4().generate().toString(),
-                            role: 'teacher',
+                          DoubtModel doubt = doubtModel;
+
+                          Chat c = Chat(
+                            message: titleController.text,
+                            time: DateTime.now().toString(),
+                            id: UserSharedPreferences.id,
+                            role: UserSharedPreferences.role,
                           );
 
-                          await Provider.of<AllUserProvider>(context, listen: false)
-                              .addTeacherUser(teacherUserModel: teacherUserModel);
+                          print(c);
 
-                          if (!context.mounted) return;
+                          doubt.chat.add(c);
+
+                          Provider.of<DoubtProvider>(context, listen: false)
+                              .updateDoubt(doubtModel: doubt);
+
+                          titleController.clear();
+                          doubt = DoubtModel(
+                              year: '', subject: '', did: '', createdTime: '', title: '', chat: []);
                           Navigator.of(context).pop();
                         }
                       },
                       child: Container(
                         height: 40,
                         width: 150,
-                        margin: const EdgeInsets.only(top: 30),
+                        margin: const EdgeInsets.only(top: 20),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
-                          isEdit ? 'Edit' : 'Add',
+                          'Create',
                           style: GoogleFonts.rubik(
                             color: const Color(0xFF6688CA),
                             fontSize: 16,

@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:online_college/consts/routes.dart';
+import 'package:online_college/consts/utils.dart';
 import 'package:online_college/providers/student_data_firestore_provider.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
 import 'package:online_college/repositories/sign_in_firebase.dart';
+import 'package:online_college/repositories/user_repository.dart';
 import 'package:provider/provider.dart';
 
-import '../consts/route_name.dart';
-import '../consts/utils.dart';
-import '../repositories/user_repository.dart';
 import 'all_user_provider.dart';
 
 class SignInProvider extends ChangeNotifier {
@@ -121,7 +121,7 @@ class SignInProvider extends ChangeNotifier {
         if (!context.mounted) return;
         Navigator.pushNamedAndRemoveUntil(
           context,
-          RoutesName.dashboard,
+          Routes.dashboard,
           (route) => false,
         );
       } else if (role == 'teacher') {
@@ -153,7 +153,7 @@ class SignInProvider extends ChangeNotifier {
         if (!context.mounted) return;
         Navigator.pushNamedAndRemoveUntil(
           context,
-          RoutesName.dashboard,
+          Routes.dashboard,
           (route) => false,
         );
       }

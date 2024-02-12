@@ -23,7 +23,8 @@ class _FeeReceiptScreenState extends State<FeeReceiptScreen> {
   @override
   Widget build(BuildContext context) {
     PaidStudent? ps =
-        Provider.of<FeeProvider>(context, listen: false).getStudentData(feeModel: widget.feeModel);
+    Provider.of<FeeProvider>(context, listen: false).getStudentData(
+        feeModel: widget.feeModel);
 
     List<pw.TableRow> row = [];
 
@@ -241,7 +242,8 @@ class _FeeReceiptScreenState extends State<FeeReceiptScreen> {
                               child: pw.Container(
                                 alignment: pw.Alignment.centerLeft,
                                 child: pw.Text(
-                                  'Payment Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(ps!.paidTime.toString()))}',
+                                  'Payment Date: ${DateFormat('dd/MM/yyyy').format(
+                                      DateTime.parse(ps!.paidTime.toString()))}',
                                   style: const pw.TextStyle(
                                     fontSize: 14,
                                   ),

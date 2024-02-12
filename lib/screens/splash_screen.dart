@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../consts/route_name.dart';
+import '../consts/routes.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -20,13 +20,13 @@ class _SplashScreenState extends State<SplashScreen> {
         if (FirebaseAuth.instance.currentUser != null) {
           Navigator.pushNamedAndRemoveUntil(
             context,
-            RoutesName.dashboard,
+            Routes.dashboard,
             (route) => false,
           );
         } else {
           Navigator.pushNamedAndRemoveUntil(
             context,
-            RoutesName.login,
+            Routes.login,
             (route) => false,
           );
         }

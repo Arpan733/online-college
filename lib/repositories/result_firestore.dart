@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 
 import '../consts/utils.dart';
 import '../model/result_model.dart';
@@ -47,5 +48,16 @@ class ResultFireStore {
     }
 
     return [];
+  }
+
+  Future<ResultModel?> getResultFromFireStore() async {
+    try {
+      return ResultModel.fromJson(
+          (await firestore.collection('results').doc(UserSharedPreferences.id).get()).data()!);
+    } catch (e) {
+      Utils().showToast(e.toString());
+    }
+
+    return null;
   }
 }

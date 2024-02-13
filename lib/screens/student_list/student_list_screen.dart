@@ -19,7 +19,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<AllUserProvider>(context, listen: false).getAllUser();
+      Provider.of<AllUserProvider>(context, listen: false).getAllUser(context: context);
     });
 
     super.initState();

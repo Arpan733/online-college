@@ -24,8 +24,8 @@ class _DoubtScreenState extends State<DoubtScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<AllUserProvider>(context, listen: false).getAllUser();
-      Provider.of<DoubtProvider>(context, listen: false).getDoubtList();
+      Provider.of<AllUserProvider>(context, listen: false).getAllUser(context: context);
+      Provider.of<DoubtProvider>(context, listen: false).getDoubtList(context: context);
     });
 
     super.initState();

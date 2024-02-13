@@ -36,7 +36,8 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
 
     if (widget.fee.paidStudents != null) {
       for (var element in widget.fee.paidStudents!) {
-        StudentUserModel? s = await UserDataFireStore().getStudentData(id: element.sid!);
+        StudentUserModel? s =
+            await UserDataFireStore().getStudentData(context: context, id: element.sid!);
 
         if (s != null) {
           setState(() {
@@ -104,7 +105,8 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                   actions: [
                     GestureDetector(
                       onTap: () async {
-                        await Provider.of<FeeProvider>(context).deleteFee(fid: widget.fee.fid!);
+                        await Provider.of<FeeProvider>(context)
+                            .deleteFee(context: context, fid: widget.fee.fid!);
 
                         if (!mounted) return;
                         Navigator.pop(context);

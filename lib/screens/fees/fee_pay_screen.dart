@@ -205,7 +205,7 @@ class _FeePayScreenState extends State<FeePayScreen> {
                                     context, arguments: widget.feeModel, Routes.feeReceipt);
                               } else {
                                 await Provider.of<FeeProvider>(context, listen: false)
-                                    .createPayment(feeModel: widget.feeModel);
+                                    .createPayment(context: context, feeModel: widget.feeModel);
                                 setState(() {});
                               }
                             },

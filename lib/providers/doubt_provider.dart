@@ -17,27 +17,27 @@ class DoubtProvider extends ChangeNotifier {
 
   DoubtModel get doubt => _doubt;
 
-  Future<void> addDoubt({required DoubtModel doubtModel}) async {
-    await DoubtFireStore().addDoubtToFireStore(doubtModel: doubtModel);
-    await getDoubtList();
+  Future<void> addDoubt({required BuildContext context, required DoubtModel doubtModel}) async {
+    await DoubtFireStore().addDoubtToFireStore(context: context, doubtModel: doubtModel);
+    await getDoubtList(context: context);
   }
 
-  Future<void> updateDoubt({required DoubtModel doubtModel}) async {
-    await DoubtFireStore().updateDoubtAtFireStore(doubtModel: doubtModel);
-    await getDoubtList();
+  Future<void> updateDoubt({required BuildContext context, required DoubtModel doubtModel}) async {
+    await DoubtFireStore().updateDoubtAtFireStore(context: context, doubtModel: doubtModel);
+    await getDoubtList(context: context);
   }
 
-  Future<void> deleteDoubt({required String sid}) async {
-    await DoubtFireStore().deleteDoubtFromFireStore(sid: sid);
-    await getDoubtList();
+  Future<void> deleteDoubt({required BuildContext context, required String sid}) async {
+    await DoubtFireStore().deleteDoubtFromFireStore(context: context, sid: sid);
+    await getDoubtList(context: context);
   }
 
-  Future<void> getDoubt({required String did}) async {
+  Future<void> getDoubt({required BuildContext context, required String did}) async {
     _doubt = DoubtModel(year: '', subject: '', did: '', createdTime: '', title: '', chat: []);
     _isLoading = true;
     notifyListeners();
 
-    DoubtModel? response = await DoubtFireStore().getDoubtFromFireStore(did: did);
+    DoubtModel? response = await DoubtFireStore().getDoubtFromFireStore(context: context, did: did);
 
     if (response != null) {
       _doubt = response;
@@ -47,12 +47,12 @@ class DoubtProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getDoubtList() async {
+  Future<void> getDoubtList({required BuildContext context}) async {
     _doubts = [];
     _isLoading = true;
     notifyListeners();
 
-    List<DoubtModel> response = await DoubtFireStore().getDoubtListFromFireStore();
+    List<DoubtModel> response = await DoubtFireStore().getDoubtListFromFireStore(context: context);
 
     if (response.isNotEmpty) {
       _doubts = response;

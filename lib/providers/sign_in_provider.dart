@@ -28,7 +28,7 @@ class SignInProvider extends ChangeNotifier {
 
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  Future<void> getOTP({required String phoneNumber}) async {
+  Future<void> getOTP({required BuildContext context, required String phoneNumber}) async {
     _isLoading = true;
     notifyListeners();
 
@@ -36,12 +36,12 @@ class SignInProvider extends ChangeNotifier {
       phoneNumber: '+91${phoneNumber.trim()}',
       verificationCompleted: (PhoneAuthCredential credential) async {},
       verificationFailed: (FirebaseAuthException e) {
-        Utils().showToast(e.code.toString());
+        Utils().showToast(context: context, message: e.code.toString());
       },
       codeSent: (String verificationid, int? resendToken) async {
         _verificationId = verificationid;
 
-        Utils().showToast('Otp sent');
+        Utils().showToast(context: context, message: 'Otp sent');
         if (_verificationId != null && _verificationId!.isNotEmpty) {
           _enableOTPField = true;
         }
@@ -60,12 +60,13 @@ class SignInProvider extends ChangeNotifier {
     notifyListeners();
 
     if (_verificationId != null && _verificationId!.isNotEmpty) {
-      _user = await SignInFirebase().checkOTP(verificationId: _verificationId!, smsCode: smsCode);
+      _user = await SignInFirebase()
+          .checkOTP(context: context, verificationId: _verificationId!, smsCode: smsCode);
     }
 
     if (_user != null) {
       if (!context.mounted) return;
-      await Provider.of<AllUserProvider>(context, listen: false).getAllUser();
+      await Provider.of<AllUserProvider>(context, listen: false).getAllUser(context: context);
 
       String id = '';
       String role = '';
@@ -92,8 +93,9 @@ class SignInProvider extends ChangeNotifier {
       if (role == 'student') {
         StudentDataFireStoreProvider studentFireStore = StudentDataFireStoreProvider();
 
-        studentFireStore.updateStudentUid(uid: firebaseAuth.currentUser!.uid, id: id);
-        await studentFireStore.getStudentData(id: id);
+        studentFireStore.updateStudentUid(
+            context: context, uid: firebaseAuth.currentUser!.uid, id: id);
+        await studentFireStore.getStudentData(context: context, id: id);
 
         if (studentFireStore.studentData != null) {
           await UserRepository.saveUserPref(
@@ -127,8 +129,9 @@ class SignInProvider extends ChangeNotifier {
       } else if (role == 'teacher') {
         TeacherDataFireStoreProvider teacherFireStore = TeacherDataFireStoreProvider();
 
-        teacherFireStore.updateTeacherUid(uid: firebaseAuth.currentUser!.uid, id: id);
-        await teacherFireStore.getTeacherData(id: id);
+        teacherFireStore.updateTeacherUid(
+            context: context, uid: firebaseAuth.currentUser!.uid, id: id);
+        await teacherFireStore.getTeacherData(context: context, id: id);
 
         if (teacherFireStore.teacherData != null) {
           await UserRepository.saveUserPref(

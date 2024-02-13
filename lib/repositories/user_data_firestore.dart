@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:online_college/model/student_user_model.dart';
 
 import '../consts/utils.dart';
@@ -13,7 +14,11 @@ class UserDataFireStore {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> updateUser({required String title, required String data, required String id}) async {
+  Future<void> updateUser(
+      {required BuildContext context,
+      required String title,
+      required String data,
+      required String id}) async {
     try {
       Map<String, String> userdata = {
         title: data,
@@ -21,11 +26,12 @@ class UserDataFireStore {
 
       await firestore.collection('users').doc(id).update(userdata);
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
   }
 
-  Future<TeacherUserModel?> getTeacherData({required String id}) async {
+  Future<TeacherUserModel?> getTeacherData(
+      {required BuildContext context, required String id}) async {
     try {
       DocumentSnapshot snapshot = await firestore.collection("users").doc(id).get();
 
@@ -35,13 +41,14 @@ class UserDataFireStore {
         return data;
       }
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
 
     return null;
   }
 
-  Future<StudentUserModel?> getStudentData({required String id}) async {
+  Future<StudentUserModel?> getStudentData(
+      {required BuildContext context, required String id}) async {
     try {
       DocumentSnapshot snapshot = await firestore.collection("users").doc(id).get();
 
@@ -51,13 +58,14 @@ class UserDataFireStore {
         return data;
       }
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
 
     return null;
   }
 
-  Future<String?> uploadProfilePhoto({required PlatformFile pickedFile}) async {
+  Future<String?> uploadProfilePhoto(
+      {required BuildContext context, required PlatformFile pickedFile}) async {
     try {
       final ref = FirebaseStorage.instance.ref().child('${user?.uid}/${pickedFile.name}');
       UploadTask upload = ref.putFile(File(pickedFile.path!));
@@ -70,7 +78,7 @@ class UserDataFireStore {
         return url;
       }
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
 
     return null;

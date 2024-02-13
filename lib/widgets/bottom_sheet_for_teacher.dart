@@ -171,12 +171,17 @@ bottomSheetForTeacher({
                     GestureDetector(
                       onTap: () async {
                         if (nameController.text.isEmpty) {
-                          Utils().showToast('Please fill the name for the teacher');
+                          Utils().showToast(
+                              context: context, message: 'Please fill the name for the teacher');
                         } else if (phoneNumberController.text.isEmpty) {
-                          Utils().showToast('Please fill the phone number for the teacher');
+                          Utils().showToast(
+                              context: context,
+                              message: 'Please fill the phone number for the teacher');
                         } else if (checkPhoneNumber(
                             context: context, phoneNumber: phoneNumberController.text)) {
-                          Utils().showToast('Please fill unique phone number for the teacher');
+                          Utils().showToast(
+                              context: context,
+                              message: 'Please fill unique phone number for the teacher');
                         } else {
                           TeacherUserModel teacherUserModel = TeacherUserModel(
                             name: nameController.text,
@@ -186,7 +191,7 @@ bottomSheetForTeacher({
                           );
 
                           await Provider.of<AllUserProvider>(context, listen: false)
-                              .addTeacherUser(teacherUserModel: teacherUserModel);
+                              .addTeacherUser(context: context, teacherUserModel: teacherUserModel);
 
                           if (!context.mounted) return;
                           Navigator.of(context).pop();

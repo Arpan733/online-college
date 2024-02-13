@@ -18,7 +18,7 @@ class _FeesScreenState extends State<FeesScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<FeeProvider>(context, listen: false).getFeeList();
+      Provider.of<FeeProvider>(context, listen: false).getFeeList(context: context);
     });
 
     super.initState();

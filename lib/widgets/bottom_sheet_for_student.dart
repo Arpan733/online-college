@@ -316,17 +316,24 @@ bottomSheetForStudent({
                     GestureDetector(
                       onTap: () async {
                         if (nameController.text.isEmpty) {
-                          Utils().showToast('Please fill the name for the student');
+                          Utils().showToast(
+                              context: context, message: 'Please fill the name for the student');
                         } else if (phoneNumberController.text.isEmpty) {
-                          Utils().showToast('Please fill the phone number for the student');
+                          Utils().showToast(
+                              context: context,
+                              message: 'Please fill the phone number for the student');
                         } else if (checkPhoneNumber(
                             context: context, phoneNumber: phoneNumberController.text)) {
-                          Utils().showToast('Please fill unique phone number for the student');
+                          Utils().showToast(
+                              context: context,
+                              message: 'Please fill unique phone number for the student');
                         } else if (checkRollNo(
                             context: context,
                             rollNo: rollNoController.text,
                             year: yearController.text)) {
-                          Utils().showToast('Please fill unique roll no for the student');
+                          Utils().showToast(
+                              context: context,
+                              message: 'Please fill unique roll no for the student');
                         } else {
                           StudentUserModel studentUserModel = StudentUserModel(
                             name: nameController.text,
@@ -338,7 +345,7 @@ bottomSheetForStudent({
                           );
 
                           await Provider.of<AllUserProvider>(context, listen: false)
-                              .addStudentUser(studentUserModel: studentUserModel);
+                              .addStudentUser(context: context, studentUserModel: studentUserModel);
 
                           if (!context.mounted) return;
                           Navigator.of(context).pop();

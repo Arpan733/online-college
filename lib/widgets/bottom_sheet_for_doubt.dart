@@ -172,25 +172,29 @@ bottomSheetForDoubt({
                     GestureDetector(
                       onTap: () async {
                         if (titleController.text.isEmpty) {
-                          Utils().showToast('Enter the title for create a doubt');
+                          Utils().showToast(
+                              context: context, message: 'Enter the title for create a doubt');
                         } else {
                           String did = const UuidV4().generate().toString();
                           DoubtModel doubtModel = DoubtModel(
-                              year: UserSharedPreferences.year,
-                              subject: subjectController.text,
-                              did: did,
-                              createdTime: DateTime.now().toString(),
-                              title: titleController.text,
-                              chat: [
-                                Chat(
-                                    message: titleController.text,
-                                    time: DateTime.now().toString(),
-                                    id: UserSharedPreferences.id,
-                                    role: UserSharedPreferences.role)
-                              ]);
+                            year: UserSharedPreferences.year,
+                            subject: subjectController.text,
+                            did: did,
+                            createdTime: DateTime.now().toString(),
+                            title: titleController.text,
+                            chat: [
+                              Chat(
+                                message: titleController.text,
+                                time: DateTime.now().toString(),
+                                id: UserSharedPreferences.id,
+                                role: UserSharedPreferences.role,
+                                attach: [],
+                              ),
+                            ],
+                          );
 
                           Provider.of<DoubtProvider>(context, listen: false)
-                              .addDoubt(doubtModel: doubtModel);
+                              .addDoubt(context: context, doubtModel: doubtModel);
                           Navigator.of(context).pop();
                         }
                       },

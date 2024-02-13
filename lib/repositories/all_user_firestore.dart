@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:online_college/consts/utils.dart';
 import 'package:online_college/model/student_user_model.dart';
 
@@ -7,31 +8,33 @@ import '../model/teacher_user_model.dart';
 class AllUserFireStore {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<List<Map<String, dynamic>>> getAllUser() async {
+  Future<List<Map<String, dynamic>>> getAllUser({required BuildContext context}) async {
     try {
       return (await firestore.collection('users').get()).docs.map((e) => e.data()).toList();
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
 
     return [];
   }
 
-  Future<void> addStudentUser({required StudentUserModel studentUserModel}) async {
+  Future<void> addStudentUser(
+      {required BuildContext context, required StudentUserModel studentUserModel}) async {
     try {
       await firestore.collection('users').doc(studentUserModel.id).set(studentUserModel.toJson());
-      Utils().showToast('Student Added');
+      Utils().showToast(context: context, message: 'Student Added');
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
   }
 
-  Future<void> addTeacherUser({required TeacherUserModel teacherUserModel}) async {
+  Future<void> addTeacherUser(
+      {required BuildContext context, required TeacherUserModel teacherUserModel}) async {
     try {
       await firestore.collection('users').doc(teacherUserModel.id).set(teacherUserModel.toJson());
-      Utils().showToast('Teacher Added');
+      Utils().showToast(context: context, message: 'Teacher Added');
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
   }
 }

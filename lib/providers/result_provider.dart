@@ -19,27 +19,28 @@ class ResultProvider extends ChangeNotifier {
 
   ResultModel get result => _result;
 
-  Future<void> addResult({required ResultModel resultModel}) async {
-    await ResultFireStore().addResultToFireStore(resultModel: resultModel);
-    await getResultList();
+  Future<void> addResult({required BuildContext context, required ResultModel resultModel}) async {
+    await ResultFireStore().addResultToFireStore(context: context, resultModel: resultModel);
+    await getResultList(context: context);
   }
 
-  Future<void> updateResult({required ResultModel resultModel}) async {
-    await ResultFireStore().updateResultAtFireStore(resultModel: resultModel);
-    await getResultList();
+  Future<void> updateResult(
+      {required BuildContext context, required ResultModel resultModel}) async {
+    await ResultFireStore().updateResultAtFireStore(context: context, resultModel: resultModel);
+    await getResultList(context: context);
   }
 
-  Future<void> deleteResult({required String sid}) async {
-    await ResultFireStore().deleteResultFromFireStore(sid: sid);
-    await getResultList();
+  Future<void> deleteResult({required BuildContext context, required String sid}) async {
+    await ResultFireStore().deleteResultFromFireStore(context: context, sid: sid);
+    await getResultList(context: context);
   }
 
-  Future<void> getResult() async {
+  Future<void> getResult({required BuildContext context}) async {
     _result = ResultModel();
     _isLoading = true;
     notifyListeners();
 
-    ResultModel? response = await ResultFireStore().getResultFromFireStore();
+    ResultModel? response = await ResultFireStore().getResultFromFireStore(context: context);
 
     if (response != null) {
       _result = response;
@@ -49,12 +50,13 @@ class ResultProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getResultList() async {
+  Future<void> getResultList({required BuildContext context}) async {
     _results = [];
     _isLoading = true;
     notifyListeners();
 
-    List<ResultModel> response = await ResultFireStore().getResultListFromFireStore();
+    List<ResultModel> response =
+        await ResultFireStore().getResultListFromFireStore(context: context);
 
     if (response.isNotEmpty) {
       _results = response;

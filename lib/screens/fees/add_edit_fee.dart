@@ -218,7 +218,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                             );
 
                             await Provider.of<FeeProvider>(context, listen: false)
-                                .updateFee(feeModel: feeModel);
+                                .updateFee(context: context, feeModel: feeModel);
 
                             if (!mounted) return;
                             Navigator.pop(context);
@@ -245,7 +245,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                             );
 
                             await Provider.of<FeeProvider>(context, listen: false)
-                                .addFee(feeModel: feeModel);
+                                .addFee(context: context, feeModel: feeModel);
 
                             if (!mounted) return;
                             Navigator.pop(context);

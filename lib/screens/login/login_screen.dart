@@ -123,7 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (!signIn.isLoading &&
                                         showSendOTP &&
                                         phoneNumberController.text.length == 10) {
-                                      signIn.getOTP(phoneNumber: phoneNumberController.text);
+                                      signIn.getOTP(
+                                          context: context,
+                                          phoneNumber: phoneNumberController.text);
 
                                       setState(() {
                                         showTimer = true;

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../consts/routes.dart';
 
@@ -14,6 +15,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    checkPermissions();
+
     Future.delayed(
       const Duration(seconds: 3),
       () {
@@ -34,6 +37,24 @@ class _SplashScreenState extends State<SplashScreen> {
     );
 
     super.initState();
+  }
+
+  checkPermissions() async {
+    await Permission.manageExternalStorage.request();
+    await Permission.accessMediaLocation.request();
+    await Permission.storage.request();
+
+    if (await Permission.storage.isDenied) {
+      await Permission.storage.request();
+    }
+
+    if (await Permission.accessMediaLocation.isDenied) {
+      await Permission.accessMediaLocation.request();
+    }
+
+    if (await Permission.manageExternalStorage.isDenied) {
+      await Permission.manageExternalStorage.request();
+    }
   }
 
   @override

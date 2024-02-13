@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:online_college/model/holiday_model.dart';
 import 'package:uuid/v4.dart';
 
@@ -8,7 +9,10 @@ class HolidayFireStore {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> addHoliday(
-      {required String title, required String description, required String date}) async {
+      {required BuildContext context,
+      required String title,
+      required String description,
+      required String date}) async {
     try {
       String hid = const UuidV4().generate().toString();
 
@@ -20,14 +24,15 @@ class HolidayFireStore {
       };
 
       await firestore.collection('holiday').doc(hid).set(data);
-      Utils().showToast('Holiday Added');
+      Utils().showToast(context: context, message: 'Holiday Added');
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
   }
 
   Future<void> editHoliday(
-      {required String title,
+      {required BuildContext context,
+      required String title,
       required String description,
       required String date,
       required String hid}) async {
@@ -40,31 +45,31 @@ class HolidayFireStore {
       };
 
       await firestore.collection('holiday').doc(hid).update(data);
-      Utils().showToast('Holiday Edited');
+      Utils().showToast(context: context, message: 'Holiday Edited');
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
   }
 
-  Future<List<HolidayModel>> getHoliday() async {
+  Future<List<HolidayModel>> getHoliday({required BuildContext context}) async {
     try {
       return (await firestore.collection('holiday').get())
           .docs
           .map((e) => HolidayModel.fromJson(e.data()))
           .toList();
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
 
     return [];
   }
 
-  Future<void> deleteHoliday({required String hid}) async {
+  Future<void> deleteHoliday({required BuildContext context, required String hid}) async {
     try {
       firestore.collection('holiday').doc(hid).delete();
-      Utils().showToast("Holiday Removed.");
+      Utils().showToast(context: context, message: "Holiday Removed.");
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
   }
 }

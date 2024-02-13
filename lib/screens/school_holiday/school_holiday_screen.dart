@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:online_college/consts/utils.dart';
 import 'package:online_college/model/holiday_model.dart';
 import 'package:online_college/providers/holiday_provider.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +8,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../consts/user_shared_preferences.dart';
 import '../../widgets/bottom_sheet_for_holiday.dart';
+import '../../widgets/dialog_for_holiday.dart';
 
 class SchoolHolidayScreen extends StatefulWidget {
   const SchoolHolidayScreen({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<HolidayProvider>(context, listen: false).getHolidayList();
+      Provider.of<HolidayProvider>(context, listen: false).getHolidayList(context: context);
     });
 
     super.initState();
@@ -290,7 +290,7 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
                                                   : mainList[index];
 
                                               return GestureDetector(
-                                                onLongPress: () => Utils().showDialogForHolidayList(
+                                                onLongPress: () => showDialogForHolidayList(
                                                   context: context,
                                                   hc: hc,
                                                   onEdit: () async {
@@ -309,7 +309,8 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
                                                   onDelete: () async {
                                                     await Provider.of<HolidayProvider>(context,
                                                             listen: false)
-                                                        .deleteHoliday(hid: hc.hid!);
+                                                        .deleteHoliday(
+                                                            context: context, hid: hc.hid!);
 
                                                     if (!context.mounted) return;
                                                     Navigator.pop(context);
@@ -317,7 +318,7 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
                                                     if (!context.mounted) return;
                                                     await Provider.of<HolidayProvider>(context,
                                                             listen: false)
-                                                        .getHolidayList();
+                                                        .getHolidayList(context: context);
                                                   },
                                                   onOk: () {
                                                     Navigator.pop(context);

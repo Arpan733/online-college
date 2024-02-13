@@ -36,24 +36,29 @@ class HolidayProvider extends ChangeNotifier {
   HolidayFireStore holidayFireStore = HolidayFireStore();
 
   Future<void> addHoliday(
-      {required String title, required String description, required String date}) async {
-    await holidayFireStore.addHoliday(title: title, description: description, date: date);
+      {required BuildContext context,
+      required String title,
+      required String description,
+      required String date}) async {
+    await holidayFireStore.addHoliday(
+        title: title, description: description, date: date, context: context);
   }
 
   Future<void> editHoliday(
-      {required String title,
+      {required BuildContext context,
+      required String title,
       required String description,
       required String date,
       required String hid}) async {
     await holidayFireStore.editHoliday(
-        title: title, description: description, date: date, hid: hid);
+        title: title, description: description, date: date, hid: hid, context: context);
   }
 
-  Future<void> getHolidayList() async {
+  Future<void> getHolidayList({required BuildContext context}) async {
     _isLoading = true;
     notifyListeners();
 
-    List<HolidayModel> list = await holidayFireStore.getHoliday();
+    List<HolidayModel> list = await holidayFireStore.getHoliday(context: context);
 
     if (list.isNotEmpty) {
       _holidays = [];
@@ -65,8 +70,8 @@ class HolidayProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteHoliday({required String hid}) async {
-    await holidayFireStore.deleteHoliday(hid: hid);
+  Future<void> deleteHoliday({required BuildContext context, required String hid}) async {
+    await holidayFireStore.deleteHoliday(hid: hid, context: context);
   }
 
   Future<void> sortList() async {

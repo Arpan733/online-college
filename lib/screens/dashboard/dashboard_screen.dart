@@ -71,17 +71,18 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(35),
                         ),
-                        child: ClipOval(
-                          child: Hero(
-                            tag: 'profilePhoto',
-                            child: Image.network(
-                              UserSharedPreferences.photoUrl,
-                              fit: BoxFit.fitHeight,
-                              errorBuilder:
-                                  (BuildContext context, Object error, StackTrace? stackTrace) {
-                                return Image.asset('assets/images/student.png');
-                              },
-                            ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Hero(
+                          tag: 'profilePhoto',
+                          child: Image.network(
+                            UserSharedPreferences.photoUrl,
+                            fit: BoxFit.fitHeight,
+                            errorBuilder:
+                                (BuildContext context, Object error, StackTrace? stackTrace) {
+                              return Image.asset(
+                                'assets/images/student.png',
+                              );
+                            },
                           ),
                         ),
                       ),

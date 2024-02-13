@@ -22,8 +22,8 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<AllUserProvider>(context, listen: false).getAllUser();
-      Provider.of<ResultProvider>(context, listen: false).getResultList();
+      Provider.of<AllUserProvider>(context, listen: false).getAllUser(context: context);
+      Provider.of<ResultProvider>(context, listen: false).getResultList(context: context);
     });
 
     super.initState();

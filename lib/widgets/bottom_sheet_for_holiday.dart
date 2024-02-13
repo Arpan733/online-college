@@ -241,14 +241,19 @@ bottomSheetForHoliday({
                     GestureDetector(
                       onTap: () async {
                         if (titleController.text.isEmpty) {
-                          Utils().showToast('Please fill the title to add Holiday');
+                          Utils().showToast(
+                              context: context, message: 'Please fill the title to add Holiday');
                         } else if (descriptionController.text.isEmpty) {
-                          Utils().showToast('Please fill the description to add Holiday');
+                          Utils().showToast(
+                              context: context,
+                              message: 'Please fill the description to add Holiday');
                         } else if (!dateTime.isAfter(DateTime.now())) {
-                          Utils().showToast('Please choose right date to add Holiday');
+                          Utils().showToast(
+                              context: context, message: 'Please choose right date to add Holiday');
                         } else {
                           if (isEdit) {
                             await getHolidayProvider(context).editHoliday(
+                              context: context,
                               title: titleController.text,
                               description: descriptionController.text,
                               date: dateTime.toString(),
@@ -256,16 +261,17 @@ bottomSheetForHoliday({
                             );
 
                             if (!context.mounted) return;
-                            await getHolidayProvider(context).getHolidayList();
+                            await getHolidayProvider(context).getHolidayList(context: context);
                           } else {
                             await getHolidayProvider(context).addHoliday(
+                              context: context,
                               title: titleController.text,
                               description: descriptionController.text,
                               date: dateTime.toString(),
                             );
 
                             if (!context.mounted) return;
-                            await getHolidayProvider(context).getHolidayList();
+                            await getHolidayProvider(context).getHolidayList(context: context);
                           }
 
                           if (!context.mounted) return;

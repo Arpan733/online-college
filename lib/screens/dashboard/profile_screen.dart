@@ -113,13 +113,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         UserSharedPreferences.setString(
                             title: 'adhar', data: adharNoController.text);
                         fireStoreStudent.updateStudentAdhar(
-                            adhar: adharNoController.text.trim(), id: UserSharedPreferences.id);
+                            context: context,
+                            adhar: adharNoController.text.trim(),
+                            id: UserSharedPreferences.id);
                       }
 
                       if (emailController.text != '' && emailController.text != email) {
                         UserSharedPreferences.setString(title: 'email', data: emailController.text);
                         fireStoreStudent.updateStudentEmail(
-                            email: emailController.text.trim(), id: UserSharedPreferences.id);
+                            context: context,
+                            email: emailController.text.trim(),
+                            id: UserSharedPreferences.id);
                       }
 
                       if (dateOfBirthController.text != '' &&
@@ -127,6 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         UserSharedPreferences.setString(
                             title: 'dateOfBirth', data: dateOfBirthController.text);
                         fireStoreStudent.updateStudentDateOfBirth(
+                            context: context,
                             dateOfBirth: dateOfBirthController.text.trim(),
                             id: UserSharedPreferences.id);
                       }
@@ -135,14 +140,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         UserSharedPreferences.setString(
                             title: 'address', data: addressController.text);
                         fireStoreStudent.updateStudentAddress(
-                            address: addressController.text, id: UserSharedPreferences.id);
+                            context: context,
+                            address: addressController.text,
+                            id: UserSharedPreferences.id);
                       }
 
                       if (userUrl != '' && userUrl != url) {
                         UserSharedPreferences.setString(
                             title: 'photoUrl', data: userUrl.toString());
                         fireStoreStudent.updateStudentPhotoUrl(
-                            photoUrl: userUrl.trim(), id: UserSharedPreferences.id);
+                            context: context,
+                            photoUrl: userUrl.trim(),
+                            id: UserSharedPreferences.id);
                       }
 
                       if (motherNameController.text != '' &&
@@ -150,6 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         UserSharedPreferences.setString(
                             title: 'motherName', data: motherNameController.text);
                         fireStoreStudent.updateStudentMotherName(
+                            context: context,
                             motherName: motherNameController.text.trim(),
                             id: UserSharedPreferences.id);
                       }
@@ -159,6 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         UserSharedPreferences.setString(
                             title: 'fatherName', data: fatherNameController.text);
                         fireStoreStudent.updateStudentFatherName(
+                            context: context,
                             fatherName: fatherNameController.text.trim(),
                             id: UserSharedPreferences.id);
                       }
@@ -167,13 +178,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         UserSharedPreferences.setString(
                             title: 'adhar', data: adharNoController.text);
                         fireStoreTeacher.updateTeacherAdhar(
-                            adhar: adharNoController.text.trim(), id: UserSharedPreferences.id);
+                            context: context,
+                            adhar: adharNoController.text.trim(),
+                            id: UserSharedPreferences.id);
                       }
 
                       if (emailController.text != '' && emailController.text != email) {
                         UserSharedPreferences.setString(title: 'email', data: emailController.text);
                         fireStoreTeacher.updateTeacherEmail(
-                            email: emailController.text.trim(), id: UserSharedPreferences.id);
+                            context: context,
+                            email: emailController.text.trim(),
+                            id: UserSharedPreferences.id);
                       }
 
                       if (dateOfBirthController.text != '' &&
@@ -181,6 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         UserSharedPreferences.setString(
                             title: 'dateOfBirth', data: dateOfBirthController.text);
                         fireStoreTeacher.updateTeacherDateOfBirth(
+                            context: context,
                             dateOfBirth: dateOfBirthController.text.trim(),
                             id: UserSharedPreferences.id);
                       }
@@ -190,6 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         UserSharedPreferences.setString(
                             title: 'qualification', data: qualificationController.text);
                         fireStoreTeacher.updateTeacherQualification(
+                            context: context,
                             qualification: qualificationController.text,
                             id: UserSharedPreferences.id);
                       }
@@ -198,14 +215,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         UserSharedPreferences.setString(
                             title: 'address', data: addressController.text);
                         fireStoreTeacher.updateTeacherAddress(
-                            address: addressController.text, id: UserSharedPreferences.id);
+                            context: context,
+                            address: addressController.text,
+                            id: UserSharedPreferences.id);
                       }
 
                       if (userUrl != '' && userUrl != url) {
                         UserSharedPreferences.setString(
                             title: 'photoUrl', data: userUrl.toString());
                         fireStoreTeacher.updateTeacherPhotoUrl(
-                            photoUrl: userUrl.trim(), id: UserSharedPreferences.id);
+                            context: context,
+                            photoUrl: userUrl.trim(),
+                            id: UserSharedPreferences.id);
                       }
                     }
                   },
@@ -323,7 +344,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               if (result != null) {
                                 PlatformFile pickedFile = result.files.first;
 
-                                await fireStoreTeacher.uploadProfilePhoto(pickedFile: pickedFile);
+                                if (!mounted) return;
+                                await fireStoreTeacher.uploadProfilePhoto(
+                                    context: context, pickedFile: pickedFile);
 
                                 setState(() {
                                   userUrl = fireStoreTeacher.photoUrl ?? '';

@@ -54,6 +54,11 @@ dependencies:
   pdf: ^3.10.7
   firebase_core: ^2.25.4
   printing: ^5.11.1
+  flutter_linkify: ^6.0.0
+  url_launcher: ^6.2.4
+  open_file: ^3.3.2
+  flutter_file_downloader: ^1.2.1
+  permission_handler: ^11.3.0
 
 dev_dependencies:
   flutter_test:

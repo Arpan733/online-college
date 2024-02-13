@@ -17,13 +17,13 @@ class AllUserProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  Future<void> getAllUser() async {
+  Future<void> getAllUser({required BuildContext context}) async {
     _isLoading = true;
     _studentsList = [];
     _teachersList = [];
     notifyListeners();
 
-    List<Map<String, dynamic>> data = await AllUserFireStore().getAllUser();
+    List<Map<String, dynamic>> data = await AllUserFireStore().getAllUser(context: context);
 
     if (data.isNotEmpty) {
       for (var element in data) {
@@ -39,13 +39,15 @@ class AllUserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addStudentUser({required StudentUserModel studentUserModel}) async {
-    await AllUserFireStore().addStudentUser(studentUserModel: studentUserModel);
-    await getAllUser();
+  Future<void> addStudentUser(
+      {required BuildContext context, required StudentUserModel studentUserModel}) async {
+    await AllUserFireStore().addStudentUser(context: context, studentUserModel: studentUserModel);
+    await getAllUser(context: context);
   }
 
-  Future<void> addTeacherUser({required TeacherUserModel teacherUserModel}) async {
-    await AllUserFireStore().addTeacherUser(teacherUserModel: teacherUserModel);
-    await getAllUser();
+  Future<void> addTeacherUser(
+      {required BuildContext context, required TeacherUserModel teacherUserModel}) async {
+    await AllUserFireStore().addTeacherUser(context: context, teacherUserModel: teacherUserModel);
+    await getAllUser(context: context);
   }
 }

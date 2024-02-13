@@ -18,33 +18,37 @@ class FeeProvider extends ChangeNotifier {
 
   Razorpay razorpay = Razorpay();
 
-  Future<void> addFee({required FeeModel feeModel}) async {
-    await FeeFireStore().addFeeToFireStore(feeModel: feeModel);
-    await getFeeList();
+  Future<void> addFee({required BuildContext context, required FeeModel feeModel}) async {
+    await FeeFireStore().addFeeToFireStore(context: context, feeModel: feeModel);
+    await getFeeList(context: context);
   }
 
   Future<void> addStudentInFeeList(
-      {required String refNo, required String sid, required FeeModel feeModel}) async {
-    await FeeFireStore().addStudentToFireStoreFeeList(sid: sid, feeModel: feeModel, refNo: refNo);
-    await getFeeList();
+      {required BuildContext context,
+      required String refNo,
+      required String sid,
+      required FeeModel feeModel}) async {
+    await FeeFireStore()
+        .addStudentToFireStoreFeeList(context: context, sid: sid, feeModel: feeModel, refNo: refNo);
+    await getFeeList(context: context);
   }
 
-  Future<void> updateFee({required FeeModel feeModel}) async {
-    await FeeFireStore().updateFeeAtFireStore(feeModel: feeModel);
-    await getFeeList();
+  Future<void> updateFee({required BuildContext context, required FeeModel feeModel}) async {
+    await FeeFireStore().updateFeeAtFireStore(context: context, feeModel: feeModel);
+    await getFeeList(context: context);
   }
 
-  Future<void> deleteFee({required String fid}) async {
-    await FeeFireStore().deleteFeeFromFireStore(fid: fid);
-    await getFeeList();
+  Future<void> deleteFee({required BuildContext context, required String fid}) async {
+    await FeeFireStore().deleteFeeFromFireStore(context: context, fid: fid);
+    await getFeeList(context: context);
   }
 
-  Future<void> getFeeList() async {
+  Future<void> getFeeList({required BuildContext context}) async {
     _feeList = [];
     _isLoading = true;
     notifyListeners();
 
-    List<FeeModel> response = await FeeFireStore().getFeeListFromFireStore();
+    List<FeeModel> response = await FeeFireStore().getFeeListFromFireStore(context: context);
 
     if (response.isNotEmpty) {
       _feeList = response;
@@ -89,23 +93,23 @@ class FeeProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<void> createPayment({required FeeModel feeModel}) async {
+  Future<void> createPayment({required BuildContext context, required FeeModel feeModel}) async {
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, (PaymentSuccessResponse response) async {
       String paymentId = response.paymentId ?? response.data?['payment_id'];
 
       await addStudentInFeeList(
-          refNo: paymentId, sid: UserSharedPreferences.id, feeModel: feeModel);
-      await getFeeList();
+          refNo: paymentId, sid: UserSharedPreferences.id, feeModel: feeModel, context: context);
+      await getFeeList(context: context);
       razorpay.clear();
     });
 
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, (PaymentFailureResponse response) {
-      Utils().showToast(response.message!);
+      Utils().showToast(context: context, message: response.message!);
       razorpay.clear();
     });
 
     razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, (ExternalWalletResponse response) {
-      // Utils().showToast(response.toString());
+      // Utils().showToast(context: context, message: response.toString());
       razorpay.clear();
     });
 
@@ -126,7 +130,7 @@ class FeeProvider extends ChangeNotifier {
     try {
       razorpay.open(options);
     } catch (e) {
-      Utils().showToast(e.toString());
+      Utils().showToast(context: context, message: e.toString());
     }
   }
 }

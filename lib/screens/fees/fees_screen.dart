@@ -92,7 +92,7 @@ class _FeesScreenState extends State<FeesScreen> {
                   SliverPadding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     sliver: SliverList.builder(
-                      itemCount: feeList.length,
+                      itemCount: feeList.isEmpty ? 0 : feeList.length,
                       itemBuilder: (context, index) {
                         if (fee.isLoading) {
                           return SizedBox(

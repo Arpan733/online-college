@@ -327,12 +327,13 @@ bottomSheetForChat({
 
                                 titleController.clear();
                                 doubt = DoubtModel(
-                                    year: '',
-                                    subject: '',
-                                    did: '',
-                                    createdTime: '',
-                                    title: '',
-                                    chat: []);
+                                  year: '',
+                                  subject: '',
+                                  did: '',
+                                  createdTime: '',
+                                  title: '',
+                                  chat: [],
+                                );
 
                                 isLoading = false;
                                 set(() {});

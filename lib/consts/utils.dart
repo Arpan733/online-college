@@ -12,13 +12,12 @@ class Utils {
   }
 
   showToast({required BuildContext context, required String message}) {
-    print(message);
     FToast().init(context);
     FToast().showToast(
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: const Color(0xFF2855AE).withOpacity(0.2),
+          color: const Color(0xFF7E7E7E).withOpacity(0.8),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(

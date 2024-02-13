@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/providers/all_user_provider.dart';
+import 'package:online_college/providers/assignment_provider.dart';
 import 'package:online_college/providers/doubt_provider.dart';
 import 'package:online_college/providers/fee_provider.dart';
 import 'package:online_college/providers/holiday_provider.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => FeeProvider()),
         ChangeNotifierProvider(create: (context) => ResultProvider()),
         ChangeNotifierProvider(create: (context) => DoubtProvider()),
+        ChangeNotifierProvider(create: (context) => AssignmentProvider()),
       ],
       child: const MaterialApp(
         title: 'Online College',

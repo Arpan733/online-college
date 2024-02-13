@@ -130,193 +130,200 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                         AssignmentModel a = assignmentList[index];
 
                         return Container(
-                          margin: const EdgeInsets.only(bottom: 20),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.black38,
-                              width: 1,
+                          color: Colors.white,
+                          child: Container(
+                            margin: const EdgeInsets.only(bottom: 20),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: assignment.checkStudentInList(assignment: a)
+                                  ? Colors.green.withOpacity(0.2)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.black38,
+                                width: 1,
+                              ),
                             ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    padding:
-                                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFE6EFFF),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      a.year,
-                                      style: GoogleFonts.rubik(
-                                        color: const Color(0xFF6789CA),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Container(
-                                    padding:
-                                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFE6EFFF),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      a.subject,
-                                      style: GoogleFonts.rubik(
-                                        color: const Color(0xFF6789CA),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                a.title,
-                                style: GoogleFonts.rubik(
-                                  color: Colors.black87,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Assign Date",
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black54,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding:
+                                          const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFE6EFFF),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Text(
+                                        a.year,
+                                        style: GoogleFonts.rubik(
+                                          color: const Color(0xFF6789CA),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    DateFormat('dd MMM yy')
-                                        .format(DateTime.parse(a.createdDateTime))
-                                        .toString(),
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Due Date",
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black54,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
+                                    Container(
+                                      padding:
+                                          const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFE6EFFF),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Text(
+                                        a.subject,
+                                        style: GoogleFonts.rubik(
+                                          color: const Color(0xFF6789CA),
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  a.title,
+                                  style: GoogleFonts.rubik(
+                                    color: Colors.black87,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  Text(
-                                    DateFormat('dd MMM yy')
-                                        .format(DateTime.parse(a.lastDateTime))
-                                        .toString(),
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Assign Date",
+                                      style: GoogleFonts.rubik(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  if (UserSharedPreferences.role == 'teacher') {
-                                    Navigator.pushNamed(
-                                        context, arguments: a, Routes.assignmentDetail);
-                                  } else {
-                                    assignment.setIsLoading(loading: true);
+                                    Text(
+                                      DateFormat('dd MMM yy')
+                                          .format(DateTime.parse(a.createdDateTime))
+                                          .toString(),
+                                      style: GoogleFonts.rubik(
+                                        color: Colors.black87,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Due Date",
+                                      style: GoogleFonts.rubik(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Text(
+                                      DateFormat('dd MMM yy')
+                                          .format(DateTime.parse(a.lastDateTime))
+                                          .toString(),
+                                      style: GoogleFonts.rubik(
+                                        color: Colors.black87,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    if (UserSharedPreferences.role == 'teacher') {
+                                      Navigator.pushNamed(
+                                          context, arguments: a, Routes.assignmentDetail);
+                                    } else {
+                                      assignment.setIsLoading(loading: true);
 
-                                    final value = await FilePicker.platform.pickFiles();
-                                    String url = '';
+                                      final value = await FilePicker.platform.pickFiles();
+                                      String url = '';
 
-                                    if (value != null) {
-                                      if (!context.mounted) return;
-                                      url = await AssignmentFireStore().uploadFile(
+                                      if (value != null) {
+                                        if (!context.mounted) return;
+                                        url = await AssignmentFireStore().uploadFile(
+                                              context: context,
+                                              pickedFile: value.files[0],
+                                              aid: a.aid,
+                                            ) ??
+                                            '';
+                                      }
+
+                                      if (url != '') {
+                                        Submitted submitted = Submitted(
+                                            sid: UserSharedPreferences.id,
+                                            url: url,
+                                            submitTime: DateTime.now().toString());
+
+                                        if (!context.mounted) return;
+                                        await assignment.addStudentInAssignmentList(
                                             context: context,
-                                            pickedFile: value.files[0],
-                                            aid: a.aid,
-                                          ) ??
-                                          '';
+                                            submitted: submitted,
+                                            assignmentModel: a);
+                                      }
+
+                                      assignment.setIsLoading(loading: true);
+
+                                      if (!mounted) return;
+                                      assignment.getAssignmentList(context: context);
                                     }
-
-                                    if (url != '') {
-                                      Submitted submitted = Submitted(
-                                          sid: UserSharedPreferences.id,
-                                          url: url,
-                                          submitTime: DateTime.now().toString());
-
-                                      if (!context.mounted) return;
-                                      await assignment.addStudentInAssignmentList(
-                                          context: context,
-                                          submitted: submitted,
-                                          assignmentModel: a);
-                                    }
-
-                                    assignment.setIsLoading(loading: true);
-
-                                    if (!mounted) return;
-                                    assignment.getAssignmentList(context: context);
-                                  }
-                                },
-                                child: Container(
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    gradient: const LinearGradient(
-                                      begin: Alignment.centerRight,
-                                      end: Alignment.centerLeft,
-                                      colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      gradient: const LinearGradient(
+                                        begin: Alignment.centerRight,
+                                        end: Alignment.centerLeft,
+                                        colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+                                      ),
+                                    ),
+                                    child: Text(
+                                      UserSharedPreferences.role == 'teacher'
+                                          ? 'DETAILS'
+                                          : assignment.checkStudentInList(assignment: a)
+                                              ? 'SUBMITTED'
+                                              : 'SUBMIT  ASSIGNMENT',
+                                      style: GoogleFonts.rubik(
+                                        color: assignment.checkStudentInList(assignment: a)
+                                            ? Colors.white54
+                                            : Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
-                                  child: Text(
-                                    UserSharedPreferences.role == 'teacher'
-                                        ? 'DETAILS'
-                                        : assignment.checkStudentInList(assignment: a)
-                                            ? 'SUBMITTED'
-                                            : 'SUBMIT  ASSIGNMENT',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
                         );
                       },

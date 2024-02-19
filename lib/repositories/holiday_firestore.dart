@@ -24,6 +24,8 @@ class HolidayFireStore {
       };
 
       await firestore.collection('holiday').doc(hid).set(data);
+
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Holiday Added');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
@@ -45,6 +47,8 @@ class HolidayFireStore {
       };
 
       await firestore.collection('holiday').doc(hid).update(data);
+
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Holiday Edited');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());

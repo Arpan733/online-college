@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:online_college/model/assignment_model.dart';
+import 'package:online_college/model/event_model.dart';
 import 'package:online_college/screens/assignments/assignment_detail_screen.dart';
 import 'package:online_college/screens/assignments/assignment_screen.dart';
 import 'package:online_college/screens/dashboard/dashboard_screen.dart';
 import 'package:online_college/screens/dashboard/profile_screen.dart';
 import 'package:online_college/screens/doubts/doubts_screen.dart';
+import 'package:online_college/screens/events/event_detail_screen.dart';
 import 'package:online_college/screens/events/events_screen.dart';
 import 'package:online_college/screens/fees/add_edit_fee.dart';
 import 'package:online_college/screens/fees/fee_detail_screen.dart';
@@ -54,6 +56,7 @@ class Routes {
   static const String printResult = 'printResult';
   static const String doubtDetail = 'doubtDetail';
   static const String assignmentDetail = 'assignmentDetail';
+  static const String eventDetail = 'eventDetail';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -129,6 +132,10 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) =>
                 AssignmentDetailScreen(assignmentModel: settings.arguments as AssignmentModel));
+      case eventDetail:
+        return MaterialPageRoute(
+            builder: (BuildContext context) =>
+                EventDetailScreen(eventModel: settings.arguments as EventModel));
       default:
         return MaterialPageRoute(
           builder: (_) {

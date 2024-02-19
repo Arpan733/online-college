@@ -44,7 +44,7 @@ bottomSheetForTeacher({
         return Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
-            height: 270,
+            height: 260,
             width: double.infinity,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -149,7 +149,7 @@ bottomSheetForTeacher({
                       child: Container(
                         height: 40,
                         width: 150,
-                        margin: const EdgeInsets.only(top: 30),
+                        margin: const EdgeInsets.only(top: 20),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -200,7 +200,7 @@ bottomSheetForTeacher({
                       child: Container(
                         height: 40,
                         width: 150,
-                        margin: const EdgeInsets.only(top: 30),
+                        margin: const EdgeInsets.only(top: 20),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: Colors.white,

@@ -58,6 +58,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
               }
 
               return CustomScrollView(
+                physics: const NeverScrollableScrollPhysics(),
                 slivers: [
                   SliverAppBar(
                     foregroundColor: Colors.white,
@@ -130,9 +131,15 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                         AssignmentModel a = assignmentList[index];
 
                         return Container(
-                          color: Colors.white,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.black38,
+                              width: 1,
+                            ),
+                          ),
                           child: Container(
-                            margin: const EdgeInsets.only(bottom: 20),
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: assignment.checkStudentInList(assignment: a)

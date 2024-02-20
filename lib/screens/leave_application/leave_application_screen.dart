@@ -76,6 +76,7 @@ class _LeaveApplicationScreenState extends State<LeaveApplicationScreen> {
               }
 
               return CustomScrollView(
+                physics: const NeverScrollableScrollPhysics(),
                 slivers: [
                   SliverAppBar(
                     foregroundColor: Colors.white,

@@ -57,6 +57,7 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
               }
 
               return CustomScrollView(
+                physics: const NeverScrollableScrollPhysics(),
                 slivers: [
                   SliverAppBar(
                     foregroundColor: Colors.white,

@@ -100,90 +100,89 @@ class _DoubtScreenState extends State<DoubtScreen> {
                       ),
                     ),
                   ),
-                  UserSharedPreferences.role == 'teacher'
-                      ? SliverList(
-                          delegate: SliverChildListDelegate(
-                            [
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: DropdownButtonFormField<String>(
-                                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                                      value: currentYear,
-                                      items: [
-                                        DropdownMenuItem(
-                                          value: '1st Year',
-                                          child: Text(
-                                            '1st Year',
-                                            style: GoogleFonts.rubik(
-                                              color: Colors.black87,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
+                  if (UserSharedPreferences.role == 'teacher')
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: DropdownButtonFormField<String>(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  value: currentYear,
+                                  items: [
+                                    DropdownMenuItem(
+                                      value: '1st Year',
+                                      child: Text(
+                                        '1st Year',
+                                        style: GoogleFonts.rubik(
+                                          color: Colors.black87,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                        DropdownMenuItem(
-                                          value: '2nd Year',
-                                          child: Text(
-                                            '2nd Year',
-                                            style: GoogleFonts.rubik(
-                                              color: Colors.black87,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: '3rd Year',
-                                          child: Text(
-                                            '3rd Year',
-                                            style: GoogleFonts.rubik(
-                                              color: Colors.black87,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: '4th Year',
-                                          child: Text(
-                                            '4th Year',
-                                            style: GoogleFonts.rubik(
-                                              color: Colors.black87,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                      onChanged: (value) {
-                                        if (value != null) {
-                                          currentYear = value;
-                                          setState(() {});
-                                        }
-                                      },
-                                      dropdownColor: Colors.white,
-                                      iconEnabledColor: Colors.white,
-                                      decoration: const InputDecoration(
-                                        suffixIcon: Icon(
-                                          Icons.arrow_drop_down,
-                                          color: Color(0xFF2855AE),
-                                          size: 30,
-                                        ),
-                                        border: InputBorder.none,
                                       ),
                                     ),
+                                    DropdownMenuItem(
+                                      value: '2nd Year',
+                                      child: Text(
+                                        '2nd Year',
+                                        style: GoogleFonts.rubik(
+                                          color: Colors.black87,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '3rd Year',
+                                      child: Text(
+                                        '3rd Year',
+                                        style: GoogleFonts.rubik(
+                                          color: Colors.black87,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '4th Year',
+                                      child: Text(
+                                        '4th Year',
+                                        style: GoogleFonts.rubik(
+                                          color: Colors.black87,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      currentYear = value;
+                                      setState(() {});
+                                    }
+                                  },
+                                  dropdownColor: Colors.white,
+                                  iconEnabledColor: Colors.white,
+                                  decoration: const InputDecoration(
+                                    suffixIcon: Icon(
+                                      Icons.arrow_drop_down,
+                                      color: Color(0xFF2855AE),
+                                      size: 30,
+                                    ),
+                                    border: InputBorder.none,
                                   ),
-                                  Expanded(child: Container()),
-                                ],
+                                ),
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
+                              Expanded(child: Container()),
                             ],
                           ),
-                        )
-                      : SliverList(delegate: SliverChildListDelegate([])),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    ),
                   SliverPadding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     sliver: SliverList.builder(

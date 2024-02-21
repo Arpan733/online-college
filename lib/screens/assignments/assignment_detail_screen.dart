@@ -113,7 +113,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                       await Provider.of<AssignmentProvider>(context, listen: false)
                           .deleteAssignment(context: context, aid: widget.assignmentModel.aid);
 
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       Navigator.pop(context);
                     },
                     child: Container(
@@ -326,7 +326,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                                                   ),
                                                   clipBehavior: Clip.antiAlias,
                                                   child: Image.network(
-                                                    su.photoUrl ?? '',
+                                                    su.photoUrl,
                                                     fit: BoxFit.fitHeight,
                                                     errorBuilder: (BuildContext context,
                                                         Object error, StackTrace? stackTrace) {
@@ -345,7 +345,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       Text(
-                                                        su.name!,
+                                                        su.name,
                                                         style: GoogleFonts.rubik(
                                                           color: Colors.black87,
                                                           fontSize: 18,
@@ -353,7 +353,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        '+91 ${su.phoneNumber!}',
+                                                        '+91 ${su.phoneNumber}',
                                                         style: GoogleFonts.rubik(
                                                           color: Colors.black54,
                                                           fontSize: 14,
@@ -367,7 +367,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                                                   width: 10,
                                                 ),
                                                 Text(
-                                                  su.rollNo!,
+                                                  su.rollNo,
                                                   style: GoogleFonts.rubik(
                                                     color: Colors.black87,
                                                     fontSize: 20,

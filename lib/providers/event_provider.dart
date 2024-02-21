@@ -4,6 +4,7 @@ import 'package:online_college/model/event_model.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/event_firestore.dart';
 import 'package:online_college/repositories/notifications.dart';
+import 'package:online_college/widgets/dialog_for_event.dart';
 import 'package:provider/provider.dart';
 
 class EventProvider extends ChangeNotifier {
@@ -71,5 +72,59 @@ class EventProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> checkUpcomingEvent({required BuildContext context}) async {
+    await getEventList(context: context);
+
+    for (var element in eventList) {
+      if (DateTime.now().year == DateTime.parse(element.dateTime).year &&
+          DateTime.now().month == DateTime.parse(element.dateTime).month &&
+          DateTime.now().day == DateTime.parse(element.dateTime).day &&
+          DateTime.now().isBefore(DateTime.parse(element.dateTime))) {
+        if (!context.mounted) return;
+        await showDialogForEvent(context: context, event: element, time: 'Today');
+      }
+
+      if (DateFormat('dd/MM/yyyy').format(DateTime.now().add(const Duration(days: 1))) ==
+          DateFormat('dd/MM/yyyy').format(DateTime.parse(element.dateTime))) {
+        if (!context.mounted) return;
+        await showDialogForEvent(context: context, event: element, time: 'Tomorrow');
+      }
+    }
+  }
+
+  List<EventModel> sorting({
+    required BuildContext context,
+    required String sort,
+  }) {
+    List<EventModel> showEventList = [];
+
+    if (sort == 'By Time') {
+      showEventList = eventList.map((element) => EventModel.fromJson(element.toJson())).toList();
+      showEventList.sort(
+        (a, b) {
+          DateTime aDate = DateTime.parse(a.dateTime);
+          DateTime bDate = DateTime.parse(b.dateTime);
+          return aDate.compareTo(bDate);
+        },
+      );
+    } else if (sort == 'Upcoming') {
+      for (var element in eventList) {
+        if (DateTime.now().isBefore(DateTime.parse(element.dateTime))) {
+          showEventList.add(element);
+        }
+      }
+    } else if (sort == 'Past') {
+      for (var element in eventList) {
+        if (DateTime.now().isAfter(DateTime.parse(element.dateTime))) {
+          showEventList.add(element);
+        }
+      }
+    } else if (sort == 'All') {
+      showEventList = eventList;
+    }
+
+    return showEventList;
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:online_college/consts/routes.dart';
 import 'package:online_college/providers/assignment_provider.dart';
+import 'package:online_college/providers/event_provider.dart';
 import 'package:online_college/providers/fee_provider.dart';
 import 'package:online_college/providers/holiday_provider.dart';
 import 'package:online_college/repositories/notifications.dart';
@@ -26,6 +27,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await Provider.of<HolidayProvider>(context, listen: false)
           .checkTomorrowIsHoliday(context: context);
+
+      if (!mounted) return;
+      await Provider.of<EventProvider>(context, listen: false).checkUpcomingEvent(context: context);
 
       if (UserSharedPreferences.role == 'student') {
         if (!mounted) return;

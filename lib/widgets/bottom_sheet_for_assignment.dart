@@ -397,8 +397,6 @@ bottomSheetForAssignment({
                                 } else {
                                   String aid = const UuidV4().generate().toString();
 
-                                  print(subjectController.text);
-
                                   AssignmentModel assignment = AssignmentModel(
                                     aid: aid,
                                     year: yearController.text,

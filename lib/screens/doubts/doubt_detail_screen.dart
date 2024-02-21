@@ -154,8 +154,8 @@ class _DoubtDetailScreenState extends State<DoubtDetailScreen> {
                                 Provider.of<AllUserProvider>(context).studentsList.forEach(
                                   (element) {
                                     if (element.id == c.id) {
-                                      name = element.name ?? '';
-                                      url = element.photoUrl ?? '';
+                                      name = element.name;
+                                      url = element.photoUrl;
                                     }
                                   },
                                 );
@@ -164,8 +164,8 @@ class _DoubtDetailScreenState extends State<DoubtDetailScreen> {
                                 Provider.of<AllUserProvider>(context).teachersList.forEach(
                                   (element) {
                                     if (element.id == c.id) {
-                                      name = element.name ?? '';
-                                      url = element.photoUrl ?? '';
+                                      name = element.name;
+                                      url = element.photoUrl;
                                     }
                                   },
                                 );

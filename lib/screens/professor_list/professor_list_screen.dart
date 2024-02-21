@@ -109,7 +109,7 @@ class _ProfessorListScreenState extends State<ProfessorListScreen> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               Hero(
-                                                tag: tu.id!,
+                                                tag: tu.id,
                                                 child: Container(
                                                   height: 60,
                                                   width: 60,
@@ -126,7 +126,7 @@ class _ProfessorListScreenState extends State<ProfessorListScreen> {
                                                   ),
                                                   clipBehavior: Clip.antiAlias,
                                                   child: Image.network(
-                                                    tu.photoUrl ?? '',
+                                                    tu.photoUrl,
                                                     fit: BoxFit.fitHeight,
                                                     errorBuilder: (BuildContext context,
                                                         Object error, StackTrace? stackTrace) {
@@ -146,7 +146,7 @@ class _ProfessorListScreenState extends State<ProfessorListScreen> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      tu.name!,
+                                                      tu.name,
                                                       style: GoogleFonts.rubik(
                                                         color: Colors.black87,
                                                         fontSize: 18,
@@ -154,7 +154,7 @@ class _ProfessorListScreenState extends State<ProfessorListScreen> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      '+91 ${tu.phoneNumber!}',
+                                                      '+91 ${tu.phoneNumber}',
                                                       style: GoogleFonts.rubik(
                                                         color: Colors.black54,
                                                         fontSize: 14,

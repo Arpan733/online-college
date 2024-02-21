@@ -55,8 +55,8 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
 
           studentsList.sort(
             (a, b) {
-              int aRoll = int.parse(a.rollNo!);
-              int bRoll = int.parse(b.rollNo!);
+              int aRoll = int.parse(a.rollNo);
+              int bRoll = int.parse(b.rollNo);
               return aRoll.compareTo(bRoll);
             },
           );
@@ -265,7 +265,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                                 SizedBox(
                                   width: 40,
                                   child: Text(
-                                    sum.rollNo!,
+                                    sum.rollNo,
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.rubik(
                                       color: Colors.black87,

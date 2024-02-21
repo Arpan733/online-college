@@ -344,7 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               if (result != null) {
                                 PlatformFile pickedFile = result.files.first;
 
-                                if (!mounted) return;
+                                if (!context.mounted) return;
                                 await fireStoreTeacher.uploadProfilePhoto(
                                     context: context, pickedFile: pickedFile);
 

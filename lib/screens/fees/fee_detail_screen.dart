@@ -108,7 +108,7 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                         await Provider.of<FeeProvider>(context, listen: false)
                             .deleteFee(context: context, fid: widget.fee.fid!);
 
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -378,7 +378,7 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                                                   ),
                                                   clipBehavior: Clip.antiAlias,
                                                   child: Image.network(
-                                                    su.photoUrl ?? '',
+                                                    su.photoUrl,
                                                     fit: BoxFit.fitHeight,
                                                     errorBuilder: (BuildContext context,
                                                         Object error, StackTrace? stackTrace) {
@@ -397,7 +397,7 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       Text(
-                                                        su.name!,
+                                                        su.name,
                                                         style: GoogleFonts.rubik(
                                                           color: Colors.black87,
                                                           fontSize: 18,
@@ -405,7 +405,7 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        '+91 ${su.phoneNumber!}',
+                                                        '+91 ${su.phoneNumber}',
                                                         style: GoogleFonts.rubik(
                                                           color: Colors.black54,
                                                           fontSize: 14,
@@ -419,7 +419,7 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                                                   width: 10,
                                                 ),
                                                 Text(
-                                                  su.rollNo!,
+                                                  su.rollNo,
                                                   style: GoogleFonts.rubik(
                                                     color: Colors.black87,
                                                     fontSize: 20,

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/consts/utils.dart';
@@ -177,5 +178,86 @@ class FeeProvider extends ChangeNotifier {
         }
       }
     }
+  }
+
+  List<FeeModel> sortingForTeacher({
+    required BuildContext context,
+    required String sort,
+  }) {
+    List<FeeModel> showFeeList = [];
+
+    if (sort == 'Created Date') {
+      showFeeList = feeList.map((element) => FeeModel.fromJson(element.toJson())).toList();
+      showFeeList.sort(
+        (a, b) {
+          DateTime aDate = DateFormat('dd/MM/yyyy').parse(a.createdDate!);
+          DateTime bDate = DateFormat('dd/MM/yyyy').parse(b.createdDate!);
+          return aDate.compareTo(bDate);
+        },
+      );
+    } else if (sort == 'Due Date') {
+      showFeeList = feeList.map((element) => FeeModel.fromJson(element.toJson())).toList();
+      showFeeList.sort(
+        (a, b) {
+          DateTime aDate = DateFormat('dd/MM/yyyy').parse(a.lastDate!);
+          DateTime bDate = DateFormat('dd/MM/yyyy').parse(b.lastDate!);
+          return aDate.compareTo(bDate);
+        },
+      );
+    } else if (sort == 'Paid By All Student') {
+      for (var element in feeList) {
+        if (element.paidStudents?.length ==
+            Provider.of<AllUserProvider>(context, listen: false).studentsList.length) {
+          showFeeList.add(FeeModel.fromJson(element.toJson()));
+        }
+      }
+    } else if (sort == 'Not Paid By All Student') {
+      for (var element in feeList) {
+        if (element.paidStudents?.length !=
+            Provider.of<AllUserProvider>(context, listen: false).studentsList.length) {
+          showFeeList.add(FeeModel.fromJson(element.toJson()));
+        }
+      }
+    } else {
+      for (var element in feeList) {
+        if (element.year == sort) {
+          showFeeList.add(FeeModel.fromJson(element.toJson()));
+        }
+      }
+    }
+
+    return showFeeList;
+  }
+
+  List<FeeModel> sortingForStudent({
+    required BuildContext context,
+    required String sort,
+  }) {
+    List<FeeModel> showFeeList = [];
+    List<FeeModel> fees = [];
+
+    for (var element in feeList) {
+      if (UserSharedPreferences.year == element.year) {
+        fees.add(element);
+      }
+    }
+
+    if (sort == 'All') {
+      showFeeList = fees;
+    } else if (sort == 'Paid') {
+      for (var element in fees) {
+        if (checkPaid(sid: UserSharedPreferences.id, fee: element)) {
+          showFeeList.add(element);
+        }
+      }
+    } else if (sort == 'Unpaid') {
+      for (var element in fees) {
+        if (!checkPaid(sid: UserSharedPreferences.id, fee: element)) {
+          showFeeList.add(element);
+        }
+      }
+    }
+
+    return showFeeList;
   }
 }

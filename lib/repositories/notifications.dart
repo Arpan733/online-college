@@ -121,8 +121,6 @@ class NotificationServices {
     required String title,
     required String message,
   }) async {
-    print('tokens ${tokens}');
-
     var data = {
       "registration_ids": tokens,
       'priority': 'high',

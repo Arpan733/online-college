@@ -220,7 +220,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                             await Provider.of<FeeProvider>(context, listen: false)
                                 .updateFee(context: context, feeModel: feeModel);
 
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             Navigator.pop(context);
                           } else {
                             String fid = const UuidV4().generate().toString();
@@ -247,7 +247,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                             await Provider.of<FeeProvider>(context, listen: false)
                                 .addFee(context: context, feeModel: feeModel);
 
-                            if (!mounted) return;
+                            if (!context.mounted) return;
                             Navigator.pop(context);
                           }
                         }

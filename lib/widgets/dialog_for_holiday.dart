@@ -21,7 +21,7 @@ showDialogForHolidayList(
         borderRadius: BorderRadius.circular(20),
       ),
       content: Container(
-        height: 240,
+        height: UserSharedPreferences.role == 'teacher' ? 240 : 185,
         width: MediaQuery.of(context).size.width * 0.7,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(

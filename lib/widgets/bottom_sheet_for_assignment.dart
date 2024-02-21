@@ -228,7 +228,11 @@ bottomSheetForAssignment({
                         child: DropdownButtonFormField<String>(
                           value: subjectController.text,
                           items: dropDownList,
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            if (value != null) {
+                              subjectController.text = value;
+                            }
+                          },
                           dropdownColor: Colors.white,
                           iconEnabledColor: Colors.white,
                           decoration: InputDecoration(
@@ -392,6 +396,8 @@ bottomSheetForAssignment({
                                           context: context, assignmentModel: assignment);
                                 } else {
                                   String aid = const UuidV4().generate().toString();
+
+                                  print(subjectController.text);
 
                                   AssignmentModel assignment = AssignmentModel(
                                     aid: aid,

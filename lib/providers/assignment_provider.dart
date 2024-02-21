@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/model/assignment_model.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/assignment_firestore.dart';
 import 'package:online_college/repositories/notifications.dart';
+import 'package:online_college/widgets/dialog_for_assignment.dart';
 import 'package:provider/provider.dart';
 
 class AssignmentProvider extends ChangeNotifier {
@@ -22,9 +25,6 @@ class AssignmentProvider extends ChangeNotifier {
 
   Future<void> addAssignment(
       {required BuildContext context, required AssignmentModel assignmentModel}) async {
-    await AssignmentFireStore()
-        .addAssignmentToFireStore(context: context, assignmentModel: assignmentModel);
-
     List<String> tokens = [];
 
     if (!context.mounted) return;
@@ -35,12 +35,15 @@ class AssignmentProvider extends ChangeNotifier {
     });
 
     NotificationServices().sendNotification(
-      title: 'About Fee',
+      title: 'Assignment assigned',
       message:
-          'Reminder: You have an assignment due for ${assignmentModel.subject}. Please ensure it\'s completed by ${assignmentModel.lastDateTime}.',
+          'Reminder: You have an assignment due for ${assignmentModel.subject}. Please ensure it\'s completed by ${DateFormat('dd/MM/yyyy').format(DateTime.parse(assignmentModel.lastDateTime))}.',
       tokens: tokens,
       page: 'assignments',
     );
+
+    await AssignmentFireStore()
+        .addAssignmentToFireStore(context: context, assignmentModel: assignmentModel);
 
     if (!context.mounted) return;
     await getAssignmentList(context: context);
@@ -97,5 +100,19 @@ class AssignmentProvider extends ChangeNotifier {
     }
 
     return false;
+  }
+
+  Future<void> checkRemainingSubmission({required BuildContext context}) async {
+    await getAssignmentList(context: context);
+
+    for (var element in assignmentList) {
+      if (DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1))) ==
+          DateFormat('yyyy-MM-dd').format(DateTime.parse(element.lastDateTime))) {
+        if (!checkStudentInList(assignment: element)) {
+          if (!context.mounted) return;
+          await showDialogForAssignment(context: context, assignmentModel: element);
+        }
+      }
+    }
   }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:online_college/repositories/holiday_firestore.dart';
+import 'package:online_college/widgets/dialog_for_holiday_show.dart';
 import 'package:provider/provider.dart';
 
 import '../model/holiday_model.dart';
@@ -82,5 +85,17 @@ class HolidayProvider extends ChangeNotifier {
         return aDate.compareTo(bDate);
       },
     );
+  }
+
+  Future<void> checkTomorrowIsHoliday({required BuildContext context}) async {
+    await getHolidayList(context: context);
+
+    for (var element in holidays) {
+      if (DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1))) ==
+          DateFormat('yyyy-MM-dd').format(DateTime.parse(element.date!))) {
+        if (!context.mounted) return;
+        await showDialogForHolidayShow(context: context, hc: element);
+      }
+    }
   }
 }

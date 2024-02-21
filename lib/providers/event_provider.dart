@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:online_college/model/event_model.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/event_firestore.dart';
@@ -33,7 +34,8 @@ class EventProvider extends ChangeNotifier {
 
     NotificationServices().sendNotification(
       title: eventModel.title,
-      message: 'Time: ${eventModel.dateTime}\nDescription: ${eventModel.description}',
+      message:
+          'Time: ${DateFormat('dd/MM/yyyy HH:mm aa').format(DateTime.parse(eventModel.dateTime))}\nDescription: ${eventModel.description}',
       tokens: tokens,
       page: 'events',
     );

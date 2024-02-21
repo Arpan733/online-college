@@ -325,6 +325,12 @@ bottomSheetForChat({
                                 Provider.of<DoubtProvider>(context, listen: false)
                                     .updateDoubt(context: context, doubtModel: doubt);
 
+                                isLoading = false;
+                                set(() {});
+
+                                if (!context.mounted) return;
+                                Navigator.of(context).pop();
+
                                 titleController.clear();
                                 doubt = DoubtModel(
                                   year: '',
@@ -334,12 +340,6 @@ bottomSheetForChat({
                                   title: '',
                                   chat: [],
                                 );
-
-                                isLoading = false;
-                                set(() {});
-
-                                if (!context.mounted) return;
-                                Navigator.of(context).pop();
                               }
                             },
                             child: Container(

@@ -11,14 +11,14 @@ class FeeModel {
   List<PaidStudent>? paidStudents;
 
   FeeModel({
-    this.fid,
-    this.title,
-    this.lastDate,
-    this.createdDate,
-    this.totalAmount,
-    this.year,
-    this.feeDescription,
-    this.paidStudents,
+    required this.fid,
+    required this.title,
+    required this.lastDate,
+    required this.createdDate,
+    required this.totalAmount,
+    required this.year,
+    required this.feeDescription,
+    required this.paidStudents,
   });
 
   factory FeeModel.fromRawJson(String str) => FeeModel.fromJson(json.decode(str));

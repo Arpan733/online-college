@@ -46,8 +46,6 @@ class DoubtProvider extends ChangeNotifier {
   }
 
   Future<void> updateDoubt({required BuildContext context, required DoubtModel doubtModel}) async {
-    await DoubtFireStore().updateDoubtAtFireStore(context: context, doubtModel: doubtModel);
-
     List<String> tokens = [];
     String name = '';
 
@@ -90,8 +88,10 @@ class DoubtProvider extends ChangeNotifier {
       message:
           'From $name: ${doubtModel.chat.last.message}${doubtModel.chat.last.attach.isNotEmpty ? ' with ${doubtModel.chat.last.attach.length} attachment' : ''}',
       tokens: tokens,
-      page: 'fees',
+      page: 'doubts',
     );
+
+    await DoubtFireStore().updateDoubtAtFireStore(context: context, doubtModel: doubtModel);
 
     if (!context.mounted) return;
     await getDoubtList(context: context);

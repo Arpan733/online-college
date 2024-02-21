@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:online_college/model/leave_application_model.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/leave_application_firestore.dart';
@@ -36,7 +37,7 @@ class LeaveApplicationProvider extends ChangeNotifier {
     NotificationServices().sendNotification(
       title: leaveApplicationModel.title,
       message:
-          'Reason: ${leaveApplicationModel.description}\nDuration: ${leaveApplicationModel.startDate} - ${leaveApplicationModel.endDate}',
+          'Reason: ${leaveApplicationModel.description}\nDuration: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(leaveApplicationModel.startDate))} - ${DateFormat('dd/MM/yyyy').format(DateTime.parse(leaveApplicationModel.endDate))}',
       tokens: tokens,
       page: 'leaveApplication',
     );

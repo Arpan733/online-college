@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:online_college/consts/routes.dart';
+import 'package:online_college/providers/assignment_provider.dart';
+import 'package:online_college/providers/fee_provider.dart';
+import 'package:online_college/providers/holiday_provider.dart';
 import 'package:online_college/repositories/notifications.dart';
+import 'package:provider/provider.dart';
 
 import '../../consts/dashboard_lists.dart';
-import '../../consts/routes.dart';
 import '../../consts/user_shared_preferences.dart';
 
 class DashBoardScreen extends StatefulWidget {
@@ -18,6 +22,20 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void initState() {
     NotificationServices().firebaseInit(context);
     NotificationServices().setupInteractMessage(context);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await Provider.of<HolidayProvider>(context, listen: false)
+          .checkTomorrowIsHoliday(context: context);
+
+      if (UserSharedPreferences.role == 'student') {
+        if (!mounted) return;
+        await Provider.of<AssignmentProvider>(context, listen: false)
+            .checkRemainingSubmission(context: context);
+
+        if (!mounted) return;
+        await Provider.of<FeeProvider>(context, listen: false).checkRemainingFees(context: context);
+      }
+    });
 
     super.initState();
   }
@@ -69,9 +87,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.profile);
-                    },
+                    onTap: () => Navigator.pushNamed(context, Routes.profile),
                     child: Container(
                       height: 70,
                       width: 70,

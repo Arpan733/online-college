@@ -129,10 +129,6 @@ class SignInProvider extends ChangeNotifier {
           );
         }
 
-        _isLoginLoading = false;
-        _enableOTPField = false;
-        notifyListeners();
-
         if (!context.mounted) return;
         Navigator.pushNamedAndRemoveUntil(
           context,
@@ -170,10 +166,6 @@ class SignInProvider extends ChangeNotifier {
           );
         }
 
-        _isLoginLoading = false;
-        _enableOTPField = false;
-        notifyListeners();
-
         if (!context.mounted) return;
         Navigator.pushNamedAndRemoveUntil(
           context,
@@ -182,6 +174,10 @@ class SignInProvider extends ChangeNotifier {
         );
       }
     }
+
+    _isLoginLoading = false;
+    _enableOTPField = false;
+    notifyListeners();
   }
 
   Future<bool> checkUserDevices({required BuildContext context}) async {

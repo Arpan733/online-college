@@ -5,6 +5,7 @@ import 'package:online_college/consts/utils.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/fee_firestore.dart';
 import 'package:online_college/repositories/notifications.dart';
+import 'package:online_college/widgets/dialog_for_fee.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -160,6 +161,21 @@ class FeeProvider extends ChangeNotifier {
       razorpay.open(options);
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
+    }
+  }
+
+  Future<void> checkRemainingFees({required BuildContext context}) async {
+    await getFeeList(context: context);
+
+    for (var element in feeList) {
+      if (DateFormat('dd/MM/yyyy').format(DateTime.now().add(const Duration(days: 1))) ==
+              element.lastDate! &&
+          UserSharedPreferences.year == element.year) {
+        if (!checkPaid(sid: UserSharedPreferences.id, fee: element)) {
+          if (!context.mounted) return;
+          await showDialogForFee(context: context, feeModel: element);
+        }
+      }
     }
   }
 }

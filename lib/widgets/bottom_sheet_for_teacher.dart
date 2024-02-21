@@ -188,6 +188,15 @@ bottomSheetForTeacher({
                             phoneNumber: phoneNumberController.text,
                             id: const UuidV4().generate().toString(),
                             role: 'teacher',
+                            qualification: '',
+                            email: '',
+                            dateOfBirth: '',
+                            adhar: '',
+                            address: '',
+                            uid: '',
+                            loginTime: '',
+                            notificationToken: '',
+                            photoUrl: '',
                           );
 
                           await Provider.of<AllUserProvider>(context, listen: false)

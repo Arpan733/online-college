@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/consts/utils.dart';
+import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/fee_firestore.dart';
+import 'package:online_college/repositories/notifications.dart';
+import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../model/fee_model.dart';
@@ -20,6 +23,25 @@ class FeeProvider extends ChangeNotifier {
 
   Future<void> addFee({required BuildContext context, required FeeModel feeModel}) async {
     await FeeFireStore().addFeeToFireStore(context: context, feeModel: feeModel);
+
+    List<String> tokens = [];
+
+    if (!context.mounted) return;
+    Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((element) {
+      if (feeModel.year == element.year && element.notificationToken != "") {
+        tokens.add(element.notificationToken);
+      }
+    });
+
+    NotificationServices().sendNotification(
+      title: 'About Fee',
+      message:
+          'Please note that the fee for ${feeModel.title} is due on ${feeModel.lastDate} and amounts to ${feeModel.totalAmount}.',
+      tokens: tokens,
+      page: 'fees',
+    );
+
+    if (!context.mounted) return;
     await getFeeList(context: context);
   }
 
@@ -30,16 +52,22 @@ class FeeProvider extends ChangeNotifier {
       required FeeModel feeModel}) async {
     await FeeFireStore()
         .addStudentToFireStoreFeeList(context: context, sid: sid, feeModel: feeModel, refNo: refNo);
+
+    if (!context.mounted) return;
     await getFeeList(context: context);
   }
 
   Future<void> updateFee({required BuildContext context, required FeeModel feeModel}) async {
     await FeeFireStore().updateFeeAtFireStore(context: context, feeModel: feeModel);
+
+    if (!context.mounted) return;
     await getFeeList(context: context);
   }
 
   Future<void> deleteFee({required BuildContext context, required String fid}) async {
     await FeeFireStore().deleteFeeFromFireStore(context: context, fid: fid);
+
+    if (!context.mounted) return;
     await getFeeList(context: context);
   }
 
@@ -99,6 +127,8 @@ class FeeProvider extends ChangeNotifier {
 
       await addStudentInFeeList(
           refNo: paymentId, sid: UserSharedPreferences.id, feeModel: feeModel, context: context);
+
+      if (!context.mounted) return;
       await getFeeList(context: context);
       razorpay.clear();
     });
@@ -109,7 +139,6 @@ class FeeProvider extends ChangeNotifier {
     });
 
     razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, (ExternalWalletResponse response) {
-      // Utils().showToast(context: context, message: response.toString());
       razorpay.clear();
     });
 

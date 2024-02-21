@@ -26,6 +26,7 @@ class UserDataFireStore {
 
       await firestore.collection('users').doc(id).update(userdata);
     } catch (e) {
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: e.toString());
     }
   }
@@ -41,6 +42,7 @@ class UserDataFireStore {
         return data;
       }
     } catch (e) {
+      if (!context.mounted) return null;
       Utils().showToast(context: context, message: e.toString());
     }
 
@@ -58,6 +60,7 @@ class UserDataFireStore {
         return data;
       }
     } catch (e) {
+      if (!context.mounted) return null;
       Utils().showToast(context: context, message: e.toString());
     }
 
@@ -78,6 +81,7 @@ class UserDataFireStore {
         return url;
       }
     } catch (e) {
+      if (!context.mounted) return null;
       Utils().showToast(context: context, message: e.toString());
     }
 

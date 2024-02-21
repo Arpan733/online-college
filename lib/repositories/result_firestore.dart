@@ -13,6 +13,7 @@ class ResultFireStore {
     try {
       await firestore.collection('results').doc(resultModel.sid).set(resultModel.toJson());
 
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Result Added');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
@@ -24,6 +25,7 @@ class ResultFireStore {
     try {
       await firestore.collection('results').doc(resultModel.sid).update(resultModel.toJson());
 
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Result Updated');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
@@ -35,6 +37,7 @@ class ResultFireStore {
     try {
       await firestore.collection('results').doc(sid).delete();
 
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Result Deleted');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:online_college/repositories/notifications.dart';
+import 'package:provider/provider.dart';
 
 import '../consts/subjects.dart';
 import '../model/result_model.dart';
 import '../repositories/result_firestore.dart';
+import 'all_user_provider.dart';
 
 class ResultProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -19,19 +22,46 @@ class ResultProvider extends ChangeNotifier {
 
   ResultModel get result => _result;
 
-  Future<void> addResult({required BuildContext context, required ResultModel resultModel}) async {
+  Future<void> addResult(
+      {required BuildContext context,
+      required ResultModel resultModel,
+      required String year,
+      required String spi}) async {
     await ResultFireStore().addResultToFireStore(context: context, resultModel: resultModel);
+
+    List<String> tokens = [];
+
+    if (!context.mounted) return;
+    Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((element) {
+      if (resultModel.sid == element.id && element.notificationToken != "") {
+        tokens.add(element.notificationToken);
+      }
+    });
+
+    NotificationServices().sendNotification(
+      title: 'About Result',
+      message:
+          'Your academic result for the $year has been calculated. Your Semester Performance Index (SPI) is $spi. Please review your result.',
+      tokens: tokens,
+      page: 'resultStudent',
+    );
+
+    if (!context.mounted) return;
     await getResultList(context: context);
   }
 
   Future<void> updateResult(
       {required BuildContext context, required ResultModel resultModel}) async {
     await ResultFireStore().updateResultAtFireStore(context: context, resultModel: resultModel);
+
+    if (!context.mounted) return;
     await getResultList(context: context);
   }
 
   Future<void> deleteResult({required BuildContext context, required String sid}) async {
     await ResultFireStore().deleteResultFromFireStore(context: context, sid: sid);
+
+    if (!context.mounted) return;
     await getResultList(context: context);
   }
 

@@ -25,7 +25,6 @@ class _LeaveApplicationScreenState extends State<LeaveApplicationScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<LeaveApplicationProvider>(context, listen: false)
           .getLeaveApplicationList(context: context);
-      Provider.of<AllUserProvider>(context, listen: false).getAllUser(context: context);
     });
 
     super.initState();

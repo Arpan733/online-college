@@ -105,7 +105,7 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                   actions: [
                     GestureDetector(
                       onTap: () async {
-                        await Provider.of<FeeProvider>(context)
+                        await Provider.of<FeeProvider>(context, listen: false)
                             .deleteFee(context: context, fid: widget.fee.fid!);
 
                         if (!mounted) return;

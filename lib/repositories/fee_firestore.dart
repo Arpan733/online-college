@@ -11,6 +11,7 @@ class FeeFireStore {
     try {
       await firestore.collection('fees').doc(feeModel.fid).set(feeModel.toJson());
 
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Fee Added');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
@@ -28,6 +29,7 @@ class FeeFireStore {
       feeModel.paidStudents?.add(data);
 
       await firestore.collection('fees').doc(feeModel.fid).update(feeModel.toJson());
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Fee Paid');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
@@ -39,6 +41,7 @@ class FeeFireStore {
     try {
       await firestore.collection('fees').doc(feeModel.fid).update(feeModel.toJson());
 
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Fee Edited');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
@@ -49,6 +52,7 @@ class FeeFireStore {
     try {
       await firestore.collection('fees').doc(fid).delete();
 
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Fee Deleted');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());

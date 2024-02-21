@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:online_college/consts/routes.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/model/assignment_model.dart';
-import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/providers/assignment_provider.dart';
 import 'package:online_college/repositories/assignment_firestore.dart';
 import 'package:online_college/widgets/bottom_sheet_for_assignment.dart';
@@ -23,7 +22,6 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<AssignmentProvider>(context, listen: false).getAssignmentList(context: context);
-      Provider.of<AllUserProvider>(context, listen: false).getAllUser(context: context);
     });
 
     super.initState();

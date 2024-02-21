@@ -1,22 +1,25 @@
 import 'package:online_college/consts/user_shared_preferences.dart';
 
 class UserRepository {
-  static Future saveUserPref(
-      {String? adhar,
-      String? email,
-      String? dateOfBirth,
-      String? qualification,
-      String? year,
-      String? id,
-      String? motherName,
-      String? fatherName,
-      String? rollNo,
-      String? address,
-      String? photoUrl,
-      String? name,
-      String? phoneNumber,
-      String? role,
-      String? uid}) async {
+  static Future saveUserPref({
+    String? adhar,
+    String? email,
+    String? dateOfBirth,
+    String? qualification,
+    String? year,
+    String? id,
+    String? motherName,
+    String? fatherName,
+    String? rollNo,
+    String? address,
+    String? photoUrl,
+    String? name,
+    String? phoneNumber,
+    String? role,
+    String? notificationToken,
+    String? loginTime,
+    String? uid,
+  }) async {
     if (adhar != null) {
       await UserSharedPreferences.setString(title: 'adhar', data: adhar);
     }
@@ -61,6 +64,12 @@ class UserRepository {
     }
     if (rollNo != null) {
       await UserSharedPreferences.setString(title: 'rollNo', data: rollNo);
+    }
+    if (notificationToken != null) {
+      await UserSharedPreferences.setString(title: 'notificationToken', data: notificationToken);
+    }
+    if (loginTime != null) {
+      await UserSharedPreferences.setString(title: 'loginTime', data: loginTime);
     }
   }
 }

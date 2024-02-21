@@ -16,6 +16,7 @@ class DoubtFireStore {
     try {
       await firestore.collection('doubts').doc(doubtModel.did).set(doubtModel.toJson());
 
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Doubt Created');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
@@ -27,6 +28,7 @@ class DoubtFireStore {
     try {
       await firestore.collection('doubts').doc(doubtModel.did).update(doubtModel.toJson());
     } catch (e) {
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: e.toString());
     }
   }
@@ -36,6 +38,7 @@ class DoubtFireStore {
     try {
       await firestore.collection('doubts').doc(sid).delete();
 
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Doubt Deleted');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
@@ -82,6 +85,7 @@ class DoubtFireStore {
         return url;
       }
     } catch (e) {
+      if (!context.mounted) return null;
       Utils().showToast(context: context, message: e.toString());
     }
 

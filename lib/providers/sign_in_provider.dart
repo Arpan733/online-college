@@ -1,10 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:online_college/consts/routes.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/consts/utils.dart';
+import 'package:online_college/model/student_user_model.dart';
+import 'package:online_college/model/teacher_user_model.dart';
 import 'package:online_college/providers/student_data_firestore_provider.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
+import 'package:online_college/repositories/notifications.dart';
 import 'package:online_college/repositories/sign_in_firebase.dart';
+import 'package:online_college/repositories/user_data_firestore.dart';
 import 'package:online_college/repositories/user_repository.dart';
 import 'package:provider/provider.dart';
 
@@ -74,8 +79,8 @@ class SignInProvider extends ChangeNotifier {
       if (!context.mounted) return;
       Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((element) {
         if (element.phoneNumber == firebaseAuth.currentUser!.phoneNumber.toString().substring(3)) {
-          id = element.id!;
-          role = element.role!;
+          id = element.id;
+          role = element.role;
         }
       });
 
@@ -84,17 +89,23 @@ class SignInProvider extends ChangeNotifier {
         Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
           if (element.phoneNumber ==
               firebaseAuth.currentUser!.phoneNumber.toString().substring(3)) {
-            id = element.id!;
-            role = element.role!;
+            id = element.id;
+            role = element.role;
           }
         });
       }
 
       if (role == 'student') {
         StudentDataFireStoreProvider studentFireStore = StudentDataFireStoreProvider();
+        String dateTime = DateTime.now().toString();
+        String token = await NotificationServices().getToken();
 
+        if (!context.mounted) return;
         studentFireStore.updateStudentUid(
             context: context, uid: firebaseAuth.currentUser!.uid, id: id);
+        studentFireStore.updateStudentLoginTime(context: context, loginTime: dateTime, id: id);
+        studentFireStore.updateStudentNotificationToken(
+            context: context, notificationToken: token, id: id);
         await studentFireStore.getStudentData(context: context, id: id);
 
         if (studentFireStore.studentData != null) {
@@ -113,6 +124,8 @@ class SignInProvider extends ChangeNotifier {
             motherName: studentFireStore.studentData?.fatherName,
             role: studentFireStore.studentData?.role,
             rollNo: studentFireStore.studentData?.rollNo,
+            notificationToken: token,
+            loginTime: dateTime,
           );
         }
 
@@ -128,9 +141,15 @@ class SignInProvider extends ChangeNotifier {
         );
       } else if (role == 'teacher') {
         TeacherDataFireStoreProvider teacherFireStore = TeacherDataFireStoreProvider();
+        String dateTime = DateTime.now().toString();
+        String token = await NotificationServices().getToken();
 
+        if (!context.mounted) return;
         teacherFireStore.updateTeacherUid(
             context: context, uid: firebaseAuth.currentUser!.uid, id: id);
+        teacherFireStore.updateTeacherLoginTime(context: context, loginTime: dateTime, id: id);
+        teacherFireStore.updateTeacherNotificationToken(
+            context: context, notificationToken: token, id: id);
         await teacherFireStore.getTeacherData(context: context, id: id);
 
         if (teacherFireStore.teacherData != null) {
@@ -146,6 +165,8 @@ class SignInProvider extends ChangeNotifier {
             photoUrl: teacherFireStore.teacherData?.photoUrl,
             role: teacherFireStore.teacherData?.role,
             id: teacherFireStore.teacherData?.id,
+            notificationToken: token,
+            loginTime: dateTime,
           );
         }
 
@@ -160,6 +181,18 @@ class SignInProvider extends ChangeNotifier {
           (route) => false,
         );
       }
+    }
+  }
+
+  Future<bool> checkUserDevices({required BuildContext context}) async {
+    if (UserSharedPreferences.role == 'student') {
+      StudentUserModel? studentUserModel =
+          await UserDataFireStore().getStudentData(context: context, id: UserSharedPreferences.id);
+      return UserSharedPreferences.loginTime == studentUserModel?.loginTime;
+    } else {
+      TeacherUserModel? teacherUserModel =
+          await UserDataFireStore().getTeacherData(context: context, id: UserSharedPreferences.id);
+      return UserSharedPreferences.loginTime == teacherUserModel?.loginTime;
     }
   }
 }

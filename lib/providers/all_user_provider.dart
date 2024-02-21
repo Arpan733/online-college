@@ -42,12 +42,16 @@ class AllUserProvider extends ChangeNotifier {
   Future<void> addStudentUser(
       {required BuildContext context, required StudentUserModel studentUserModel}) async {
     await AllUserFireStore().addStudentUser(context: context, studentUserModel: studentUserModel);
+
+    if (!context.mounted) return;
     await getAllUser(context: context);
   }
 
   Future<void> addTeacherUser(
       {required BuildContext context, required TeacherUserModel teacherUserModel}) async {
     await AllUserFireStore().addTeacherUser(context: context, teacherUserModel: teacherUserModel);
+
+    if (!context.mounted) return;
     await getAllUser(context: context);
   }
 }

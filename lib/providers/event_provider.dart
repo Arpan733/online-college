@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:online_college/model/event_model.dart';
+import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/event_firestore.dart';
+import 'package:online_college/repositories/notifications.dart';
+import 'package:provider/provider.dart';
 
 class EventProvider extends ChangeNotifier {
   List<EventModel> _eventList = [];
@@ -18,6 +21,22 @@ class EventProvider extends ChangeNotifier {
 
   Future<void> addEvent({required BuildContext context, required EventModel eventModel}) async {
     await EventFireStore().addEventToFireStore(context: context, eventModel: eventModel);
+
+    List<String> tokens = [];
+
+    if (!context.mounted) return;
+    Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((element) {
+      if (element.notificationToken != "") {
+        tokens.add(element.notificationToken);
+      }
+    });
+
+    NotificationServices().sendNotification(
+      title: eventModel.title,
+      message: 'Time: ${eventModel.dateTime}\nDescription: ${eventModel.description}',
+      tokens: tokens,
+      page: 'events',
+    );
 
     if (!context.mounted) return;
     await getEventList(context: context);

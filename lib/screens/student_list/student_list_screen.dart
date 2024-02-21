@@ -17,15 +17,6 @@ class _StudentListScreenState extends State<StudentListScreen> {
   String currentYear = '1st Year';
 
   @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<AllUserProvider>(context, listen: false).getAllUser(context: context);
-    });
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -51,8 +42,8 @@ class _StudentListScreenState extends State<StudentListScreen> {
 
               u.sort(
                 (a, b) {
-                  int aDate = int.parse(a.rollNo!);
-                  int bDate = int.parse(b.rollNo!);
+                  int aDate = int.parse(a.rollNo);
+                  int bDate = int.parse(b.rollNo);
                   return aDate.compareTo(bDate);
                 },
               );
@@ -207,7 +198,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               Hero(
-                                                tag: su.id!,
+                                                tag: su.id,
                                                 child: Container(
                                                   height: 60,
                                                   width: 60,
@@ -224,7 +215,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                                   ),
                                                   clipBehavior: Clip.antiAlias,
                                                   child: Image.network(
-                                                    su.photoUrl ?? '',
+                                                    su.photoUrl,
                                                     fit: BoxFit.fitHeight,
                                                     errorBuilder: (BuildContext context,
                                                         Object error, StackTrace? stackTrace) {
@@ -244,7 +235,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      su.name!,
+                                                      su.name,
                                                       style: GoogleFonts.rubik(
                                                         color: Colors.black87,
                                                         fontSize: 18,
@@ -252,7 +243,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      '+91 ${su.phoneNumber!}',
+                                                      '+91 ${su.phoneNumber}',
                                                       style: GoogleFonts.rubik(
                                                         color: Colors.black54,
                                                         fontSize: 14,
@@ -266,7 +257,7 @@ class _StudentListScreenState extends State<StudentListScreen> {
                                                 width: 10,
                                               ),
                                               Text(
-                                                su.rollNo!,
+                                                su.rollNo,
                                                 style: GoogleFonts.rubik(
                                                   color: Colors.black87,
                                                   fontSize: 20,

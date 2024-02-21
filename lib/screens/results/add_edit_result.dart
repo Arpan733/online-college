@@ -168,8 +168,8 @@ class _AddEditResultState extends State<AddEditResult> {
 
     sm.sort(
       (a, b) {
-        int aRoll = int.parse(a.rollNo!);
-        int bRoll = int.parse(b.rollNo!);
+        int aRoll = int.parse(a.rollNo);
+        int bRoll = int.parse(b.rollNo);
         return aRoll.compareTo(bRoll);
       },
     );
@@ -188,7 +188,7 @@ class _AddEditResultState extends State<AddEditResult> {
         if (s.id == r.sid) {
           for (var element in r.result!) {
             if (element.year == yearController.text) {
-              ism.add(s.id!);
+              ism.add(s.id);
               isd.add(sd[sm.indexOf(s)].value!);
             }
           }
@@ -331,7 +331,7 @@ class _AddEditResultState extends State<AddEditResult> {
                                     .updateResult(context: context, resultModel: resultModel);
                               }
 
-                              if (!mounted) return;
+                              if (!context.mounted) return;
                               Navigator.pop(context);
                             },
                             child: Container(
@@ -441,12 +441,15 @@ class _AddEditResultState extends State<AddEditResult> {
 
                               ResultModel resultModel = ResultModel(
                                 cpi: cpi,
-                                sid: sm[c].id!,
+                                sid: sm[c].id,
                                 result: re,
                               );
 
-                              Provider.of<ResultProvider>(context, listen: false)
-                                  .addResult(context: context, resultModel: resultModel);
+                              Provider.of<ResultProvider>(context, listen: false).addResult(
+                                  context: context,
+                                  resultModel: resultModel,
+                                  year: yearController.text,
+                                  spi: spiController.text);
                               Navigator.pop(context);
 
                               re.clear();

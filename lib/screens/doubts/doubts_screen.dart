@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/model/doubt_model.dart';
-import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/providers/doubt_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:text_scroll/text_scroll.dart';
@@ -24,7 +23,6 @@ class _DoubtScreenState extends State<DoubtScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<AllUserProvider>(context, listen: false).getAllUser(context: context);
       Provider.of<DoubtProvider>(context, listen: false).getDoubtList(context: context);
     });
 

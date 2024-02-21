@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/model/assignment_model.dart';
+import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/assignment_firestore.dart';
+import 'package:online_college/repositories/notifications.dart';
+import 'package:provider/provider.dart';
 
 class AssignmentProvider extends ChangeNotifier {
   List<AssignmentModel> _assignmentList = [];
@@ -21,6 +24,23 @@ class AssignmentProvider extends ChangeNotifier {
       {required BuildContext context, required AssignmentModel assignmentModel}) async {
     await AssignmentFireStore()
         .addAssignmentToFireStore(context: context, assignmentModel: assignmentModel);
+
+    List<String> tokens = [];
+
+    if (!context.mounted) return;
+    Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((element) {
+      if (assignmentModel.year == element.year && element.notificationToken != "") {
+        tokens.add(element.notificationToken);
+      }
+    });
+
+    NotificationServices().sendNotification(
+      title: 'About Fee',
+      message:
+          'Reminder: You have an assignment due for ${assignmentModel.subject}. Please ensure it\'s completed by ${assignmentModel.lastDateTime}.',
+      tokens: tokens,
+      page: 'assignments',
+    );
 
     if (!context.mounted) return;
     await getAssignmentList(context: context);

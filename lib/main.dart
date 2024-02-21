@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/providers/all_user_provider.dart';
@@ -14,15 +15,45 @@ import 'package:online_college/providers/sign_in_provider.dart';
 import 'package:online_college/providers/student_data_firestore_provider.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
 import 'package:online_college/providers/time_table_provider.dart';
+import 'package:online_college/repositories/notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'consts/routes.dart';
 import 'firebase_options.dart';
 
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage? message) async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+}
+
+checkPermissions() async {
+  await Permission.manageExternalStorage.request();
+  await Permission.accessMediaLocation.request();
+  await Permission.storage.request();
+
+  if (await Permission.storage.isDenied) {
+    await Permission.storage.request();
+  }
+
+  if (await Permission.accessMediaLocation.isDenied) {
+    await Permission.accessMediaLocation.request();
+  }
+
+  if (await Permission.manageExternalStorage.isDenied) {
+    await Permission.manageExternalStorage.request();
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   UserSharedPreferences().init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  NotificationServices().requestNotificationPermissions();
+  checkPermissions();
   runApp(const MyApp());
 }
 
@@ -69,3 +100,27 @@ class MyApp extends StatelessWidget {
 // "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/online-college-da0ab%40appspot.gserviceaccount.com",
 // "universe_domain": "googleapis.com"
 // }
+
+// NotificationServices().getToken().then((value) async {
+//   var data = {
+//     'to': value.toString(),
+// "registration_ids":[],
+//     'priority': 'high',
+//     'notification': {
+//       'title': 'Hello',
+//       'body': 'World!!',
+//     },
+//     'data': {
+//       'page': 'new_page',
+//     },
+//   };
+//   await http.post(
+//     Uri.parse('https://fcm.googleapis.com/fcm/send'),
+//     headers: {
+//       'Content-Type': 'application/json; charset=UTF-8',
+//       'Authorization':
+//       'key=AAAAuhSDaBw:APA91bGCkWIGn43dIkpD1UDGCrpNqZKUGQMIcfE4jYKBEN6uL3X_FlIzO4-7ScO55FzpAk3Kj3CKE8QsNjFABn2PKXtRzRUvl8qBAuwnq0OY8PjeTvsQkU4hks-V-swH888R2vmAnpAq',
+//     },
+//     body: jsonEncode(data),
+//   );
+// });

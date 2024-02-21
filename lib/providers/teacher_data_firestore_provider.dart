@@ -63,4 +63,13 @@ class TeacherDataFireStoreProvider extends ChangeNotifier {
   Future<void> updateTeacherPhotoUrl(
           {required BuildContext context, required String photoUrl, required String id}) =>
       UserDataFireStore().updateUser(context: context, title: 'photoUrl', data: photoUrl, id: id);
+
+  Future<void> updateTeacherNotificationToken(
+          {required BuildContext context, required String notificationToken, required String id}) =>
+      UserDataFireStore().updateUser(
+          context: context, title: 'notificationToken', data: notificationToken, id: id);
+
+  Future<void> updateTeacherLoginTime(
+          {required BuildContext context, required String loginTime, required String id}) =>
+      UserDataFireStore().updateUser(context: context, title: 'loginTime', data: loginTime, id: id);
 }

@@ -15,15 +15,6 @@ class ProfessorListScreen extends StatefulWidget {
 
 class _ProfessorListScreenState extends State<ProfessorListScreen> {
   @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<AllUserProvider>(context, listen: false).getAllUser(context: context);
-    });
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,

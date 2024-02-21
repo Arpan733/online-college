@@ -37,6 +37,10 @@ class UserSharedPreferences {
 
   static String get fatherName => UserSharedPreferences().get('fatherName');
 
+  static String get notificationToken => UserSharedPreferences().get('notificationToken');
+
+  static String get loginTime => UserSharedPreferences().get('loginTime');
+
   static Future setString({required String title, required String data}) async {
     await preferences?.setString(title, data);
   }

@@ -24,6 +24,7 @@ class SignInFirebase {
 
       return verificationId;
     } on FirebaseAuthException catch (e) {
+      if (!context.mounted) return null;
       Utils().showToast(context: context, message: e.code.toString());
     }
 
@@ -42,6 +43,7 @@ class SignInFirebase {
 
       return user;
     } on FirebaseAuthException catch (e) {
+      if (!context.mounted) return null;
       Utils().showToast(context: context, message: e.code.toString());
     }
 

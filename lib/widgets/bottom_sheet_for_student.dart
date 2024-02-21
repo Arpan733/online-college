@@ -342,6 +342,16 @@ bottomSheetForStudent({
                             rollNo: rollNoController.text,
                             id: const UuidV4().generate().toString(),
                             role: 'student',
+                            photoUrl: '',
+                            notificationToken: '',
+                            loginTime: '',
+                            uid: '',
+                            address: '',
+                            adhar: '',
+                            dateOfBirth: '',
+                            email: '',
+                            motherName: '',
+                            fatherName: '',
                           );
 
                           await Provider.of<AllUserProvider>(context, listen: false)

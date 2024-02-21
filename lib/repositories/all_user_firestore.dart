@@ -22,6 +22,8 @@ class AllUserFireStore {
       {required BuildContext context, required StudentUserModel studentUserModel}) async {
     try {
       await firestore.collection('users').doc(studentUserModel.id).set(studentUserModel.toJson());
+
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Student Added');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
@@ -32,6 +34,8 @@ class AllUserFireStore {
       {required BuildContext context, required TeacherUserModel teacherUserModel}) async {
     try {
       await firestore.collection('users').doc(teacherUserModel.id).set(teacherUserModel.toJson());
+
+      if (!context.mounted) return;
       Utils().showToast(context: context, message: 'Teacher Added');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());

@@ -23,6 +23,13 @@ List<Map<String, dynamic>> functionalityListTeacher = [
     },
   },
   {
+    'name': 'Quiz',
+    'image': 'assets/icons/quiz.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, Routes.quiz);
+    },
+  },
+  {
     'name': 'Fees',
     'image': 'assets/icons/fees.png',
     'onTap': (BuildContext context) {
@@ -110,6 +117,13 @@ List<Map<String, dynamic>> functionalityListTeacher = [
 ];
 
 List<Map<String, dynamic>> functionalityListStudent = [
+  {
+    'name': 'Play Quiz',
+    'image': 'assets/icons/quiz.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, Routes.quiz);
+    },
+  },
   {
     'name': 'Assignments',
     'image': 'assets/icons/assignment.png',

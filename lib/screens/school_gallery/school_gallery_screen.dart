@@ -9,6 +9,7 @@ import 'package:online_college/providers/school_gallery_provider.dart';
 import 'package:online_college/widgets/bottom_sheet_for_school_photos.dart';
 import 'package:pie_menu/pie_menu.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SchoolGalleryScreen extends StatefulWidget {
   const SchoolGalleryScreen({Key? key}) : super(key: key);
@@ -175,7 +176,10 @@ class _SchoolGalleryScreenState extends State<SchoolGalleryScreen> {
                                                 ),
                                                 PieAction(
                                                   tooltip: const Text(''),
-                                                  onSelect: () {},
+                                                  onSelect: () async {
+                                                    await Share.share(g.url);
+                                                    // await Share.shareUri(Uri.parse(g.url));
+                                                  },
                                                   buttonTheme: const PieButtonTheme(
                                                     backgroundColor: Colors.black26,
                                                     iconColor: Colors.black87,

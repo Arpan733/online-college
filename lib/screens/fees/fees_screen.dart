@@ -339,8 +339,8 @@ class _FeesScreenState extends State<FeesScreen> {
                                       height: 10,
                                     ),
                                     GestureDetector(
-                                      onTap: () =>
-                                          Navigator.pushNamed(context, arguments: f, Routes.feePay),
+                                      onTap: () => Navigator.pushNamed(
+                                          context, arguments: f.fid, Routes.feePay),
                                       child: Container(
                                         height: 50,
                                         decoration: const BoxDecoration(
@@ -377,8 +377,8 @@ class _FeesScreenState extends State<FeesScreen> {
                               );
                             } else {
                               return GestureDetector(
-                                onTap: () =>
-                                    Navigator.pushNamed(context, arguments: f, Routes.feeDetail),
+                                onTap: () => Navigator.pushNamed(
+                                    context, arguments: f.fid, Routes.feeDetail),
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 20),
                                   alignment: Alignment.center,

@@ -335,6 +335,7 @@ bottomSheetForChat({
                                 doubt = DoubtModel(
                                   year: '',
                                   subject: '',
+                                  solved: '',
                                   did: '',
                                   createdTime: '',
                                   title: '',

@@ -18,6 +18,17 @@ class AllUserFireStore {
     return [];
   }
 
+  Future<void> deleteUserFromFireStore({required BuildContext context, required String id}) async {
+    try {
+      await firestore.collection('users').doc(id).delete();
+
+      if (!context.mounted) return;
+      Utils().showToast(context: context, message: 'User Deleted');
+    } catch (e) {
+      Utils().showToast(context: context, message: e.toString());
+    }
+  }
+
   Future<void> addStudentUser(
       {required BuildContext context, required StudentUserModel studentUserModel}) async {
     try {

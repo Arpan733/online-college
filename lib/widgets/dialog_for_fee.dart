@@ -18,7 +18,7 @@ showDialogForFee({
       ),
       content: GestureDetector(
         onTap: () {
-          Navigator.popAndPushNamed(context, Routes.fees);
+          Navigator.popAndPushNamed(context, arguments: feeModel.fid, Routes.feePay);
         },
         child: Container(
           height: 115,

@@ -8,15 +8,24 @@ import 'package:provider/provider.dart';
 import 'package:uuid/v4.dart';
 
 class AddEditFees extends StatefulWidget {
-  final FeeModel? feeModel;
+  final String? fid;
 
-  const AddEditFees({super.key, this.feeModel});
+  const AddEditFees({super.key, this.fid});
 
   @override
   State<AddEditFees> createState() => _AddEditFeesState();
 }
 
 class _AddEditFeesState extends State<AddEditFees> {
+  FeeModel feeModel = FeeModel(
+      fid: 'fid',
+      title: 'title',
+      lastDate: 'lastDate',
+      createdDate: 'createdDate',
+      totalAmount: 'totalAmount',
+      year: 'year',
+      feeDescription: [],
+      paidStudents: []);
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   bool isEdit = false;
 
@@ -82,25 +91,28 @@ class _AddEditFeesState extends State<AddEditFees> {
     amount4Controller.text = '0';
     amount5Controller.text = '0';
 
-    if (widget.feeModel != null) {
-      isEdit = true;
-      titleController.text = widget.feeModel?.title ?? "";
-      amountController.text = widget.feeModel?.totalAmount ?? "";
-      lastDateController.text = widget.feeModel?.lastDate ?? "";
-      yearController.text = widget.feeModel?.year ?? '1st Year';
-      noOfData = widget.feeModel?.feeDescription?.length ?? 1;
+    if (widget.fid != 'null') {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+        FeeProvider provider = Provider.of<FeeProvider>(context, listen: false);
+        await provider.getFee(context: context, fid: widget.fid!);
+        feeModel = provider.fee;
 
-      int c = 0;
+        isEdit = true;
+        titleController.text = feeModel.title ?? "";
+        amountController.text = feeModel.totalAmount ?? "";
+        lastDateController.text = feeModel.lastDate ?? "";
+        yearController.text = feeModel.year ?? '1st Year';
+        noOfData = feeModel.feeDescription?.length ?? 1;
 
-      widget.feeModel?.feeDescription?.forEach((element) {
-        getTitleController(i: c).text = element.title!;
-        getAmountController(i: c).text = element.amount!;
-        c++;
-      });
+        int c = 0;
 
-      totalAmountController();
+        feeModel.feeDescription?.forEach((element) {
+          getTitleController(i: c).text = element.title!;
+          getAmountController(i: c).text = element.amount!;
+          c++;
+        });
 
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        totalAmountController();
         setState(() {});
       });
     } else {
@@ -165,6 +177,26 @@ class _AddEditFeesState extends State<AddEditFees> {
                   ),
                   actions: [
                     GestureDetector(
+                      onTap: () async {
+                        if (!context.mounted) return;
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 40,
+                        margin: const EdgeInsets.only(right: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const Icon(
+                          Icons.close_outlined,
+                          color: Colors.red,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
                       child: Container(
                         height: 30,
                         width: 90,
@@ -206,19 +238,19 @@ class _AddEditFeesState extends State<AddEditFees> {
                                   amount: getAmountController(i: i).text));
                             }
 
-                            FeeModel feeModel = FeeModel(
+                            FeeModel f = FeeModel(
                               title: titleController.text,
                               lastDate: lastDateController.text,
-                              createdDate: widget.feeModel?.createdDate,
+                              createdDate: feeModel.createdDate,
                               totalAmount: amountController.text,
                               year: yearController.text,
                               feeDescription: l,
-                              paidStudents: widget.feeModel?.paidStudents,
-                              fid: widget.feeModel?.fid,
+                              paidStudents: feeModel.paidStudents,
+                              fid: feeModel.fid,
                             );
 
                             await Provider.of<FeeProvider>(context, listen: false)
-                                .updateFee(context: context, feeModel: feeModel);
+                                .updateFee(context: context, feeModel: f);
 
                             if (!context.mounted) return;
                             Navigator.pop(context);
@@ -232,7 +264,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                                   amount: getAmountController(i: i).text));
                             }
 
-                            FeeModel feeModel = FeeModel(
+                            FeeModel f = FeeModel(
                               title: titleController.text,
                               lastDate: lastDateController.text,
                               createdDate:
@@ -245,7 +277,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                             );
 
                             await Provider.of<FeeProvider>(context, listen: false)
-                                .addFee(context: context, feeModel: feeModel);
+                                .addFee(context: context, feeModel: f);
 
                             if (!context.mounted) return;
                             Navigator.pop(context);

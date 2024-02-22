@@ -61,6 +61,8 @@ class _EventScreenState extends State<EventScreen> {
         await Provider.of<EventProvider>(context, listen: false).getEventList(context: context);
         setState(() {});
       },
+      backgroundColor: const Color(0xFF2855AE),
+      color: Colors.white,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Stack(
@@ -191,8 +193,8 @@ class _EventScreenState extends State<EventScreen> {
                             EventModel e = showEventList[index];
 
                             return GestureDetector(
-                              onTap: () =>
-                                  Navigator.pushNamed(context, arguments: e, Routes.eventDetail),
+                              onTap: () => Navigator.pushNamed(
+                                  context, arguments: e.eid, Routes.eventDetail),
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 20),
                                 decoration: BoxDecoration(

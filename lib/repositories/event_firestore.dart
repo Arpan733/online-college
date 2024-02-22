@@ -59,6 +59,17 @@ class EventFireStore {
     return [];
   }
 
+  Future<EventModel?> getEventFromFireStore(
+      {required BuildContext context, required String eid}) async {
+    try {
+      return EventModel.fromJson((await firestore.collection('events').doc(eid).get()).data()!);
+    } catch (e) {
+      Utils().showToast(context: context, message: e.toString());
+    }
+
+    return null;
+  }
+
   Future<String?> uploadFile({
     required BuildContext context,
     required PlatformFile pickedFile,

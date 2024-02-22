@@ -39,7 +39,7 @@ class LeaveApplicationProvider extends ChangeNotifier {
       message:
           'Reason: ${leaveApplicationModel.description}\nDuration: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(leaveApplicationModel.startDate))} - ${DateFormat('dd/MM/yyyy').format(DateTime.parse(leaveApplicationModel.endDate))}',
       tokens: tokens,
-      page: 'leaveApplication',
+      pd: {'page': 'leaveApplication'},
     );
 
     if (!context.mounted) return;

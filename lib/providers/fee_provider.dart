@@ -17,6 +17,18 @@ class FeeProvider extends ChangeNotifier {
 
   List<FeeModel> get feeList => _feeList;
 
+  FeeModel _fee = FeeModel(
+      fid: 'fid',
+      title: 'title',
+      lastDate: 'lastDate',
+      createdDate: 'createdDate',
+      totalAmount: 'totalAmount',
+      year: 'year',
+      feeDescription: [],
+      paidStudents: []);
+
+  FeeModel get fee => _fee;
+
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
@@ -24,8 +36,6 @@ class FeeProvider extends ChangeNotifier {
   Razorpay razorpay = Razorpay();
 
   Future<void> addFee({required BuildContext context, required FeeModel feeModel}) async {
-    await FeeFireStore().addFeeToFireStore(context: context, feeModel: feeModel);
-
     List<String> tokens = [];
 
     if (!context.mounted) return;
@@ -40,8 +50,13 @@ class FeeProvider extends ChangeNotifier {
       message:
           'Please note that the fee for ${feeModel.title} is due on ${feeModel.lastDate} and amounts to ${feeModel.totalAmount}.',
       tokens: tokens,
-      page: 'fees',
+      pd: {
+        'page': 'feePay',
+        'id': feeModel.fid,
+      },
     );
+
+    await FeeFireStore().addFeeToFireStore(context: context, feeModel: feeModel);
 
     if (!context.mounted) return;
     await getFeeList(context: context);
@@ -83,6 +98,29 @@ class FeeProvider extends ChangeNotifier {
     if (response.isNotEmpty) {
       _feeList = response;
       await sortFee();
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> getFee({required BuildContext context, required String fid}) async {
+    _fee = FeeModel(
+        fid: 'fid',
+        title: 'title',
+        lastDate: 'lastDate',
+        createdDate: 'createdDate',
+        totalAmount: 'totalAmount',
+        year: 'year',
+        feeDescription: [],
+        paidStudents: []);
+    _isLoading = true;
+    notifyListeners();
+
+    FeeModel? response = await FeeFireStore().getFeeFromFireStore(context: context, fid: fid);
+
+    if (response != null) {
+      _fee = response;
     }
 
     _isLoading = false;

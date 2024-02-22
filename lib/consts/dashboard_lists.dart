@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:online_college/consts/routes.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
+import 'package:online_college/providers/student_data_firestore_provider.dart';
+import 'package:online_college/providers/teacher_data_firestore_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<Map<String, dynamic>> functionalityListTeacher = [
@@ -85,6 +89,11 @@ List<Map<String, dynamic>> functionalityListTeacher = [
     'name': 'Log Out',
     'image': 'assets/icons/logout.png',
     'onTap': (BuildContext context) async {
+      if (!context.mounted) return;
+      await Provider.of<TeacherDataFireStoreProvider>(context, listen: false)
+          .updateTeacherNotificationToken(
+              context: context, notificationToken: '', id: UserSharedPreferences.id);
+
       await FirebaseAuth.instance.signOut();
       SharedPreferences preference = await SharedPreferences.getInstance();
       await preference.clear();
@@ -168,6 +177,11 @@ List<Map<String, dynamic>> functionalityListStudent = [
     'name': 'Log Out',
     'image': 'assets/icons/logout.png',
     'onTap': (BuildContext context) async {
+      if (!context.mounted) return;
+      await Provider.of<StudentDataFireStoreProvider>(context, listen: false)
+          .updateStudentNotificationToken(
+              context: context, notificationToken: '', id: UserSharedPreferences.id);
+
       await FirebaseAuth.instance.signOut();
       SharedPreferences preference = await SharedPreferences.getInstance();
       await preference.clear();

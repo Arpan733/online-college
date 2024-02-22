@@ -73,6 +73,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
             .getAssignmentList(context: context);
         setState(() {});
       },
+      backgroundColor: const Color(0xFF2855AE),
+      color: Colors.white,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Stack(
@@ -352,40 +354,42 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                       onTap: () async {
                                         if (UserSharedPreferences.role == 'teacher') {
                                           Navigator.pushNamed(
-                                              context, arguments: a, Routes.assignmentDetail);
+                                              context, arguments: a.aid, Routes.assignmentDetail);
                                         } else {
-                                          assignment.setIsLoading(loading: true);
+                                          if (!assignment.checkStudentInList(assignment: a)) {
+                                            assignment.setIsLoading(loading: true);
 
-                                          final value = await FilePicker.platform.pickFiles();
-                                          String url = '';
+                                            final value = await FilePicker.platform.pickFiles();
+                                            String url = '';
 
-                                          if (value != null) {
-                                            if (!context.mounted) return;
-                                            url = await AssignmentFireStore().uploadFile(
+                                            if (value != null) {
+                                              if (!context.mounted) return;
+                                              url = await AssignmentFireStore().uploadFile(
+                                                    context: context,
+                                                    pickedFile: value.files[0],
+                                                    aid: a.aid,
+                                                  ) ??
+                                                  '';
+                                            }
+
+                                            if (url != '') {
+                                              Submitted submitted = Submitted(
+                                                  sid: UserSharedPreferences.id,
+                                                  url: url,
+                                                  submitTime: DateTime.now().toString());
+
+                                              if (!context.mounted) return;
+                                              await assignment.addStudentInAssignmentList(
                                                   context: context,
-                                                  pickedFile: value.files[0],
-                                                  aid: a.aid,
-                                                ) ??
-                                                '';
-                                          }
+                                                  submitted: submitted,
+                                                  assignmentModel: a);
+                                            }
 
-                                          if (url != '') {
-                                            Submitted submitted = Submitted(
-                                                sid: UserSharedPreferences.id,
-                                                url: url,
-                                                submitTime: DateTime.now().toString());
+                                            assignment.setIsLoading(loading: false);
 
                                             if (!context.mounted) return;
-                                            await assignment.addStudentInAssignmentList(
-                                                context: context,
-                                                submitted: submitted,
-                                                assignmentModel: a);
+                                            assignment.getAssignmentList(context: context);
                                           }
-
-                                          assignment.setIsLoading(loading: true);
-
-                                          if (!context.mounted) return;
-                                          assignment.getAssignmentList(context: context);
                                         }
                                       },
                                       child: Container(

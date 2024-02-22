@@ -182,6 +182,7 @@ bottomSheetForDoubt({
                             did: did,
                             createdTime: DateTime.now().toString(),
                             title: titleController.text,
+                            solved: 'false',
                             chat: [
                               Chat(
                                 message: titleController.text,

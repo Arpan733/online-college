@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:online_college/model/assignment_model.dart';
-import 'package:online_college/model/event_model.dart';
+import 'package:online_college/model/result_model.dart';
 import 'package:online_college/screens/assignments/assignment_detail_screen.dart';
 import 'package:online_college/screens/assignments/assignment_screen.dart';
 import 'package:online_college/screens/dashboard/dashboard_screen.dart';
 import 'package:online_college/screens/dashboard/profile_screen.dart';
+import 'package:online_college/screens/doubts/doubt_detail_screen.dart';
 import 'package:online_college/screens/doubts/doubts_screen.dart';
 import 'package:online_college/screens/events/event_detail_screen.dart';
 import 'package:online_college/screens/events/events_screen.dart';
@@ -25,11 +25,7 @@ import 'package:online_college/screens/school_holiday/school_holiday_screen.dart
 import 'package:online_college/screens/splash_screen.dart';
 import 'package:online_college/screens/student_list/student_list_screen.dart';
 import 'package:online_college/screens/timetable/timetable_screen.dart';
-
-import '../model/doubt_model.dart';
-import '../model/fee_model.dart';
-import '../model/result_model.dart';
-import '../screens/doubts/doubt_detail_screen.dart';
+import 'package:online_college/screens/users_details/user_details_screen.dart';
 
 class Routes {
   static const String splash = 'splash';
@@ -57,6 +53,7 @@ class Routes {
   static const String doubtDetail = 'doubtDetail';
   static const String assignmentDetail = 'assignmentDetail';
   static const String eventDetail = 'eventDetail';
+  static const String userDetail = 'userDetail';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -90,20 +87,17 @@ class Routes {
         return MaterialPageRoute(builder: (BuildContext context) => const FeesScreen());
       case addEditFees:
         return MaterialPageRoute(
-            builder: (BuildContext context) =>
-                AddEditFees(feeModel: settings.arguments as FeeModel?));
+            builder: (BuildContext context) => AddEditFees(fid: settings.arguments.toString()));
       case feeDetail:
         return MaterialPageRoute(
-            builder: (BuildContext context) =>
-                FeeDetailScreen(fee: settings.arguments as FeeModel));
+            builder: (BuildContext context) => FeeDetailScreen(fid: settings.arguments.toString()));
       case feePay:
         return MaterialPageRoute(
-            builder: (BuildContext context) =>
-                FeePayScreen(feeModel: settings.arguments as FeeModel));
+            builder: (BuildContext context) => FeePayScreen(fid: settings.arguments.toString()));
       case feeReceipt:
         return MaterialPageRoute(
             builder: (BuildContext context) =>
-                FeeReceiptScreen(feeModel: settings.arguments as FeeModel));
+                FeeReceiptScreen(fid: settings.arguments.toString()));
       case resultTeacher:
         return MaterialPageRoute(builder: (BuildContext context) => const ResultScreenForTeacher());
       case resultStudent:
@@ -127,15 +121,19 @@ class Routes {
       case doubtDetail:
         return MaterialPageRoute(
             builder: (BuildContext context) =>
-                DoubtDetailScreen(doubtModel: settings.arguments as DoubtModel));
+                DoubtDetailScreen(did: settings.arguments.toString()));
       case assignmentDetail:
         return MaterialPageRoute(
             builder: (BuildContext context) =>
-                AssignmentDetailScreen(assignmentModel: settings.arguments as AssignmentModel));
+                AssignmentDetailScreen(aid: settings.arguments.toString()));
       case eventDetail:
         return MaterialPageRoute(
             builder: (BuildContext context) =>
-                EventDetailScreen(eventModel: settings.arguments as EventModel));
+                EventDetailScreen(eid: settings.arguments.toString()));
+      case userDetail:
+        return MaterialPageRoute(
+            builder: (BuildContext context) =>
+                UserDetailsScreen(id: settings.arguments.toString()));
       default:
         return MaterialPageRoute(
           builder: (_) {

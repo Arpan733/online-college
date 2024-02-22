@@ -32,411 +32,363 @@ class _SchoolHolidayScreenState extends State<SchoolHolidayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-            width: MediaQuery.of(context).size.width,
-            child: Image.asset(
-              'assets/images/background 1.png',
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-          Consumer<HolidayProvider>(
-            builder: (context, holiday, _) {
-              List<HolidayModel> mainList = [];
-              List<DateTime> dateTimeList = [];
+    return RefreshIndicator(
+      onRefresh: () async {
+        Provider.of<HolidayProvider>(context, listen: false).getHolidayList(context: context);
+      },
+      backgroundColor: const Color(0xFF2855AE),
+      color: Colors.white,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Consumer<HolidayProvider>(
+          builder: (context, holiday, child) {
+            List<HolidayModel> mainList = [];
+            List<DateTime> dateTimeList = [];
 
-              for (var element in holiday.holidays) {
-                if (DateTime.parse(element.date!).month == holiday.focusedDay.month) {
-                  mainList.add(element);
-                  dateTimeList.add(DateTime.parse(element.date!));
-                }
+            for (var element in holiday.holidays) {
+              if (DateTime.parse(element.date!).month == holiday.focusedDay.month) {
+                mainList.add(element);
+                dateTimeList.add(DateTime.parse(element.date!));
               }
-
-              return CustomScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                slivers: [
-                  SliverAppBar(
-                    foregroundColor: Colors.white,
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerRight,
-                            end: Alignment.centerLeft,
-                            colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+            }
+            return Stack(
+              children: [
+                Positioned(
+                  bottom: 0,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/images/background 1.png',
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
+                CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      foregroundColor: Colors.white,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerRight,
+                              end: Alignment.centerLeft,
+                              colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+                            ),
+                          ),
+                          child: Image.asset('assets/images/background.png'),
+                        ),
+                      ),
+                      bottom: PreferredSize(
+                        preferredSize: Size(MediaQuery.of(context).size.width, 40),
+                        child: Container(
+                          height: 40,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(40), topLeft: Radius.circular(40)),
+                            color: Colors.white,
                           ),
                         ),
-                        child: Image.asset('assets/images/background.png'),
                       ),
-                    ),
-                    bottom: PreferredSize(
-                      preferredSize: Size(MediaQuery.of(context).size.width, 40),
-                      child: Container(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(40), topLeft: Radius.circular(40)),
+                      title: Text(
+                        'Holiday',
+                        style: GoogleFonts.rubik(
                           color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                    title: Text(
-                      'Holiday',
-                      style: GoogleFonts.rubik(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate(
-                        [
-                          TableCalendar(
-                            firstDay: DateTime(
-                                DateTime.now().year - 2, DateTime.now().month, DateTime.now().day),
-                            lastDay: DateTime(
-                                DateTime.now().year + 2, DateTime.now().month, DateTime.now().day),
-                            focusedDay: holiday.focusedDay,
-                            calendarFormat: CalendarFormat.month,
-                            rowHeight: 50,
-                            calendarStyle: CalendarStyle(
-                              defaultTextStyle: GoogleFonts.rubik(
-                                color: Colors.black87,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              holidayDecoration: const BoxDecoration(
-                                color: Colors.green,
-                                shape: BoxShape.circle,
-                              ),
-                              holidayTextStyle: GoogleFonts.rubik(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              outsideTextStyle: GoogleFonts.rubik(
-                                color: Colors.black54,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300,
-                              ),
-                              selectedDecoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  begin: Alignment.centerRight,
-                                  end: Alignment.centerLeft,
-                                  colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+                    SliverPadding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+                            TableCalendar(
+                              firstDay: DateTime(DateTime.now().year - 2, DateTime.now().month,
+                                  DateTime.now().day),
+                              lastDay: DateTime(DateTime.now().year + 2, DateTime.now().month,
+                                  DateTime.now().day),
+                              focusedDay: holiday.focusedDay,
+                              calendarFormat: CalendarFormat.month,
+                              rowHeight: 50,
+                              calendarStyle: CalendarStyle(
+                                defaultTextStyle: GoogleFonts.rubik(
+                                  color: Colors.black87,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                holidayDecoration: const BoxDecoration(
+                                  color: Colors.green,
+                                  shape: BoxShape.circle,
+                                ),
+                                holidayTextStyle: GoogleFonts.rubik(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                outsideTextStyle: GoogleFonts.rubik(
+                                  color: Colors.black54,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                                selectedDecoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                    begin: Alignment.centerRight,
+                                    end: Alignment.centerLeft,
+                                    colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+                                  ),
+                                ),
+                                selectedTextStyle: GoogleFonts.rubik(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                todayDecoration: BoxDecoration(
+                                  color: const Color(0xFF6688CA).withOpacity(0.8),
+                                  shape: BoxShape.circle,
+                                ),
+                                todayTextStyle: GoogleFonts.rubik(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              selectedTextStyle: GoogleFonts.rubik(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
+                              daysOfWeekHeight: 30,
+                              daysOfWeekStyle: DaysOfWeekStyle(
+                                weekdayStyle: GoogleFonts.rubik(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                weekendStyle: GoogleFonts.rubik(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                              todayDecoration: BoxDecoration(
-                                color: const Color(0xFF6688CA).withOpacity(0.8),
-                                shape: BoxShape.circle,
-                              ),
-                              todayTextStyle: GoogleFonts.rubik(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            daysOfWeekHeight: 30,
-                            daysOfWeekStyle: DaysOfWeekStyle(
-                              weekdayStyle: GoogleFonts.rubik(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              weekendStyle: GoogleFonts.rubik(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            holidayPredicate: (DateTime date) {
-                              if ((date.weekday == DateTime.sunday) ||
-                                  (dateTimeList.any((element) => element.day == date.day))) {
-                                return true;
-                              }
+                              holidayPredicate: (DateTime date) {
+                                if ((date.weekday == DateTime.sunday) ||
+                                    (dateTimeList.any((element) => element.day == date.day))) {
+                                  return true;
+                                }
 
-                              return false;
-                            },
-                            onHeaderTapped: (dateTime) {
-                              isSelected = false;
-                              showList.clear();
+                                return false;
+                              },
+                              onHeaderTapped: (dateTime) {
+                                isSelected = false;
+                                showList.clear();
 
-                              setState(() {});
-                            },
-                            headerStyle: HeaderStyle(
-                              formatButtonVisible: false,
-                              titleCentered: true,
-                              titleTextStyle: GoogleFonts.rubik(
+                                setState(() {});
+                              },
+                              headerStyle: HeaderStyle(
+                                formatButtonVisible: false,
+                                titleCentered: true,
+                                titleTextStyle: GoogleFonts.rubik(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                leftChevronMargin: const EdgeInsets.only(right: 50),
+                                leftChevronIcon: const Icon(
+                                  Icons.chevron_left_outlined,
+                                  color: Colors.black,
+                                  size: 25,
+                                ),
+                                rightChevronMargin: const EdgeInsets.only(left: 50),
+                                rightChevronIcon: const Icon(
+                                  Icons.chevron_right_outlined,
+                                  color: Colors.black,
+                                  size: 25,
+                                ),
+                                headerMargin: const EdgeInsets.only(bottom: 5),
+                              ),
+                              selectedDayPredicate: (day) {
+                                return isSameDay(holiday.selectedDay, day);
+                              },
+                              onDaySelected: (selectedDay, focusedDay) {
+                                showList = [];
+
+                                for (var element in mainList) {
+                                  if (DateTime.parse(element.date!).day == selectedDay.day) {
+                                    showList.add(element);
+                                  }
+                                }
+
+                                isSelected = true;
+
+                                setState(() {
+                                  holiday.setFocusDay(focusedDay);
+                                  holiday.setSelectedDay(selectedDay);
+                                });
+                              },
+                              onPageChanged: (focusedDay) {
+                                holiday.setFocusDay(focusedDay);
+                                setState(() {});
+                              },
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              'List of Holiday',
+                              style: GoogleFonts.rubik(
                                 color: Colors.black,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
                               ),
-                              leftChevronMargin: const EdgeInsets.only(right: 50),
-                              leftChevronIcon: const Icon(
-                                Icons.chevron_left_outlined,
-                                color: Colors.black,
-                                size: 25,
-                              ),
-                              rightChevronMargin: const EdgeInsets.only(left: 50),
-                              rightChevronIcon: const Icon(
-                                Icons.chevron_right_outlined,
-                                color: Colors.black,
-                                size: 25,
-                              ),
-                              headerMargin: const EdgeInsets.only(bottom: 5),
                             ),
-                            selectedDayPredicate: (day) {
-                              return isSameDay(holiday.selectedDay, day);
-                            },
-                            onDaySelected: (selectedDay, focusedDay) {
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SliverPadding(
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      sliver: SliverList.builder(
+                        itemCount: showList.isNotEmpty ? showList.length : mainList.length,
+                        itemBuilder: (context, index) {
+                          HolidayModel hc = showList.isNotEmpty ? showList[index] : mainList[index];
+
+                          return GestureDetector(
+                            onLongPress: () => showDialogForHolidayList(
+                              context: context,
+                              hc: hc,
+                              onEdit: () async {
+                                if (!context.mounted) return;
+                                Navigator.pop(context);
+
+                                await bottomSheetForHoliday(
+                                  context: context,
+                                  title: hc.title!,
+                                  description: hc.description!,
+                                  date: hc.date!,
+                                  hid: hc.hid!,
+                                  isEdit: true,
+                                );
+                              },
+                              onDelete: () async {
+                                await Provider.of<HolidayProvider>(context, listen: false)
+                                    .deleteHoliday(context: context, hid: hc.hid!);
+
+                                if (!context.mounted) return;
+                                Navigator.pop(context);
+
+                                if (!context.mounted) return;
+                                await Provider.of<HolidayProvider>(context, listen: false)
+                                    .getHolidayList(context: context);
+                              },
+                              onOk: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            onTap: () {
+                              DateTime sd = DateTime.parse(hc.date!);
+                              holiday.setSelectedDay(sd);
+
                               showList = [];
 
                               for (var element in mainList) {
-                                if (DateTime.parse(element.date!).day == selectedDay.day) {
+                                if (DateTime.parse(element.date!).day == holiday.selectedDay?.day) {
                                   showList.add(element);
                                 }
                               }
 
                               isSelected = true;
 
-                              setState(() {
-                                holiday.setFocusDay(focusedDay);
-                                holiday.setSelectedDay(selectedDay);
-                              });
-                            },
-                            onPageChanged: (focusedDay) {
-                              holiday.setFocusDay(focusedDay);
                               setState(() {});
                             },
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            'List of Holiday',
-                            style: GoogleFonts.rubik(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          holiday.isLoading
-                              ? SizedBox(
-                                  height: MediaQuery.of(context).size.height - 550,
-                                  child: const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color(0xFF2855AE),
+                            child: Container(
+                              height: 80,
+                              margin: const EdgeInsets.only(bottom: 20),
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.black38,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    hc.title ?? '',
+                                    style: GoogleFonts.rubik(
+                                      color: Colors.black87,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                )
-                              : mainList.isEmpty
-                                  ? SizedBox(
-                                      height: MediaQuery.of(context).size.height - 550,
-                                      child: Center(
-                                        child: Text(
-                                          'There is no holidays on that month\nEvery sunday are holiday',
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.rubik(
-                                            color: Colors.black54,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                          ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        DateFormat('d MMMM')
+                                            .format(DateTime.parse(hc.date!))
+                                            .toString(),
+                                        style: GoogleFonts.rubik(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                    )
-                                  : isSelected && showList.isEmpty
-                                      ? SizedBox(
-                                          height: MediaQuery.of(context).size.height - 550,
-                                          child: Center(
-                                            child: Text(
-                                              holiday.selectedDay?.weekday == 7
-                                                  ? 'Holiday for sunday'
-                                                  : 'There is no holiday on that day',
-                                              textAlign: TextAlign.center,
-                                              style: GoogleFonts.rubik(
-                                                color: Colors.black54,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : SizedBox(
-                                          height: MediaQuery.of(context).size.height - 515,
-                                          child: ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            itemCount: showList.isNotEmpty
-                                                ? showList.length
-                                                : mainList.length,
-                                            itemBuilder: (context, index) {
-                                              HolidayModel hc = showList.isNotEmpty
-                                                  ? showList[index]
-                                                  : mainList[index];
-
-                                              return GestureDetector(
-                                                onLongPress: () => showDialogForHolidayList(
-                                                  context: context,
-                                                  hc: hc,
-                                                  onEdit: () async {
-                                                    if (!context.mounted) return;
-                                                    Navigator.pop(context);
-
-                                                    await bottomSheetForHoliday(
-                                                      context: context,
-                                                      title: hc.title!,
-                                                      description: hc.description!,
-                                                      date: hc.date!,
-                                                      hid: hc.hid!,
-                                                      isEdit: true,
-                                                    );
-                                                  },
-                                                  onDelete: () async {
-                                                    await Provider.of<HolidayProvider>(context,
-                                                            listen: false)
-                                                        .deleteHoliday(
-                                                            context: context, hid: hc.hid!);
-
-                                                    if (!context.mounted) return;
-                                                    Navigator.pop(context);
-
-                                                    if (!context.mounted) return;
-                                                    await Provider.of<HolidayProvider>(context,
-                                                            listen: false)
-                                                        .getHolidayList(context: context);
-                                                  },
-                                                  onOk: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                ),
-                                                onTap: () {
-                                                  DateTime sd = DateTime.parse(hc.date!);
-                                                  holiday.setSelectedDay(sd);
-
-                                                  showList = [];
-
-                                                  for (var element in mainList) {
-                                                    if (DateTime.parse(element.date!).day ==
-                                                        holiday.selectedDay?.day) {
-                                                      showList.add(element);
-                                                    }
-                                                  }
-
-                                                  isSelected = true;
-
-                                                  setState(() {});
-                                                },
-                                                child: Container(
-                                                  height: 80,
-                                                  margin: const EdgeInsets.only(bottom: 20),
-                                                  padding: const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.circular(10),
-                                                    border: Border.all(
-                                                      color: Colors.black38,
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.spaceBetween,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        hc.title ?? '',
-                                                        style: GoogleFonts.rubik(
-                                                          color: Colors.black87,
-                                                          fontSize: 16,
-                                                          fontWeight: FontWeight.w600,
-                                                        ),
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            DateFormat('d MMMM')
-                                                                .format(DateTime.parse(hc.date!))
-                                                                .toString(),
-                                                            style: GoogleFonts.rubik(
-                                                              color: Colors.black54,
-                                                              fontSize: 14,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            DateFormat('EEEE')
-                                                                .format(DateTime.parse(hc.date!)),
-                                                            style: GoogleFonts.rubik(
-                                                              color: Colors.black54,
-                                                              fontSize: 14,
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
+                                      Text(
+                                        DateFormat('EEEE').format(DateTime.parse(hc.date!)),
+                                        style: GoogleFonts.rubik(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                        ],
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: UserSharedPreferences.role == 'teacher'
+            ? GestureDetector(
+                onTap: () async {
+                  await bottomSheetForHoliday(
+                    context: context,
+                  );
+                },
+                child: Container(
+                  height: 60,
+                  width: 60,
+                  margin: const EdgeInsets.only(bottom: 15),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.centerRight,
+                      end: Alignment.centerLeft,
+                      colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
+                    ),
                   ),
-                ],
-              );
-            },
-          ),
-        ],
+                  child: const Icon(
+                    Icons.add,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            : null,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: UserSharedPreferences.role == 'teacher'
-          ? GestureDetector(
-              onTap: () async {
-                await bottomSheetForHoliday(
-                  context: context,
-                );
-              },
-              child: Container(
-                height: 60,
-                width: 60,
-                margin: const EdgeInsets.only(bottom: 15),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.centerRight,
-                    end: Alignment.centerLeft,
-                    colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
-                  ),
-                ),
-                child: const Icon(
-                  Icons.add,
-                  size: 30,
-                  color: Colors.white,
-                ),
-              ),
-            )
-          : null,
     );
   }
 }

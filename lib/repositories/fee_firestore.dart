@@ -71,4 +71,15 @@ class FeeFireStore {
 
     return [];
   }
+
+  Future<FeeModel?> getFeeFromFireStore(
+      {required BuildContext context, required String fid}) async {
+    try {
+      return FeeModel.fromJson((await firestore.collection('fees').doc(fid).get()).data()!);
+    } catch (e) {
+      Utils().showToast(context: context, message: e.toString());
+    }
+
+    return null;
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/providers/all_user_provider.dart';
@@ -17,7 +18,7 @@ class DoubtProvider extends ChangeNotifier {
   List<DoubtModel> get doubts => _doubts;
 
   DoubtModel _doubt =
-      DoubtModel(year: '', subject: '', did: '', createdTime: '', title: '', chat: []);
+      DoubtModel(year: '', subject: '', did: '', solved: '', createdTime: '', title: '', chat: []);
 
   DoubtModel get doubt => _doubt;
 
@@ -38,11 +39,21 @@ class DoubtProvider extends ChangeNotifier {
       message:
           'You have a new query from a ${doubtModel.year} student regarding ${doubtModel.title} in ${doubtModel.subject}. Please address it at your earliest convenience.',
       tokens: tokens,
-      page: 'doubts',
+      pd: {
+        'page': 'doubtDetail',
+        'id': doubtModel.did,
+      },
     );
 
     if (!context.mounted) return;
     await getDoubtList(context: context);
+  }
+
+  void getDoubtModels(String id) {
+    FirebaseFirestore.instance.collection('doubts').doc(id).snapshots().listen((event) {
+      _doubt = DoubtModel.fromJson(event.data()!);
+      notifyListeners();
+    });
   }
 
   Future<void> updateDoubt({required BuildContext context, required DoubtModel doubtModel}) async {
@@ -88,9 +99,19 @@ class DoubtProvider extends ChangeNotifier {
       message:
           'From $name: ${doubtModel.chat.last.message}${doubtModel.chat.last.attach.isNotEmpty ? ' with ${doubtModel.chat.last.attach.length} attachment' : ''}',
       tokens: tokens,
-      page: 'doubts',
+      pd: {
+        'page': 'doubtDetail',
+        'id': doubtModel.did,
+      },
     );
 
+    await DoubtFireStore().updateDoubtAtFireStore(context: context, doubtModel: doubtModel);
+
+    if (!context.mounted) return;
+    await getDoubtList(context: context);
+  }
+
+  Future<void> solveDoubt({required BuildContext context, required DoubtModel doubtModel}) async {
     await DoubtFireStore().updateDoubtAtFireStore(context: context, doubtModel: doubtModel);
 
     if (!context.mounted) return;
@@ -104,8 +125,9 @@ class DoubtProvider extends ChangeNotifier {
     await getDoubtList(context: context);
   }
 
-  Future<void> getDoubt({required BuildContext context, required String did}) async {
-    _doubt = DoubtModel(year: '', subject: '', did: '', createdTime: '', title: '', chat: []);
+  Future<void> getDoubtAsFuture({required BuildContext context, required String did}) async {
+    _doubt = DoubtModel(
+        year: '', subject: '', solved: '', did: '', createdTime: '', title: '', chat: []);
     _isLoading = true;
     notifyListeners();
 

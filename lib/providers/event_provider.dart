@@ -12,6 +12,11 @@ class EventProvider extends ChangeNotifier {
 
   List<EventModel> get eventList => _eventList;
 
+  EventModel _event = EventModel(
+      eid: 'eid', title: 'title', description: 'description', url: 'url', dateTime: 'dateTime');
+
+  EventModel get event => _event;
+
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
@@ -38,7 +43,10 @@ class EventProvider extends ChangeNotifier {
       message:
           'Time: ${DateFormat('dd/MM/yyyy HH:mm aa').format(DateTime.parse(eventModel.dateTime))}\nDescription: ${eventModel.description}',
       tokens: tokens,
-      page: 'events',
+      pd: {
+        'page': 'eventDetail',
+        'id': eventModel.eid,
+      },
     );
 
     if (!context.mounted) return;
@@ -68,6 +76,22 @@ class EventProvider extends ChangeNotifier {
 
     if (response.isNotEmpty) {
       _eventList = response;
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> getEvent({required BuildContext context, required String eid}) async {
+    _event = EventModel(
+        eid: 'eid', title: 'title', description: 'description', url: 'url', dateTime: 'dateTime');
+    _isLoading = true;
+    notifyListeners();
+
+    EventModel? response = await EventFireStore().getEventFromFireStore(context: context, eid: eid);
+
+    if (response != null) {
+      _event = response;
     }
 
     _isLoading = false;

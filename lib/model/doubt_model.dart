@@ -6,6 +6,7 @@ class DoubtModel {
   String createdTime;
   String title;
   String subject;
+  String solved;
   List<Chat> chat;
 
   DoubtModel({
@@ -14,6 +15,7 @@ class DoubtModel {
     required this.createdTime,
     required this.title,
     required this.subject,
+    required this.solved,
     required this.chat,
   });
 
@@ -27,6 +29,7 @@ class DoubtModel {
         createdTime: json["createdTime"],
         title: json["title"],
         subject: json["subject"],
+        solved: json["solved"],
         chat: List<Chat>.from(json["chat"].map((x) => Chat.fromJson(x))),
       );
 
@@ -36,6 +39,7 @@ class DoubtModel {
         "createdTime": createdTime,
         "title": title,
         "subject": subject,
+        "solved": solved,
         "chat": List<dynamic>.from(chat.map((x) => x.toJson())),
       };
 }

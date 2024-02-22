@@ -87,6 +87,18 @@ class AssignmentFireStore {
     return [];
   }
 
+  Future<AssignmentModel?> getAssignmentFromFireStore(
+      {required BuildContext context, required String aid}) async {
+    try {
+      return AssignmentModel.fromJson(
+          (await firestore.collection('assignments').doc(aid).get()).data()!);
+    } catch (e) {
+      Utils().showToast(context: context, message: e.toString());
+    }
+
+    return null;
+  }
+
   Future<String?> uploadFile({
     required BuildContext context,
     required PlatformFile pickedFile,

@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/providers/sign_in_provider.dart';
+import 'package:online_college/providers/student_data_firestore_provider.dart';
+import 'package:online_college/providers/teacher_data_firestore_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,6 +40,18 @@ class _SplashScreenState extends State<SplashScreen> {
               (route) => false,
             );
           } else {
+            if (UserSharedPreferences.role == 'student') {
+              if (!mounted) return;
+              await Provider.of<StudentDataFireStoreProvider>(context, listen: false)
+                  .updateStudentNotificationToken(
+                      context: context, notificationToken: '', id: UserSharedPreferences.id);
+            } else {
+              if (!mounted) return;
+              await Provider.of<TeacherDataFireStoreProvider>(context, listen: false)
+                  .updateTeacherNotificationToken(
+                      context: context, notificationToken: '', id: UserSharedPreferences.id);
+            }
+
             await FirebaseAuth.instance.signOut();
             SharedPreferences preference = await SharedPreferences.getInstance();
             await preference.clear();

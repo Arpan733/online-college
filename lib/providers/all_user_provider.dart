@@ -39,6 +39,13 @@ class AllUserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteUser({required BuildContext context, required String id}) async {
+    await AllUserFireStore().deleteUserFromFireStore(context: context, id: id);
+
+    if (!context.mounted) return;
+    await getAllUser(context: context);
+  }
+
   Future<void> addStudentUser(
       {required BuildContext context, required StudentUserModel studentUserModel}) async {
     await AllUserFireStore().addStudentUser(context: context, studentUserModel: studentUserModel);

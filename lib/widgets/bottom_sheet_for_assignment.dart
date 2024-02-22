@@ -416,10 +416,6 @@ bottomSheetForAssignment({
 
                                 if (!context.mounted) return;
                                 Navigator.pop(context);
-
-                                if (isEdit) {
-                                  Navigator.pop(context);
-                                }
                               }
                             },
                             child: Container(

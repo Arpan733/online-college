@@ -47,9 +47,9 @@ class NotificationServices {
     FirebaseMessaging.onMessage.listen((message) {
       try {
         if (kDebugMode) {
-          print(message.notification?.title);
-          print(message.notification?.body);
-          print(message.data['page']);
+          print('title: ${message.notification?.title}');
+          print('body: ${message.notification?.body}');
+          print('data: ${message.data}');
         }
 
         initLocalNotifications(context, message);
@@ -112,12 +112,20 @@ class NotificationServices {
   }
 
   void handleMessage(BuildContext context, RemoteMessage message) {
-    Navigator.of(context).pushNamed(message.data['page'].toString());
+    if (message.data['id'] == null) {
+      Navigator.pushNamed(context, message.data['page'].toString());
+    } else {
+      Navigator.pushNamed(
+        context,
+        arguments: message.data['id'],
+        message.data['page'].toString(),
+      );
+    }
   }
 
   void sendNotification({
     required List<String> tokens,
-    String page = '',
+    Map<String, dynamic> pd = const {},
     required String title,
     required String message,
   }) async {
@@ -128,9 +136,7 @@ class NotificationServices {
         'title': title,
         'body': message,
       },
-      'data': {
-        'page': page,
-      },
+      'data': pd,
     };
     await http.post(
       Uri.parse('https://fcm.googleapis.com/fcm/send'),

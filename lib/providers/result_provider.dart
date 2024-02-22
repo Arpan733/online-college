@@ -43,7 +43,7 @@ class ResultProvider extends ChangeNotifier {
       message:
           'Your academic result for the $year has been calculated. Your Semester Performance Index (SPI) is $spi. Please review your result.',
       tokens: tokens,
-      page: 'resultStudent',
+      pd: {'page': 'resultStudent'},
     );
 
     if (!context.mounted) return;

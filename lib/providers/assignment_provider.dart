@@ -14,6 +14,17 @@ class AssignmentProvider extends ChangeNotifier {
 
   List<AssignmentModel> get assignmentList => _assignmentList;
 
+  AssignmentModel _assignment = AssignmentModel(
+      aid: 'aid',
+      title: 'title',
+      year: 'year',
+      submitted: [],
+      lastDateTime: '',
+      createdDateTime: '',
+      subject: '');
+
+  AssignmentModel get assignment => _assignment;
+
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
@@ -39,7 +50,7 @@ class AssignmentProvider extends ChangeNotifier {
       message:
           'Reminder: You have an assignment due for ${assignmentModel.subject}. Please ensure it\'s completed by ${DateFormat('dd/MM/yyyy').format(DateTime.parse(assignmentModel.lastDateTime))}.',
       tokens: tokens,
-      page: 'assignments',
+      pd: {'page': 'assignments'},
     );
 
     await AssignmentFireStore()
@@ -86,6 +97,29 @@ class AssignmentProvider extends ChangeNotifier {
 
     if (response.isNotEmpty) {
       _assignmentList = response;
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> getAssignment({required BuildContext context, required String aid}) async {
+    _assignment = AssignmentModel(
+        aid: 'aid',
+        title: 'title',
+        year: 'year',
+        submitted: [],
+        lastDateTime: '',
+        createdDateTime: '',
+        subject: '');
+    _isLoading = true;
+    notifyListeners();
+
+    AssignmentModel? response =
+        await AssignmentFireStore().getAssignmentFromFireStore(context: context, aid: aid);
+
+    if (response != null) {
+      _assignment = response;
     }
 
     _isLoading = false;

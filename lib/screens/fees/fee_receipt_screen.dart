@@ -2,29 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
+import 'package:online_college/model/fee_model.dart';
 import 'package:online_college/providers/fee_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/fee_model.dart';
-
 class FeeReceiptScreen extends StatefulWidget {
-  final FeeModel feeModel;
+  final String fid;
 
-  const FeeReceiptScreen({super.key, required this.feeModel});
+  const FeeReceiptScreen({super.key, required this.fid});
 
   @override
   State<FeeReceiptScreen> createState() => _FeeReceiptScreenState();
 }
 
 class _FeeReceiptScreenState extends State<FeeReceiptScreen> {
+  late FeeProvider provider;
+
+  @override
+  void initState() {
+    provider = Provider.of<FeeProvider>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      provider.getFee(context: context, fid: widget.fid);
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    PaidStudent? ps =
-    Provider.of<FeeProvider>(context, listen: false).getStudentData(
-        feeModel: widget.feeModel);
+    PaidStudent? ps = provider.getStudentData(feeModel: provider.fee);
 
     List<pw.TableRow> row = [];
 
@@ -78,7 +88,7 @@ class _FeeReceiptScreenState extends State<FeeReceiptScreen> {
       ),
     );
 
-    for (var element in widget.feeModel.feeDescription!) {
+    for (var element in provider.fee.feeDescription!) {
       row.add(
         pw.TableRow(
           children: [
@@ -97,7 +107,7 @@ class _FeeReceiptScreenState extends State<FeeReceiptScreen> {
               height: 20,
               alignment: pw.Alignment.center,
               child: pw.Text(
-                '${widget.feeModel.feeDescription!.indexOf(element) + 1}',
+                '${provider.fee.feeDescription!.indexOf(element) + 1}',
                 style: const pw.TextStyle(
                   fontSize: 14,
                 ),
@@ -172,7 +182,7 @@ class _FeeReceiptScreenState extends State<FeeReceiptScreen> {
             width: 40,
             alignment: pw.Alignment.center,
             child: pw.Text(
-              widget.feeModel.totalAmount!,
+              provider.fee.totalAmount!,
               style: const pw.TextStyle(
                 fontSize: 14,
               ),
@@ -183,232 +193,233 @@ class _FeeReceiptScreenState extends State<FeeReceiptScreen> {
     );
 
     return Scaffold(
-      body: PdfPreview(
-        build: (PdfPageFormat format) async {
-          final pdf = pw.Document(
-            version: PdfVersion.pdf_1_4,
-            compress: true,
-          );
+      body: Consumer<FeeProvider>(
+        builder: (context, fee, child) => PdfPreview(
+          build: (PdfPageFormat format) async {
+            final pdf = pw.Document(
+              version: PdfVersion.pdf_1_4,
+              compress: true,
+            );
 
-          final sign = pw.MemoryImage(
-            (await rootBundle.load('assets/images/sign.png')).buffer.asUint8List(),
-          );
+            final sign = pw.MemoryImage(
+              (await rootBundle.load('assets/images/sign.png')).buffer.asUint8List(),
+            );
 
-          pdf.addPage(
-            pw.Page(
-              pageFormat: format,
-              build: (context) {
-                return pw.Container(
-                  width: double.infinity,
-                  padding: const pw.EdgeInsets.all(20),
-                  child: pw.Column(
-                    children: [
-                      pw.Text(
-                        'Fee Receipt',
-                        style: const pw.TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                      pw.Text(
-                        'Online College',
-                        style: pw.TextStyle(
-                          fontSize: 20,
-                          fontWeight: pw.FontWeight.bold,
-                        ),
-                      ),
-                      pw.SizedBox(
-                        height: 20,
-                      ),
-                      pw.Row(
-                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                        children: [
-                          pw.Container(
-                            height: 20,
-                            child: pw.Expanded(
-                              child: pw.Container(
-                                alignment: pw.Alignment.centerLeft,
-                                child: pw.Text(
-                                  'Receipt No.: ${ps?.refNo}',
-                                  style: const pw.TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          pw.Container(
-                            height: 20,
-                            child: pw.Expanded(
-                              child: pw.Container(
-                                alignment: pw.Alignment.centerLeft,
-                                child: pw.Text(
-                                  'Payment Date: ${DateFormat('dd/MM/yyyy').format(
-                                      DateTime.parse(ps!.paidTime.toString()))}',
-                                  style: const pw.TextStyle(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      pw.Divider(),
-                      pw.Container(
-                        height: 20,
-                        child: pw.Expanded(
-                          child: pw.Container(
-                            alignment: pw.Alignment.centerLeft,
-                            child: pw.Text(
-                              'Student Name: ${UserSharedPreferences.name}',
-                              style: const pw.TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
+            pdf.addPage(
+              pw.Page(
+                pageFormat: format,
+                build: (context) {
+                  return pw.Container(
+                    width: double.infinity,
+                    padding: const pw.EdgeInsets.all(20),
+                    child: pw.Column(
+                      children: [
+                        pw.Text(
+                          'Fee Receipt',
+                          style: const pw.TextStyle(
+                            fontSize: 16,
                           ),
                         ),
-                      ),
-                      pw.Container(
-                        height: 20,
-                        child: pw.Expanded(
-                          child: pw.Container(
-                            alignment: pw.Alignment.centerLeft,
-                            child: pw.Text(
-                              'Roll No.: ${UserSharedPreferences.rollNo}',
-                              style: const pw.TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
+                        pw.Text(
+                          'Online College',
+                          style: pw.TextStyle(
+                            fontSize: 20,
+                            fontWeight: pw.FontWeight.bold,
                           ),
                         ),
-                      ),
-                      pw.Container(
-                        height: 20,
-                        child: pw.Expanded(
-                          child: pw.Container(
-                            alignment: pw.Alignment.centerLeft,
-                            child: pw.Text(
-                              'Student Year: ${widget.feeModel.year}',
-                              style: const pw.TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
+                        pw.SizedBox(
+                          height: 20,
                         ),
-                      ),
-                      pw.Container(
-                        height: 20,
-                        child: pw.Expanded(
-                          child: pw.Container(
-                            alignment: pw.Alignment.centerLeft,
-                            child: pw.Text(
-                              'Phone No.: ${UserSharedPreferences.phoneNumber}',
-                              style: const pw.TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      pw.SizedBox(
-                        height: 30,
-                      ),
-                      pw.Expanded(
-                        child: pw.Table(
-                          border: pw.TableBorder(
-                            bottom: pw.BorderSide(
-                              color: PdfColor.fromHex('101010'),
-                            ),
-                            top: pw.BorderSide(
-                              color: PdfColor.fromHex('101010'),
-                            ),
-                            left: pw.BorderSide(
-                              color: PdfColor.fromHex('101010'),
-                            ),
-                            right: pw.BorderSide(
-                              color: PdfColor.fromHex('101010'),
-                            ),
-                            verticalInside: pw.BorderSide(
-                              color: PdfColor.fromHex('101010'),
-                            ),
-                          ),
-                          children: row,
-                        ),
-                      ),
-                      pw.SizedBox(
-                        height: 20,
-                      ),
-                      pw.Container(
-                        height: 20,
-                        child: pw.Expanded(
-                          child: pw.Container(
-                            alignment: pw.Alignment.centerLeft,
-                            child: pw.Text(
-                              'Paid By: RazorPay',
-                              style: const pw.TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      pw.SizedBox(
-                        height: 40,
-                      ),
-                      pw.Container(
-                        height: 50,
-                        child: pw.Row(
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                           children: [
                             pw.Container(
-                              width: 150,
-                              child: pw.Image(
-                                sign,
-                                fit: pw.BoxFit.fitHeight,
+                              height: 20,
+                              child: pw.Expanded(
+                                child: pw.Container(
+                                  alignment: pw.Alignment.centerLeft,
+                                  child: pw.Text(
+                                    'Receipt No.: ${ps?.refNo}',
+                                    style: const pw.TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            pw.Expanded(
-                              child: pw.Container(),
+                            pw.Container(
+                              height: 20,
+                              child: pw.Expanded(
+                                child: pw.Container(
+                                  alignment: pw.Alignment.centerLeft,
+                                  child: pw.Text(
+                                    'Payment Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(ps!.paidTime.toString()))}',
+                                    style: const pw.TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      pw.SizedBox(
-                        height: 10,
-                      ),
-                      pw.Container(
-                        height: 20,
-                        child: pw.Expanded(
-                          child: pw.Container(
-                            alignment: pw.Alignment.centerLeft,
-                            child: pw.Text(
-                              'Signature by Center Head',
-                              style: const pw.TextStyle(
-                                fontSize: 14,
+                        pw.Divider(),
+                        pw.Container(
+                          height: 20,
+                          child: pw.Expanded(
+                            child: pw.Container(
+                              alignment: pw.Alignment.centerLeft,
+                              child: pw.Text(
+                                'Student Name: ${UserSharedPreferences.name}',
+                                style: const pw.TextStyle(
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      pw.Container(
-                        height: 70,
-                        alignment: pw.Alignment.bottomCenter,
-                        child: pw.Text(
-                          'All above mentioned Amount once paid are non refundable in any case whatsoever.',
-                          textAlign: pw.TextAlign.center,
-                          style: const pw.TextStyle(
-                            fontSize: 10,
+                        pw.Container(
+                          height: 20,
+                          child: pw.Expanded(
+                            child: pw.Container(
+                              alignment: pw.Alignment.centerLeft,
+                              child: pw.Text(
+                                'Roll No.: ${UserSharedPreferences.rollNo}',
+                                style: const pw.TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          );
+                        pw.Container(
+                          height: 20,
+                          child: pw.Expanded(
+                            child: pw.Container(
+                              alignment: pw.Alignment.centerLeft,
+                              child: pw.Text(
+                                'Student Year: ${fee.fee.year}',
+                                style: const pw.TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        pw.Container(
+                          height: 20,
+                          child: pw.Expanded(
+                            child: pw.Container(
+                              alignment: pw.Alignment.centerLeft,
+                              child: pw.Text(
+                                'Phone No.: ${UserSharedPreferences.phoneNumber}',
+                                style: const pw.TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        pw.SizedBox(
+                          height: 30,
+                        ),
+                        pw.Expanded(
+                          child: pw.Table(
+                            border: pw.TableBorder(
+                              bottom: pw.BorderSide(
+                                color: PdfColor.fromHex('101010'),
+                              ),
+                              top: pw.BorderSide(
+                                color: PdfColor.fromHex('101010'),
+                              ),
+                              left: pw.BorderSide(
+                                color: PdfColor.fromHex('101010'),
+                              ),
+                              right: pw.BorderSide(
+                                color: PdfColor.fromHex('101010'),
+                              ),
+                              verticalInside: pw.BorderSide(
+                                color: PdfColor.fromHex('101010'),
+                              ),
+                            ),
+                            children: row,
+                          ),
+                        ),
+                        pw.SizedBox(
+                          height: 20,
+                        ),
+                        pw.Container(
+                          height: 20,
+                          child: pw.Expanded(
+                            child: pw.Container(
+                              alignment: pw.Alignment.centerLeft,
+                              child: pw.Text(
+                                'Paid By: RazorPay',
+                                style: const pw.TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        pw.SizedBox(
+                          height: 40,
+                        ),
+                        pw.Container(
+                          height: 50,
+                          child: pw.Row(
+                            children: [
+                              pw.Container(
+                                width: 150,
+                                child: pw.Image(
+                                  sign,
+                                  fit: pw.BoxFit.fitHeight,
+                                ),
+                              ),
+                              pw.Expanded(
+                                child: pw.Container(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        pw.SizedBox(
+                          height: 10,
+                        ),
+                        pw.Container(
+                          height: 20,
+                          child: pw.Expanded(
+                            child: pw.Container(
+                              alignment: pw.Alignment.centerLeft,
+                              child: pw.Text(
+                                'Signature by Center Head',
+                                style: const pw.TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        pw.Container(
+                          height: 70,
+                          alignment: pw.Alignment.bottomCenter,
+                          child: pw.Text(
+                            'All above mentioned Amount once paid are non refundable in any case whatsoever.',
+                            textAlign: pw.TextAlign.center,
+                            style: const pw.TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
 
-          return pdf.save();
-        },
+            return pdf.save();
+          },
+        ),
       ),
     );
   }

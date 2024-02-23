@@ -177,8 +177,7 @@ class _SchoolGalleryScreenState extends State<SchoolGalleryScreen> {
                                                 PieAction(
                                                   tooltip: const Text(''),
                                                   onSelect: () async {
-                                                    await Share.share(g.url);
-                                                    // await Share.shareUri(Uri.parse(g.url));
+                                                    await Share.shareUri(Uri.parse(g.url));
                                                   },
                                                   buttonTheme: const PieButtonTheme(
                                                     backgroundColor: Colors.black26,

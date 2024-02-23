@@ -63,7 +63,7 @@ class _QuizPlayScreenState extends State<QuizPlayScreen> {
                           ),
                         ),
                         title: Text(
-                          'Fees',
+                          '',
                           style: GoogleFonts.rubik(
                             color: Colors.white,
                             fontSize: 22,

@@ -21,11 +21,6 @@ class EventProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  setIsLoading({required bool loading}) {
-    _isLoading = loading;
-    notifyListeners();
-  }
-
   Future<void> addEvent({required BuildContext context, required EventModel eventModel}) async {
     await EventFireStore().addEventToFireStore(context: context, eventModel: eventModel);
 

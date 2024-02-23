@@ -16,6 +16,7 @@ import 'package:online_college/screens/fees/fees_screen.dart';
 import 'package:online_college/screens/leave_application/leave_application_screen.dart';
 import 'package:online_college/screens/login/login_screen.dart';
 import 'package:online_college/screens/professor_list/professor_list_screen.dart';
+import 'package:online_college/screens/quiz/quiz_detail_screen.dart';
 import 'package:online_college/screens/quiz/quiz_play_screen.dart';
 import 'package:online_college/screens/quiz/quiz_question_screen.dart';
 import 'package:online_college/screens/quiz/quiz_screen.dart';
@@ -60,6 +61,7 @@ class Routes {
   static const String quiz = 'quiz';
   static const String quizPlay = 'quizPlay';
   static const String quizQuestion = 'quizQuestion';
+  static const String quizDetail = 'quizDetail';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -146,6 +148,8 @@ class Routes {
         return MaterialPageRoute(builder: (BuildContext context) => const QuizPlayScreen());
       case quizQuestion:
         return MaterialPageRoute(builder: (BuildContext context) => const QuizQuestionScreen());
+      case quizDetail:
+        return MaterialPageRoute(builder: (BuildContext context) => const QuizDetailScreen());
       default:
         return MaterialPageRoute(
           builder: (_) {

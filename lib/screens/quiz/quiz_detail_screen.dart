@@ -39,16 +39,14 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
 
       if (!mounted) return;
       quizModel = Provider.of<QuizProvider>(context, listen: false).quiz;
-      questions =
-          Provider.of<QuizProvider>(context, listen: false).quizQuestionList.where((element) {
-        for (var e in quizModel.questions) {
-          if (e.qqid == element.qqid) {
-            return true;
+      for (var element in quizModel.questions) {
+        Provider.of<QuizProvider>(context, listen: false).quizQuestionList.forEach((qq) {
+          if (element.qqid == qq.qqid) {
+            questions.add(qq);
           }
-        }
+        });
+      }
 
-        return false;
-      }).toList();
       student = Provider.of<AllUserProvider>(context, listen: false)
           .studentsList
           .where((element) => element.id == quizModel.sid)
@@ -56,6 +54,24 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    student = [];
+    questions = [];
+    quizModel = QuizModel(
+      qid: 'qid',
+      sid: 'sid',
+      createdDateTime: 'createdDateTime',
+      questions: [],
+      takenTime: 'takenTime',
+      right: 'right',
+      wrong: 'wrong',
+      skip: 'skip',
+    );
+
+    super.dispose();
   }
 
   @override
@@ -149,16 +165,13 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                                         )
                                       : ClipRRect(
                                           borderRadius: BorderRadius.circular(10),
-                                          child: Hero(
-                                            tag: 'profilePhoto',
-                                            child: Image.network(
-                                              student.first.photoUrl,
-                                              fit: BoxFit.fitHeight,
-                                              errorBuilder: (BuildContext context, Object error,
-                                                  StackTrace? stackTrace) {
-                                                return Image.asset('assets/images/student.png');
-                                              },
-                                            ),
+                                          child: Image.network(
+                                            student.first.photoUrl,
+                                            fit: BoxFit.fitHeight,
+                                            errorBuilder: (BuildContext context, Object error,
+                                                StackTrace? stackTrace) {
+                                              return Image.asset('assets/images/student.png');
+                                            },
                                           ),
                                         ),
                                 ),
@@ -251,112 +264,129 @@ class _QuizDetailScreenState extends State<QuizDetailScreen> {
                         }
 
                         QuizQuestionModel qq = questions[index];
+                        String ans = qq.options[0].isAnswer == 'true'
+                            ? 'Option 1'
+                            : qq.options[1].isAnswer == 'true'
+                                ? 'Option 2'
+                                : qq.options[2].isAnswer == 'true'
+                                    ? 'Option 3'
+                                    : 'Option 4';
 
                         return Container(
                           width: MediaQuery.of(context).size.width - 60,
                           margin: const EdgeInsets.only(bottom: 20),
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.black38,
-                              width: 1,
-                            ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 10,
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: quizModel.questions[index].result == 'Not Chosen'
+                                  ? Colors.white
+                                  : (quizModel.questions[index].result == ans
+                                      ? Colors.green.withOpacity(0.1)
+                                      : Colors.red.withOpacity(0.1)),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.black38,
+                                width: 1,
                               ),
-                              Text(
-                                'Question:',
-                                style: GoogleFonts.rubik(
-                                  color: Colors.black54,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              Text(
-                                qq.question,
-                                style: GoogleFonts.rubik(
-                                  color: Colors.black87,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                                Text(
+                                  'Question:',
+                                  style: GoogleFonts.rubik(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 ),
-                              ),
-                              const Divider(),
-                              Text(
-                                'Options:',
-                                style: GoogleFonts.rubik(
-                                  color: Colors.black54,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
+                                Text(
+                                  qq.question,
+                                  style: GoogleFonts.rubik(
+                                    color: Colors.black87,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              ListView.builder(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: 4,
-                                itemBuilder: (context, i) {
-                                  return Row(
-                                    children: [
-                                      SizedBox(
-                                        height: 25,
-                                        width: 25,
-                                        child: quiz.quiz.questions[index].result[7] ==
-                                                (i + 1).toString()
-                                            ? Icon(
-                                                qq.options[i].isAnswer != 'false'
-                                                    ? Icons.check_outlined
-                                                    : Icons.close_outlined,
-                                                color: qq.options[i].isAnswer != 'false'
-                                                    ? Colors.green.withOpacity(0.8)
-                                                    : Colors.red.withOpacity(0.8),
-                                              )
-                                            : null,
-                                      ),
-                                      Text(
-                                        i == 0
-                                            ? 'A: '
-                                            : i == 1
-                                                ? 'B: '
-                                                : i == 2
-                                                    ? 'C: '
-                                                    : 'D: ',
-                                        style: GoogleFonts.rubik(
-                                          color: qq.options[i].isAnswer == 'false'
-                                              ? Colors.black54
-                                              : Colors.green.withOpacity(0.54),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
+                                const Divider(),
+                                Text(
+                                  'Options:',
+                                  style: GoogleFonts.rubik(
+                                    color: Colors.black54,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: 4,
+                                  itemBuilder: (context, i) {
+                                    return Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 25,
+                                          width: 25,
+                                          child: quiz.quiz.questions[index].result[7] ==
+                                                  (i + 1).toString()
+                                              ? Icon(
+                                                  qq.options[i].isAnswer != 'false'
+                                                      ? Icons.check_outlined
+                                                      : Icons.close_outlined,
+                                                  color: qq.options[i].isAnswer != 'false'
+                                                      ? Colors.green.withOpacity(0.8)
+                                                      : Colors.red.withOpacity(0.8),
+                                                )
+                                              : null,
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width - 120,
-                                        child: Text(
-                                          qq.options[i].option,
+                                        Text(
+                                          i == 0
+                                              ? 'A: '
+                                              : i == 1
+                                                  ? 'B: '
+                                                  : i == 2
+                                                      ? 'C: '
+                                                      : 'D: ',
                                           style: GoogleFonts.rubik(
                                             color: qq.options[i].isAnswer == 'false'
-                                                ? Colors.black87
-                                                : Colors.green.withOpacity(0.87),
+                                                ? Colors.black54
+                                                : Colors.green.withOpacity(0.54),
                                             fontSize: 16,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
+                                        SizedBox(
+                                          width: MediaQuery.of(context).size.width - 120,
+                                          child: Text(
+                                            qq.options[i].option,
+                                            style: GoogleFonts.rubik(
+                                              color: qq.options[i].isAnswer == 'false'
+                                                  ? Colors.black87
+                                                  : Colors.green.withOpacity(0.87),
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

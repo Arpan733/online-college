@@ -297,7 +297,7 @@ bottomSheetForEvent({
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(
-                                DateFormat('HH:mm a').format(dateTime),
+                                DateFormat('hh:mm aa').format(dateTime),
                                 style: GoogleFonts.rubik(
                                   color: const Color(0xFF6688CA),
                                   fontSize: 16,

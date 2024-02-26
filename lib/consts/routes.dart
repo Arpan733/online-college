@@ -149,7 +149,10 @@ class Routes {
       case quizQuestion:
         return MaterialPageRoute(builder: (BuildContext context) => const QuizQuestionScreen());
       case quizDetail:
-        return MaterialPageRoute(builder: (BuildContext context) => const QuizDetailScreen());
+        return MaterialPageRoute(
+            builder: (BuildContext context) => QuizDetailScreen(
+                  qid: settings.arguments.toString(),
+                ));
       default:
         return MaterialPageRoute(
           builder: (_) {

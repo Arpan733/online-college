@@ -309,7 +309,7 @@ class _DoubtScreenState extends State<DoubtScreen> {
                                         ),
                                       ),
                                       Text(
-                                        DateFormat('dd/MM/yyyy HH:mm aa')
+                                        DateFormat('dd/MM/yyyy hh:mm aa')
                                             .format(DateTime.parse(d.createdTime))
                                             .toString(),
                                         style: GoogleFonts.rubik(

@@ -57,7 +57,7 @@ showDialogForEvent({
                 textAlign: TextAlign.right,
               ),
               Text(
-                DateFormat('d MMM, EEEE - HH:mm aa').format(DateTime.parse(event.dateTime)),
+                DateFormat('d MMM, EEEE - hh:mm aa').format(DateTime.parse(event.dateTime)),
                 style: GoogleFonts.rubik(
                   color: Colors.white,
                   fontSize: 12,

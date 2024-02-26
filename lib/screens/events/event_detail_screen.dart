@@ -98,7 +98,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                                           width: 5,
                                         ),
                                         Text(
-                                          DateFormat('dd MMM yy, HH:mm aa')
+                                          DateFormat('dd MMM yy, hh:mm aa')
                                               .format(DateTime.parse(event.event.dateTime)),
                                           style: GoogleFonts.rubik(
                                             color: const Color(0xFF6789CA),

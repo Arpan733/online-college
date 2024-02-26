@@ -290,7 +290,7 @@ class _DoubtDetailScreenState extends State<DoubtDetailScreen> {
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  'on ${DateFormat('dd/MM/yyyy HH:mm aa').format(DateTime.parse(c.time))}',
+                                                  'on ${DateFormat('dd/MM/yyyy hh:mm aa').format(DateTime.parse(c.time))}',
                                                   style: GoogleFonts.rubik(
                                                       color: Colors.black54,
                                                       fontSize: 14,

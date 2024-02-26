@@ -141,7 +141,8 @@ class AssignmentProvider extends ChangeNotifier {
 
     for (var element in assignmentList) {
       if (DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1))) ==
-          DateFormat('yyyy-MM-dd').format(DateTime.parse(element.lastDateTime))) {
+              DateFormat('yyyy-MM-dd').format(DateTime.parse(element.lastDateTime)) &&
+          element.year == UserSharedPreferences.year) {
         if (!checkStudentInList(assignment: element)) {
           if (!context.mounted) return;
           await showDialogForAssignment(context: context, assignmentModel: element);

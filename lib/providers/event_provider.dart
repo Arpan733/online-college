@@ -36,7 +36,7 @@ class EventProvider extends ChangeNotifier {
     NotificationServices().sendNotification(
       title: eventModel.title,
       message:
-          'Time: ${DateFormat('dd/MM/yyyy HH:mm aa').format(DateTime.parse(eventModel.dateTime))}\nDescription: ${eventModel.description}',
+          'Time: ${DateFormat('dd/MM/yyyy hh:mm aa').format(DateTime.parse(eventModel.dateTime))}\nDescription: ${eventModel.description}',
       tokens: tokens,
       pd: {
         'page': 'eventDetail',

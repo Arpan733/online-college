@@ -145,7 +145,17 @@ class AssignmentProvider extends ChangeNotifier {
           element.year == UserSharedPreferences.year) {
         if (!checkStudentInList(assignment: element)) {
           if (!context.mounted) return;
-          await showDialogForAssignment(context: context, assignmentModel: element);
+          await showDialogForAssignment(
+              context: context, assignmentModel: element, time: 'Tomorrow');
+        }
+      }
+
+      if (DateFormat('yyyy-MM-dd').format(DateTime.now()) ==
+              DateFormat('yyyy-MM-dd').format(DateTime.parse(element.lastDateTime)) &&
+          element.year == UserSharedPreferences.year) {
+        if (!checkStudentInList(assignment: element)) {
+          if (!context.mounted) return;
+          await showDialogForAssignment(context: context, assignmentModel: element, time: 'Today');
         }
       }
     }

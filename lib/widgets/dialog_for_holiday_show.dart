@@ -7,6 +7,7 @@ import 'package:text_scroll/text_scroll.dart';
 showDialogForHolidayShow({
   required BuildContext context,
   required HolidayModel hc,
+  required String time,
 }) {
   return showDialog(
     context: context,
@@ -40,7 +41,7 @@ showDialogForHolidayShow({
               ),
             ),
             TextScroll(
-              'Tomorrow is ${hc.title!}',
+              '$time is ${hc.title!}',
               mode: TextScrollMode.endless,
               velocity: const Velocity(pixelsPerSecond: Offset(50, 0)),
               delayBefore: const Duration(milliseconds: 1000),

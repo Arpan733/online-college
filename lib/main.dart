@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:online_college/consts/routes.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
+import 'package:online_college/firebase_options.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/providers/assignment_provider.dart';
 import 'package:online_college/providers/doubt_provider.dart';
@@ -9,6 +11,7 @@ import 'package:online_college/providers/event_provider.dart';
 import 'package:online_college/providers/fee_provider.dart';
 import 'package:online_college/providers/holiday_provider.dart';
 import 'package:online_college/providers/leave_application_provider.dart';
+import 'package:online_college/providers/meeting_provider.dart';
 import 'package:online_college/providers/quiz_provider.dart';
 import 'package:online_college/providers/result_provider.dart';
 import 'package:online_college/providers/school_gallery_provider.dart';
@@ -19,9 +22,6 @@ import 'package:online_college/providers/time_table_provider.dart';
 import 'package:online_college/repositories/notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
-import 'consts/routes.dart';
-import 'firebase_options.dart';
 
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage? message) async {
@@ -79,6 +79,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SchoolGalleryProvider()),
         ChangeNotifierProvider(create: (context) => TimeTableProvider()),
         ChangeNotifierProvider(create: (context) => QuizProvider()),
+        ChangeNotifierProvider(create: (context) => MeetingProvider()),
       ],
       child: const MaterialApp(
         title: 'Online College',
@@ -88,3 +89,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// token: 007eJxTYEjrit/y8pDpv7j7Yhvf/mnfEa0lqbbk6Jp+r3mOPuLyc7UUGCwMzZKTk5IM00xNU01MjZOTLEyTUw2TLZNSjY2TzFINtvreSW0IZGQQvsXMysgAgSA+H0N+Xk5mXqpCcn5OTmp6KgMDAPZvI+I=
+// appId: 816ccbb1f55e453cb85ce1c9be33b6e0

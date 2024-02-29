@@ -15,6 +15,9 @@ import 'package:online_college/screens/fees/fee_receipt_screen.dart';
 import 'package:online_college/screens/fees/fees_screen.dart';
 import 'package:online_college/screens/leave_application/leave_application_screen.dart';
 import 'package:online_college/screens/login/login_screen.dart';
+import 'package:online_college/screens/material/material_screen.dart';
+import 'package:online_college/screens/meeting/meeting_list_screen.dart';
+import 'package:online_college/screens/meeting/meeting_screen.dart';
 import 'package:online_college/screens/professor_list/professor_list_screen.dart';
 import 'package:online_college/screens/quiz/quiz_detail_screen.dart';
 import 'package:online_college/screens/quiz/quiz_play_screen.dart';
@@ -62,6 +65,9 @@ class Routes {
   static const String quizPlay = 'quizPlay';
   static const String quizQuestion = 'quizQuestion';
   static const String quizDetail = 'quizDetail';
+  static const String meetingList = 'meetingList';
+  static const String meeting = 'meeting';
+  static const String material = 'material';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -150,9 +156,15 @@ class Routes {
         return MaterialPageRoute(builder: (BuildContext context) => const QuizQuestionScreen());
       case quizDetail:
         return MaterialPageRoute(
-            builder: (BuildContext context) => QuizDetailScreen(
-                  qid: settings.arguments.toString(),
-                ));
+            builder: (BuildContext context) =>
+                QuizDetailScreen(qid: settings.arguments.toString()));
+      case meetingList:
+        return MaterialPageRoute(builder: (BuildContext context) => const MeetingListScreen());
+      case meeting:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => MeetingScreen(mid: settings.arguments.toString()));
+      case material:
+        return MaterialPageRoute(builder: (BuildContext context) => const MaterialScreen());
       default:
         return MaterialPageRoute(
           builder: (_) {

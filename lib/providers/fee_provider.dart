@@ -212,7 +212,15 @@ class FeeProvider extends ChangeNotifier {
           UserSharedPreferences.year == element.year) {
         if (!checkPaid(sid: UserSharedPreferences.id, fee: element)) {
           if (!context.mounted) return;
-          await showDialogForFee(context: context, feeModel: element);
+          await showDialogForFee(context: context, feeModel: element, time: 'Tomorrow');
+        }
+      }
+
+      if (DateFormat('dd/MM/yyyy').format(DateTime.now()) == element.lastDate! &&
+          UserSharedPreferences.year == element.year) {
+        if (!checkPaid(sid: UserSharedPreferences.id, fee: element)) {
+          if (!context.mounted) return;
+          await showDialogForFee(context: context, feeModel: element, time: 'Today');
         }
       }
     }

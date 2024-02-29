@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:online_college/consts/routes.dart';
-import 'package:online_college/model/fee_model.dart';
+import 'package:online_college/model/meeting_model.dart';
 import 'package:text_scroll/text_scroll.dart';
 
-showDialogForFee({
+showDialogForMeeting({
   required BuildContext context,
-  required FeeModel feeModel,
+  required MeetingModel meeting,
   required String time,
 }) {
   return showDialog(
@@ -18,9 +19,7 @@ showDialogForFee({
         borderRadius: BorderRadius.circular(20),
       ),
       content: GestureDetector(
-        onTap: () {
-          Navigator.popAndPushNamed(context, arguments: feeModel.fid, Routes.feePay);
-        },
+        onTap: () => Navigator.popAndPushNamed(context, Routes.meetingList),
         child: Container(
           height: 115,
           width: MediaQuery.of(context).size.width * 0.7,
@@ -37,7 +36,7 @@ showDialogForFee({
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Fee Due',
+                'Meeting Time',
                 style: GoogleFonts.rubik(
                   color: Colors.white,
                   fontSize: 22,
@@ -45,7 +44,7 @@ showDialogForFee({
                 ),
               ),
               TextScroll(
-                '$time is due date for ${feeModel.title} rupees of ${feeModel.totalAmount}',
+                '$time, We have to discuss on ${meeting.title}',
                 mode: TextScrollMode.endless,
                 velocity: const Velocity(pixelsPerSecond: Offset(50, 0)),
                 delayBefore: const Duration(milliseconds: 1000),
@@ -58,7 +57,7 @@ showDialogForFee({
                 textAlign: TextAlign.right,
               ),
               Text(
-                feeModel.lastDate!,
+                DateFormat('dd/MM/yyyy - hh:mm aa').format(DateTime.parse(meeting.time)),
                 style: GoogleFonts.rubik(
                   color: Colors.white,
                   fontSize: 12,

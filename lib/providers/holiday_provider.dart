@@ -94,7 +94,13 @@ class HolidayProvider extends ChangeNotifier {
       if (DateFormat('yyyy-MM-dd').format(DateTime.now().add(const Duration(days: 1))) ==
           DateFormat('yyyy-MM-dd').format(DateTime.parse(element.date!))) {
         if (!context.mounted) return;
-        await showDialogForHolidayShow(context: context, hc: element);
+        await showDialogForHolidayShow(context: context, hc: element, time: 'Tomorrow');
+      }
+
+      if (DateFormat('yyyy-MM-dd').format(DateTime.now()) ==
+          DateFormat('yyyy-MM-dd').format(DateTime.parse(element.date!))) {
+        if (!context.mounted) return;
+        await showDialogForHolidayShow(context: context, hc: element, time: 'Today');
       }
     }
   }

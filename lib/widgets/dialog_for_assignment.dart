@@ -8,6 +8,7 @@ import 'package:text_scroll/text_scroll.dart';
 showDialogForAssignment({
   required BuildContext context,
   required AssignmentModel assignmentModel,
+  required String time,
 }) {
   return showDialog(
     context: context,
@@ -45,7 +46,7 @@ showDialogForAssignment({
                 ),
               ),
               TextScroll(
-                'Tomorrow is due date for ${assignmentModel.title}',
+                '$time is due date for ${assignmentModel.title}',
                 mode: TextScrollMode.endless,
                 velocity: const Velocity(pixelsPerSecond: Offset(50, 0)),
                 delayBefore: const Duration(milliseconds: 1000),

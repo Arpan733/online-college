@@ -51,6 +51,13 @@ List<Map<String, dynamic>> functionalityListTeacher = [
     },
   },
   {
+    'name': 'Meeting',
+    'image': 'assets/icons/meeting.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, Routes.meetingList);
+    },
+  },
+  {
     'name': 'School Holidays',
     'image': 'assets/icons/holiday.png',
     'onTap': (BuildContext context) {
@@ -62,6 +69,13 @@ List<Map<String, dynamic>> functionalityListTeacher = [
     'image': 'assets/icons/timetable.png',
     'onTap': (BuildContext context) {
       Navigator.pushNamed(context, Routes.timetable);
+    },
+  },
+  {
+    'name': 'Material',
+    'image': 'assets/icons/material.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, Routes.material);
     },
   },
   {
@@ -132,6 +146,13 @@ List<Map<String, dynamic>> functionalityListStudent = [
     },
   },
   {
+    'name': 'Meeting',
+    'image': 'assets/icons/meeting.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, Routes.meetingList);
+    },
+  },
+  {
     'name': 'School Holidays',
     'image': 'assets/icons/holiday.png',
     'onTap': (BuildContext context) {
@@ -157,6 +178,13 @@ List<Map<String, dynamic>> functionalityListStudent = [
     'image': 'assets/icons/result.png',
     'onTap': (BuildContext context) {
       Navigator.pushNamed(context, Routes.resultStudent);
+    },
+  },
+  {
+    'name': 'Material',
+    'image': 'assets/icons/material.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, Routes.material);
     },
   },
   {

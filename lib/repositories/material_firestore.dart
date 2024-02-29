@@ -17,7 +17,7 @@ class MaterialFireStore {
       await firestore.collection('materials').doc(materialModel.mid).set(materialModel.toJson());
 
       if (!context.mounted) return;
-      Utils().showToast(context: context, message: 'Material Created');
+      Utils().showToast(context: context, message: 'Materials Uploaded');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
     }
@@ -27,6 +27,9 @@ class MaterialFireStore {
       {required BuildContext context, required MaterialModel materialModel}) async {
     try {
       await firestore.collection('materials').doc(materialModel.mid).update(materialModel.toJson());
+
+      if (!context.mounted) return;
+      Utils().showToast(context: context, message: 'Materials Updated');
     } catch (e) {
       if (!context.mounted) return;
       Utils().showToast(context: context, message: e.toString());
@@ -34,12 +37,12 @@ class MaterialFireStore {
   }
 
   Future<void> deleteMaterialFromFireStore(
-      {required BuildContext context, required String sid}) async {
+      {required BuildContext context, required String mid}) async {
     try {
-      await firestore.collection('materials').doc(sid).delete();
+      await firestore.collection('materials').doc(mid).delete();
 
       if (!context.mounted) return;
-      Utils().showToast(context: context, message: 'Material Deleted');
+      Utils().showToast(context: context, message: 'Materials Deleted');
     } catch (e) {
       Utils().showToast(context: context, message: e.toString());
     }
@@ -70,13 +73,13 @@ class MaterialFireStore {
     return null;
   }
 
-  Future<String?> uploadFile(
-      {required BuildContext context,
-      required PlatformFile pickedFile,
-      required String mid,
-      required String time}) async {
+  Future<String?> uploadFile({
+    required BuildContext context,
+    required PlatformFile pickedFile,
+    required String mid,
+  }) async {
     try {
-      final ref = FirebaseStorage.instance.ref().child('materials/$mid/$time/${pickedFile.name}');
+      final ref = FirebaseStorage.instance.ref().child('materials/$mid/${pickedFile.name}');
       UploadTask upload = ref.putFile(File(pickedFile.path!));
 
       final snapshot = await upload.whenComplete(() {});
@@ -91,5 +94,20 @@ class MaterialFireStore {
     }
 
     return null;
+  }
+
+  Future<void> deleteFiles({required BuildContext context, required String mid}) async {
+    try {
+      final folderRef = FirebaseStorage.instance.ref().child('materials/$mid');
+
+      final items = await folderRef.listAll();
+
+      await Future.forEach(items.items, (Reference ref) async {
+        await ref.delete();
+      });
+    } catch (e) {
+      if (!context.mounted) return;
+      Utils().showToast(context: context, message: e.toString());
+    }
   }
 }

@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 class MaterialModel {
+  String createdTime;
   String mid;
   String title;
   List<String> year;
-  List<Material> materials;
+  List<Materialss> materials;
 
   MaterialModel({
+    required this.createdTime,
     required this.mid,
     required this.title,
     required this.year,
@@ -18,13 +20,15 @@ class MaterialModel {
   String toRawJson() => json.encode(toJson());
 
   factory MaterialModel.fromJson(Map<String, dynamic> json) => MaterialModel(
+        createdTime: json["createdTime"],
         mid: json["mid"],
         title: json["title"],
         year: List<String>.from(json["year"].map((x) => x)),
-        materials: List<Material>.from(json["materials"].map((x) => Material.fromJson(x))),
+        materials: List<Materialss>.from(json["materials"].map((x) => Materialss.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
+        "createdTime": createdTime,
         "mid": mid,
         "title": title,
         "year": List<dynamic>.from(year.map((x) => x)),
@@ -32,22 +36,22 @@ class MaterialModel {
       };
 }
 
-class Material {
+class Materialss {
   String name;
   String extension;
   String url;
 
-  Material({
+  Materialss({
     required this.name,
     required this.extension,
     required this.url,
   });
 
-  factory Material.fromRawJson(String str) => Material.fromJson(json.decode(str));
+  factory Materialss.fromRawJson(String str) => Materialss.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Material.fromJson(Map<String, dynamic> json) => Material(
+  factory Materialss.fromJson(Map<String, dynamic> json) => Materialss(
         name: json["name"],
         extension: json["extension"],
         url: json["url"],

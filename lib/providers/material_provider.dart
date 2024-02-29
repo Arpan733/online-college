@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/notifications.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,8 @@ class MaterialProvider extends ChangeNotifier {
 
   List<MaterialModel> get materials => _materials;
 
-  MaterialModel _material = MaterialModel(year: [], title: '', mid: '', materials: []);
+  MaterialModel _material =
+      MaterialModel(year: [], title: '', mid: '', materials: [], createdTime: "");
 
   MaterialModel get material => _material;
 
@@ -36,11 +38,10 @@ class MaterialProvider extends ChangeNotifier {
 
     NotificationServices().sendNotification(
       title: materialModel.title,
-      message: '${materialModel}',
+      message: '${materialModel.materials.length} files added.',
       tokens: tokens,
       pd: {
         'page': 'materialDetail',
-        'id': materialModel.mid,
       },
     );
 
@@ -49,8 +50,8 @@ class MaterialProvider extends ChangeNotifier {
   }
 
   void getMaterialModels(String id) {
-    FirebaseFirestore.instance.collection('materials').doc(id).snapshots().listen((event) {
-      _material = MaterialModel.fromJson(event.data()!);
+    FirebaseFirestore.instance.collection('materials').doc(id).snapshots().listen((material) {
+      _material = MaterialModel.fromJson(material.data()!);
       notifyListeners();
     });
   }
@@ -73,15 +74,15 @@ class MaterialProvider extends ChangeNotifier {
     await getMaterialList(context: context);
   }
 
-  Future<void> deleteMaterial({required BuildContext context, required String sid}) async {
-    await MaterialFireStore().deleteMaterialFromFireStore(context: context, sid: sid);
+  Future<void> deleteMaterial({required BuildContext context, required String mid}) async {
+    await MaterialFireStore().deleteMaterialFromFireStore(context: context, mid: mid);
 
     if (!context.mounted) return;
     await getMaterialList(context: context);
   }
 
   Future<void> getMaterialAsFuture({required BuildContext context, required String mid}) async {
-    _material = MaterialModel(year: [], title: '', mid: '', materials: []);
+    _material = MaterialModel(year: [], title: '', mid: '', materials: [], createdTime: "");
     _isLoading = true;
     notifyListeners();
 
@@ -110,5 +111,64 @@ class MaterialProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  List<MaterialModel> teacherSorting({
+    required BuildContext context,
+    required String sort,
+  }) {
+    List<MaterialModel> showMaterialList = [];
+
+    if (sort == 'Uploaded Time') {
+      showMaterialList =
+          materials.map((element) => MaterialModel.fromJson(element.toJson())).toList();
+      showMaterialList.sort(
+        (a, b) {
+          DateTime aDate = DateTime.parse(a.createdTime);
+          DateTime bDate = DateTime.parse(b.createdTime);
+          return aDate.compareTo(bDate);
+        },
+      );
+    } else if (sort == 'All') {
+      showMaterialList = materials;
+    } else {
+      for (var element in materials) {
+        if (element.year.contains(sort)) {
+          showMaterialList.add(MaterialModel.fromJson(element.toJson()));
+        }
+      }
+    }
+
+    return showMaterialList;
+  }
+
+  List<MaterialModel> studentSorting({
+    required BuildContext context,
+    required String sort,
+  }) {
+    List<MaterialModel> showMaterialList = [];
+    List<MaterialModel> materialList = [];
+
+    for (var element in materials) {
+      if (element.year.contains(UserSharedPreferences.year)) {
+        materialList.add(element);
+      }
+    }
+
+    if (sort == 'Uploaded Time') {
+      showMaterialList =
+          materialList.map((element) => MaterialModel.fromJson(element.toJson())).toList();
+      showMaterialList.sort(
+        (a, b) {
+          DateTime aDate = DateTime.parse(a.createdTime);
+          DateTime bDate = DateTime.parse(b.createdTime);
+          return aDate.compareTo(bDate);
+        },
+      );
+    } else if (sort == 'All') {
+      showMaterialList = materialList;
+    }
+
+    return showMaterialList;
   }
 }

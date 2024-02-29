@@ -51,7 +51,6 @@ class MeetingProvider extends ChangeNotifier {
       tokens: tokens,
       pd: {
         'page': 'meetingDetail',
-        'id': meetingModel.mid,
       },
     );
 

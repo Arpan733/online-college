@@ -233,8 +233,10 @@ class _MeetingListScreenState extends State<MeetingListScreen> {
                                 //   }
                                 // }
                               },
-                              onLongPress: () => bottomSheetForMeeting(
-                                  context: context, isEdit: true, meetingModel: m),
+                              onLongPress: () => UserSharedPreferences.role == 'teacher'
+                                  ? bottomSheetForMeeting(
+                                      context: context, isEdit: true, meetingModel: m)
+                                  : null,
                               child: Container(
                                 width: MediaQuery.of(context).size.width - 60,
                                 margin: const EdgeInsets.only(bottom: 20),

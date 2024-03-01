@@ -227,7 +227,7 @@ class _MeetingListScreenState extends State<MeetingListScreen> {
                                       .subtract(const Duration(minutes: 5)))) {
                                     Utils().showToast(
                                         context: context, message: 'Meeting has time to start');
-                                  } else if (DateTime.now().isBefore(
+                                  } else if (!DateTime.now().isBefore(
                                       DateTime.parse(m.time).add(const Duration(hours: 3)))) {
                                     Utils()
                                         .showToast(context: context, message: 'Meeting has ended');

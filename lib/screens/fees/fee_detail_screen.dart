@@ -126,28 +126,30 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                               ),
                             ),
                             actions: [
-                              GestureDetector(
-                                onTap: () async {
-                                  fee.deleteFee(context: context, fid: widget.fid);
+                              if (fee.isLoading &&
+                                  DateTime.now().isAfter(DateTime.parse(fee.fee.lastDate!)))
+                                GestureDetector(
+                                  onTap: () async {
+                                    fee.deleteFee(context: context, fid: widget.fid);
 
-                                  if (!context.mounted) return;
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  height: 30,
-                                  width: 40,
-                                  margin: const EdgeInsets.only(right: 20),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: const Icon(
-                                    Icons.delete_outline,
-                                    color: Colors.red,
-                                    size: 25,
+                                    if (!context.mounted) return;
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    width: 40,
+                                    margin: const EdgeInsets.only(right: 20),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: const Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.red,
+                                      size: 25,
+                                    ),
                                   ),
                                 ),
-                              ),
                               GestureDetector(
                                 onTap: () async {
                                   Navigator.pushNamed(

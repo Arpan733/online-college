@@ -75,12 +75,13 @@ class MeetingFireStore {
     required DateTime time,
   }) async {
     try {
-      int expirationTime =
-          (time.add(const Duration(hours: 3))).difference(DateTime.now()).inSeconds;
+      int expirationTime = (time.add(const Duration(hours: 3))).difference(DateTime.now()).inHours;
 
-      final response = await http.get(Uri.parse(
-        'https://agora-token-1db4.onrender.com/access_token?channelName=$channelName&uid=0&role=publisher&expirationTime=$expirationTime',
-      ));
+      final response = await http.get(
+        Uri.parse(
+          'https://agora-token-1db4.onrender.com/access_token?channelName=$channelName&uid=0&role=publisher&expirationTime=${expirationTime * 3600}',
+        ),
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = jsonDecode(response.body);

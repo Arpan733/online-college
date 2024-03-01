@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/consts/routes.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
+import 'package:online_college/consts/utils.dart';
 import 'package:online_college/model/meeting_model.dart';
 import 'package:online_college/providers/meeting_provider.dart';
 import 'package:online_college/widgets/bottom_sheet_for_meeting.dart';
@@ -216,22 +217,22 @@ class _MeetingListScreenState extends State<MeetingListScreen> {
 
                             return GestureDetector(
                               onTap: () {
-                                Navigator.pushNamed(context, arguments: m.mid, Routes.meeting);
-                                // if (DateTime.parse(m.time).isAfter(
-                                //         DateTime.now().subtract(const Duration(minutes: 5))) &&
-                                //     DateTime.parse(m.time)
-                                //         .isAfter(DateTime.now().add(const Duration(hours: 2)))) {
-                                //   Navigator.pushNamed(context, arguments: m.mid, Routes.meeting);
-                                // } else {
-                                //   if (!DateTime.parse(m.time).isAfter(
-                                //       DateTime.now().subtract(const Duration(minutes: 5)))) {
-                                //     Utils().showToast(context: context, message: 'Meeting has time to start');
-                                //   } else if (
-                                //       DateTime.parse(m.time)
-                                //           .isAfter(DateTime.now().add(const Duration(hours: 2)))) {
-                                //     Utils().showToast(context: context, message: 'Meeting has ended');
-                                //   }
-                                // }
+                                if (DateTime.now().isAfter(DateTime.parse(m.time)
+                                        .subtract(const Duration(minutes: 5))) &&
+                                    DateTime.now().isBefore(
+                                        DateTime.parse(m.time).add(const Duration(hours: 3)))) {
+                                  Navigator.pushNamed(context, arguments: m.mid, Routes.meeting);
+                                } else {
+                                  if (!DateTime.now().isAfter(DateTime.parse(m.time)
+                                      .subtract(const Duration(minutes: 5)))) {
+                                    Utils().showToast(
+                                        context: context, message: 'Meeting has time to start');
+                                  } else if (DateTime.now().isBefore(
+                                      DateTime.parse(m.time).add(const Duration(hours: 3)))) {
+                                    Utils()
+                                        .showToast(context: context, message: 'Meeting has ended');
+                                  }
+                                }
                               },
                               onLongPress: () => UserSharedPreferences.role == 'teacher'
                                   ? bottomSheetForMeeting(
@@ -248,9 +249,15 @@ class _MeetingListScreenState extends State<MeetingListScreen> {
                                   alignment: Alignment.centerLeft,
                                   padding: const EdgeInsets.symmetric(horizontal: 10),
                                   decoration: BoxDecoration(
-                                    color: DateTime.parse(m.time).isBefore(DateTime.now())
-                                        ? Colors.black12
-                                        : Colors.white,
+                                    color: DateTime.now().isAfter(DateTime.parse(m.time)
+                                                .subtract(const Duration(minutes: 5))) &&
+                                            DateTime.now().isBefore(DateTime.parse(m.time)
+                                                .add(const Duration(hours: 3)))
+                                        ? Colors.green.withOpacity(0.2)
+                                        : DateTime.parse(m.time).isBefore(
+                                                DateTime.now().subtract(const Duration(hours: 3)))
+                                            ? Colors.black12
+                                            : Colors.white,
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
                                       color: Colors.black38,

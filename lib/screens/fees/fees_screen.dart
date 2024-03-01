@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:online_college/consts/routes.dart';
 import 'package:online_college/providers/fee_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +16,11 @@ class FeesScreen extends StatefulWidget {
 }
 
 class _FeesScreenState extends State<FeesScreen> {
-  String sort = UserSharedPreferences.role == 'teacher' ? 'Created Date' : 'All';
+  String sort = 'All';
 
   List<String> dropDownList = UserSharedPreferences.role == 'teacher'
       ? [
+          "All",
           "Created Date",
           "Due Date",
           "Paid By All Student",
@@ -28,7 +30,7 @@ class _FeesScreenState extends State<FeesScreen> {
           "3rd Year",
           "4th Year"
         ]
-      : ["All", "Paid", "Unpaid"];
+      : ["All", "Created Date", "Due Date", "Paid", "Unpaid"];
 
   List<DropdownMenuItem<String>> dropDowns = [];
   List<FeeModel> showFeeList = [];
@@ -293,7 +295,8 @@ class _FeesScreenState extends State<FeesScreen> {
                                             ),
                                           ),
                                           Text(
-                                            f.lastDate!,
+                                            DateFormat('dd/MM/yyyy')
+                                                .format(DateTime.parse(f.lastDate!)),
                                             style: GoogleFonts.rubik(
                                               color: Colors.black87,
                                               fontSize: 16,
@@ -483,7 +486,8 @@ class _FeesScreenState extends State<FeesScreen> {
                                               ),
                                             ),
                                             Text(
-                                              f.lastDate!,
+                                              DateFormat('dd/MM/yyyy')
+                                                  .format(DateTime.parse(f.lastDate!)),
                                               style: GoogleFonts.rubik(
                                                 color: Colors.black87,
                                                 fontSize: 16,

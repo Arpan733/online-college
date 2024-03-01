@@ -24,6 +24,8 @@ class _MeetingScreenState extends State<MeetingScreen> {
   String channel = '';
   String appId = '816ccbb1f55e453cb85ce1c9be33b6e0';
 
+  late AgoraRtcEventHandlers agoraEvents;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -34,6 +36,15 @@ class _MeetingScreenState extends State<MeetingScreen> {
       token = Provider.of<MeetingProvider>(context, listen: false).meeting.agoraToken;
       channel = Provider.of<MeetingProvider>(context, listen: false).meeting.channelName;
 
+      agoraEvents = AgoraRtcEventHandlers(
+        onUserMuteAudio: (connection, remoteUid, muted) {
+          mute = muted;
+        },
+        onUserMuteVideo: (connection, remoteUid, muted) {
+          screenShare = muted;
+        },
+      );
+
       client = AgoraClient(
         agoraConnectionData: AgoraConnectionData(
           appId: appId,
@@ -41,14 +52,7 @@ class _MeetingScreenState extends State<MeetingScreen> {
           tempToken: token,
           uid: 0,
         ),
-        agoraEventHandlers: AgoraRtcEventHandlers(
-          onUserMuteAudio: (connection, remoteUid, muted) {
-            mute = muted;
-          },
-          onUserMuteVideo: (connection, remoteUid, muted) {
-            screenShare = muted;
-          },
-        ),
+        agoraEventHandlers: agoraEvents,
       );
 
       await client.initialize();
@@ -64,7 +68,7 @@ class _MeetingScreenState extends State<MeetingScreen> {
   }
 
   void _onCallEnd(BuildContext context) async {
-    client.release();
+    await client.engine.release(sync: false);
 
     if (!context.mounted) return;
     Navigator.pop(context);
@@ -84,8 +88,12 @@ class _MeetingScreenState extends State<MeetingScreen> {
                 children: [
                   AgoraVideoViewer(
                     client: client,
-                    layoutType: Layout.floating,
                     enableHostControls: true,
+                    showNumberOfUsers: true,
+                    showAVState: true,
+                    floatingLayoutMainViewPadding: const EdgeInsets.all(10),
+                    floatingLayoutSubViewPadding: const EdgeInsets.all(10),
+                    layoutType: Layout.grid,
                   ),
                   AgoraVideoButtons(
                     autoHideButtons: true,
@@ -114,11 +122,12 @@ class _MeetingScreenState extends State<MeetingScreen> {
                       ),
                     ),
                     muteButtonChild: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        await client.engine.muteLocalAudioStream(!mute);
+
                         setState(() {
                           mute = !mute;
                         });
-                        client.engine.muteLocalAudioStream(mute);
                       },
                       child: Container(
                         height: 50,
@@ -136,17 +145,17 @@ class _MeetingScreenState extends State<MeetingScreen> {
                       ),
                     ),
                     screenSharingButtonWidget: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          screenShare = !screenShare;
-                        });
-
-                        client.engine.updateScreenCapture(
+                      onTap: () async {
+                        await client.engine.updateScreenCapture(
                           ScreenCaptureParameters2(
                             captureVideo: screenShare,
                             captureAudio: screenShare,
                           ),
                         );
+
+                        setState(() {
+                          screenShare = !screenShare;
+                        });
                       },
                       child: Container(
                         height: 50,

@@ -56,7 +56,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            floating: true,
             expandedHeight: 200,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -125,7 +124,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             sliver: SliverGrid.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -141,14 +140,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     ? functionalityListStudent[index]
                     : functionalityListTeacher[index];
 
-                Key uniqueKey = ValueKey<String>(current['name']);
-
                 return GestureDetector(
                   onTap: () {
                     current['onTap'](context);
                   },
                   child: Container(
-                    key: uniqueKey,
+                    key: ValueKey<String>(current['name']),
                     height: 135,
                     width: 165,
                     padding: const EdgeInsets.only(top: 20, left: 20, right: 20),

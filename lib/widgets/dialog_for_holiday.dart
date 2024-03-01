@@ -86,45 +86,47 @@ showDialogForHolidayList(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                        children: [
-                          GestureDetector(
-                            onTap: onDelete,
-                            child: Container(
-                              height: 40,
-                              width: 50,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(
-                                Icons.delete_outline,
-                                color: Colors.red,
-                                size: 25,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          GestureDetector(
-                            onTap: onEdit,
-                            child: Container(
-                              height: 40,
-                              width: 50,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(
-                                Icons.edit,
-                                color: Color(0xFF6688CA),
-                                size: 25,
-                              ),
-                            ),
-                          ),
-                        ],
+                        children: DateTime.now().isAfter(DateTime.parse(hc.date!))
+                            ? []
+                            : [
+                                GestureDetector(
+                                  onTap: onDelete,
+                                  child: Container(
+                                    height: 40,
+                                    width: 50,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.red,
+                                      size: 25,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
+                                  onTap: onEdit,
+                                  child: Container(
+                                    height: 40,
+                                    width: 50,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Color(0xFF6688CA),
+                                      size: 25,
+                                    ),
+                                  ),
+                                ),
+                              ],
                       ),
                       GestureDetector(
                         onTap: onOk,

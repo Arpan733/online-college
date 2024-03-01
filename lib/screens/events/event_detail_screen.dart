@@ -149,14 +149,15 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                 ),
               ),
-              UserSharedPreferences.role == 'teacher'
+              UserSharedPreferences.role == 'teacher' &&
+                      !event.isLoading &&
+                      !DateTime.now().isAfter(DateTime.parse(event.event.dateTime))
                   ? Positioned(
                       top: 30,
                       right: 60,
                       child: IconButton(
                         onPressed: () {
-                          Provider.of<EventProvider>(context, listen: false)
-                              .deleteEvent(context: context, eid: event.event.eid);
+                          event.deleteEvent(context: context, eid: event.event.eid);
                           Navigator.pop(context);
                         },
                         icon: const Icon(
@@ -166,7 +167,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       ),
                     )
                   : Container(),
-              UserSharedPreferences.role == 'teacher'
+              UserSharedPreferences.role == 'teacher' &&
+                      !event.isLoading &&
+                      !DateTime.now().isAfter(DateTime.parse(event.event.dateTime))
                   ? Positioned(
                       top: 30,
                       right: 10,
@@ -175,8 +178,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           bottomSheetForEvent(
                               context: context, isEdit: true, eventModel: event.event);
 
-                          Provider.of<EventProvider>(context, listen: false)
-                              .getEvent(context: context, eid: widget.eid);
+                          event.getEvent(context: context, eid: widget.eid);
                           setState(() {});
                         },
                         icon: const Icon(

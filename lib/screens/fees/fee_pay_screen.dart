@@ -135,7 +135,7 @@ class _FeePayScreenState extends State<FeePayScreen> {
                                               ),
                                             )
                                           : Text(
-                                              'Last Date: ${fee.fee.lastDate!}',
+                                              'Last Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(fee.fee.lastDate!))}',
                                               style: GoogleFonts.rubik(
                                                 color: !DateTime.now().isAfter(
                                                         DateFormat('dd/MM/yyyy')
@@ -232,7 +232,8 @@ class _FeePayScreenState extends State<FeePayScreen> {
                                                   sid: UserSharedPreferences.id, fee: fee.fee)) {
                                             Navigator.pushNamed(
                                                 context, arguments: widget.fid, Routes.feeReceipt);
-                                          } else {
+                                          } else if (!DateTime.now()
+                                              .isAfter(DateTime.parse(fee.fee.lastDate!))) {
                                             await Provider.of<FeeProvider>(context, listen: false)
                                                 .createPayment(context: context, feeModel: fee.fee);
 
@@ -263,7 +264,10 @@ class _FeePayScreenState extends State<FeePayScreen> {
                                                             sid: UserSharedPreferences.id,
                                                             fee: fee.fee)
                                                     ? 'Download PDF'
-                                                    : 'Pay Fees',
+                                                    : DateTime.now().isAfter(
+                                                            DateTime.parse(fee.fee.lastDate!))
+                                                        ? 'Time Left'
+                                                        : 'Pay Fees',
                                                 style: GoogleFonts.rubik(
                                                   color: Colors.white,
                                                   fontSize: 16,
@@ -279,7 +283,10 @@ class _FeePayScreenState extends State<FeePayScreen> {
                                                             sid: UserSharedPreferences.id,
                                                             fee: fee.fee)
                                                     ? Icons.picture_as_pdf_outlined
-                                                    : Icons.arrow_forward_outlined,
+                                                    : DateTime.now().isAfter(
+                                                            DateTime.parse(fee.fee.lastDate!))
+                                                        ? Icons.timer_off_outlined
+                                                        : Icons.arrow_forward_outlined,
                                                 color: Colors.white,
                                                 size: 25,
                                               ),

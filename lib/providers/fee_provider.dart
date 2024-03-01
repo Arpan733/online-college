@@ -97,7 +97,6 @@ class FeeProvider extends ChangeNotifier {
 
     if (response.isNotEmpty) {
       _feeList = response;
-      await sortFee();
     }
 
     _isLoading = false;
@@ -125,16 +124,6 @@ class FeeProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
-  }
-
-  Future<void> sortFee() async {
-    _feeList.sort(
-      (a, b) {
-        DateTime aDate = DateFormat('dd/MM/yyyy').parse(a.createdDate!);
-        DateTime bDate = DateFormat('dd/MM/yyyy').parse(b.createdDate!);
-        return aDate.compareTo(bDate);
-      },
-    );
   }
 
   bool checkPaid({required String sid, required FeeModel fee}) {
@@ -232,12 +221,14 @@ class FeeProvider extends ChangeNotifier {
   }) {
     List<FeeModel> showFeeList = [];
 
-    if (sort == 'Created Date') {
+    if (sort == 'All') {
+      showFeeList = feeList;
+    } else if (sort == 'Created Date') {
       showFeeList = feeList.map((element) => FeeModel.fromJson(element.toJson())).toList();
       showFeeList.sort(
         (a, b) {
-          DateTime aDate = DateFormat('dd/MM/yyyy').parse(a.createdDate!);
-          DateTime bDate = DateFormat('dd/MM/yyyy').parse(b.createdDate!);
+          DateTime aDate = DateTime.parse(a.createdDate!);
+          DateTime bDate = DateTime.parse(b.createdDate!);
           return aDate.compareTo(bDate);
         },
       );
@@ -245,8 +236,8 @@ class FeeProvider extends ChangeNotifier {
       showFeeList = feeList.map((element) => FeeModel.fromJson(element.toJson())).toList();
       showFeeList.sort(
         (a, b) {
-          DateTime aDate = DateFormat('dd/MM/yyyy').parse(a.lastDate!);
-          DateTime bDate = DateFormat('dd/MM/yyyy').parse(b.lastDate!);
+          DateTime aDate = DateTime.parse(a.lastDate!);
+          DateTime bDate = DateTime.parse(b.lastDate!);
           return aDate.compareTo(bDate);
         },
       );
@@ -290,6 +281,24 @@ class FeeProvider extends ChangeNotifier {
 
     if (sort == 'All') {
       showFeeList = fees;
+    } else if (sort == 'Created Date') {
+      showFeeList = fees.map((element) => FeeModel.fromJson(element.toJson())).toList();
+      showFeeList.sort(
+        (a, b) {
+          DateTime aDate = DateTime.parse(a.createdDate!);
+          DateTime bDate = DateTime.parse(b.createdDate!);
+          return aDate.compareTo(bDate);
+        },
+      );
+    } else if (sort == 'Due Date') {
+      showFeeList = fees.map((element) => FeeModel.fromJson(element.toJson())).toList();
+      showFeeList.sort(
+        (a, b) {
+          DateTime aDate = DateTime.parse(a.lastDate!);
+          DateTime bDate = DateTime.parse(b.lastDate!);
+          return aDate.compareTo(bDate);
+        },
+      );
     } else if (sort == 'Paid') {
       for (var element in fees) {
         if (checkPaid(sid: UserSharedPreferences.id, fee: element)) {

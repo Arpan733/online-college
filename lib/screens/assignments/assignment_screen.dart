@@ -22,6 +22,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
 
   List<String> dropDownList = UserSharedPreferences.role == 'teacher'
       ? [
+          "All",
           "Created Date",
           "Due Date",
           "Submitted By All Student",
@@ -31,7 +32,7 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
           "3rd Year",
           "4th Year"
         ]
-      : ["All", "Submitted", "Not Submitted"];
+      : ["All", "Created Date", "Due Date", "Submitted", "Not Submitted"];
 
   List<DropdownMenuItem<String>> dropDowns = [];
 
@@ -236,7 +237,9 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                 decoration: BoxDecoration(
                                   color: assignment.checkStudentInList(assignment: a)
                                       ? Colors.green.withOpacity(0.2)
-                                      : Colors.white,
+                                      : DateTime.now().isAfter(DateTime.parse(a.lastDateTime))
+                                          ? Colors.red.withOpacity(0.2)
+                                          : Colors.white,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Column(
@@ -355,7 +358,8 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                         if (UserSharedPreferences.role == 'teacher') {
                                           Navigator.pushNamed(
                                               context, arguments: a.aid, Routes.assignmentDetail);
-                                        } else {
+                                        } else if (!DateTime.now()
+                                            .isAfter(DateTime.parse(a.lastDateTime))) {
                                           if (!assignment.checkStudentInList(assignment: a)) {
                                             assignment.setIsLoading(loading: true);
 
@@ -408,9 +412,15 @@ class _AssignmentScreenState extends State<AssignmentScreen> {
                                               ? 'DETAILS'
                                               : assignment.checkStudentInList(assignment: a)
                                                   ? 'SUBMITTED'
-                                                  : 'SUBMIT  ASSIGNMENT',
+                                                  : DateTime.now()
+                                                          .isAfter(DateTime.parse(a.lastDateTime))
+                                                      ? 'TIME LEFT'
+                                                      : 'SUBMIT  ASSIGNMENT',
                                           style: GoogleFonts.rubik(
-                                            color: assignment.checkStudentInList(assignment: a)
+                                            color: assignment.checkStudentInList(assignment: a) ||
+                                                    DateTime.now().isAfter(
+                                                            DateTime.parse(a.lastDateTime)) &&
+                                                        UserSharedPreferences.role == 'student'
                                                 ? Colors.white54
                                                 : Colors.white,
                                             fontSize: 16,

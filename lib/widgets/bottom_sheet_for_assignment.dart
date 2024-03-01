@@ -22,15 +22,17 @@ List<DropdownMenuItem<String>> getDropDownMenu({required List<String> subs}) {
   List<DropdownMenuItem<String>> dropDownList = [];
 
   for (var element in subs) {
-    dropDownList.add(DropdownMenuItem<String>(
-      value: element,
-      child: Text(
-        element,
-        style: GoogleFonts.rubik(
-          color: const Color(0xFF6688CA),
+    dropDownList.add(
+      DropdownMenuItem<String>(
+        value: element,
+        child: Text(
+          element,
+          style: GoogleFonts.rubik(
+            color: const Color(0xFF6688CA),
+          ),
         ),
       ),
-    ));
+    );
   }
 
   return dropDownList;
@@ -55,10 +57,53 @@ bottomSheetForAssignment({
   subs = getSub(year: yearController.text);
   dropDownList = getDropDownMenu(subs: subs);
 
+  List<DropdownMenuItem<String>> dropDownListForYear = [];
+  List<String> years = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
+
+  for (var element in years) {
+    dropDownListForYear.add(
+      DropdownMenuItem(
+        value: element,
+        child: Text(
+          element,
+          style: GoogleFonts.rubik(
+            color: const Color(0xFF6688CA),
+          ),
+        ),
+      ),
+    );
+  }
+
   if (assignmentModel != null) {
     titleController.text = assignmentModel.title;
     yearController.text = assignmentModel.year;
     subjectController.text = assignmentModel.subject;
+
+    if (DateTime.now().isAfter(DateTime.parse(assignmentModel.lastDateTime))) {
+      dropDownListForYear.clear();
+      dropDownListForYear.add(DropdownMenuItem(
+        value: yearController.text,
+        child: Text(
+          yearController.text,
+          style: GoogleFonts.rubik(
+            color: const Color(0xFF6688CA),
+          ),
+        ),
+      ));
+
+      dropDownList.clear();
+      dropDownList.add(
+        DropdownMenuItem<String>(
+          value: subjectController.text,
+          child: Text(
+            subjectController.text,
+            style: GoogleFonts.rubik(
+              color: const Color(0xFF6688CA),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   subjectController.text = subs[0];
@@ -110,6 +155,10 @@ bottomSheetForAssignment({
                           controller: titleController,
                           cursorColor: const Color(0xFF6688CA),
                           cursorWidth: 3,
+                          readOnly: isEdit
+                              ? DateTime.now()
+                                  .isAfter(DateTime.parse(assignmentModel!.lastDateTime))
+                              : false,
                           style: GoogleFonts.rubik(
                             color: const Color(0xFF6688CA),
                           ),
@@ -145,51 +194,32 @@ bottomSheetForAssignment({
                         child: DropdownButtonFormField<String>(
                           padding: const EdgeInsets.only(left: 10),
                           value: yearController.text,
-                          items: [
-                            DropdownMenuItem(
-                              value: '1st Year',
-                              child: Text(
-                                '1st Year',
-                                style: GoogleFonts.rubik(
-                                  color: const Color(0xFF6688CA),
-                                ),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: '2nd Year',
-                              child: Text(
-                                '2nd Year',
-                                style: GoogleFonts.rubik(
-                                  color: const Color(0xFF6688CA),
-                                ),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: '3rd Year',
-                              child: Text(
-                                '3rd Year',
-                                style: GoogleFonts.rubik(
-                                  color: const Color(0xFF6688CA),
-                                ),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: '4th Year',
-                              child: Text(
-                                '4th Year',
-                                style: GoogleFonts.rubik(
-                                  color: const Color(0xFF6688CA),
-                                ),
-                              ),
-                            ),
-                          ],
+                          items: dropDownListForYear,
                           onChanged: (value) {
                             if (value != null) {
                               yearController.text = value;
                               subs = getSub(year: value);
-                              dropDownList = getDropDownMenu(subs: subs);
 
-                              subjectController.text = dropDownList[0].value!;
+                              if (assignmentModel != null &&
+                                  DateTime.now()
+                                      .isAfter(DateTime.parse(assignmentModel.lastDateTime))) {
+                                dropDownList.clear();
+                                dropDownList.add(
+                                  DropdownMenuItem<String>(
+                                    value: subjectController.text,
+                                    child: Text(
+                                      subjectController.text,
+                                      style: GoogleFonts.rubik(
+                                        color: const Color(0xFF6688CA),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                dropDownList = getDropDownMenu(subs: subs);
+
+                                subjectController.text = dropDownList[0].value!;
+                              }
                             }
                             set(() {});
                           },

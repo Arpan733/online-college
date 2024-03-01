@@ -167,7 +167,9 @@ class AssignmentProvider extends ChangeNotifier {
   }) {
     List<AssignmentModel> showAssignmentList = [];
 
-    if (sort == 'Created Date') {
+    if (sort == 'All') {
+      showAssignmentList = assignmentList;
+    } else if (sort == 'Created Date') {
       showAssignmentList =
           assignmentList.map((element) => AssignmentModel.fromJson(element.toJson())).toList();
       showAssignmentList.sort(
@@ -227,6 +229,26 @@ class AssignmentProvider extends ChangeNotifier {
 
     if (sort == 'All') {
       showAssignmentList = assignments;
+    } else if (sort == 'Created Date') {
+      showAssignmentList =
+          assignments.map((element) => AssignmentModel.fromJson(element.toJson())).toList();
+      showAssignmentList.sort(
+        (a, b) {
+          DateTime aDate = DateTime.parse(a.createdDateTime);
+          DateTime bDate = DateTime.parse(b.createdDateTime);
+          return aDate.compareTo(bDate);
+        },
+      );
+    } else if (sort == 'Due Date') {
+      showAssignmentList =
+          assignments.map((element) => AssignmentModel.fromJson(element.toJson())).toList();
+      showAssignmentList.sort(
+        (a, b) {
+          DateTime aDate = DateTime.parse(a.lastDateTime);
+          DateTime bDate = DateTime.parse(b.lastDateTime);
+          return aDate.compareTo(bDate);
+        },
+      );
     } else if (sort == 'Submitted') {
       for (var element in assignments) {
         if (checkStudentInList(assignment: element)) {

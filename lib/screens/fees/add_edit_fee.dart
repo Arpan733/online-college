@@ -29,6 +29,9 @@ class _AddEditFeesState extends State<AddEditFees> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
   bool isEdit = false;
 
+  List<DropdownMenuItem<String>> dropdowns = [];
+  List<String> years = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
+
   final titleController = TextEditingController();
   final amountController = TextEditingController();
   final yearController = TextEditingController();
@@ -100,9 +103,33 @@ class _AddEditFeesState extends State<AddEditFees> {
         isEdit = true;
         titleController.text = feeModel.title ?? "";
         amountController.text = feeModel.totalAmount ?? "";
-        lastDateController.text = feeModel.lastDate ?? "";
+        lastDateController.text =
+            DateFormat('dd/MM/yyyy').format(DateTime.parse(feeModel.lastDate!));
         yearController.text = feeModel.year ?? '1st Year';
         noOfData = feeModel.feeDescription?.length ?? 1;
+
+        dateTime = DateTime.parse(feeModel.lastDate!);
+
+        if (!mounted) return;
+        if (!(!Provider.of<FeeProvider>(context, listen: false).isLoading &&
+            DateTime.now().isAfter(DateTime.parse(feeModel.lastDate!)))) {
+          years.clear();
+          years.add(feeModel.year!);
+        }
+
+        dropdowns.add(
+          DropdownMenuItem(
+            value: feeModel.year!,
+            child: Text(
+              feeModel.year!,
+              style: GoogleFonts.rubik(
+                color: Colors.black87,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        );
 
         int c = 0;
 
@@ -118,6 +145,22 @@ class _AddEditFeesState extends State<AddEditFees> {
     } else {
       lastDateController.text = DateFormat('dd/MM/yyyy').format(dateTime);
       totalAmountController();
+
+      for (var element in years) {
+        dropdowns.add(
+          DropdownMenuItem(
+            value: element,
+            child: Text(
+              element,
+              style: GoogleFonts.rubik(
+                color: Colors.black87,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        );
+      }
     }
 
     super.initState();
@@ -267,8 +310,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                             FeeModel f = FeeModel(
                               title: titleController.text,
                               lastDate: lastDateController.text,
-                              createdDate:
-                                  DateFormat('dd/MM/yyyy').format(DateTime.now()).toString(),
+                              createdDate: DateTime.now().toString(),
                               totalAmount: amountController.text,
                               year: yearController.text,
                               feeDescription: l,
@@ -297,6 +339,9 @@ class _AddEditFeesState extends State<AddEditFees> {
                             TextFormField(
                               controller: titleController,
                               autovalidateMode: AutovalidateMode.onUserInteraction,
+                              readOnly:
+                                  !Provider.of<FeeProvider>(context, listen: false).isLoading &&
+                                      DateTime.now().isAfter(DateTime.parse(feeModel.lastDate!)),
                               validator: (value) {
                                 if (value != null && value.isEmpty) {
                                   return 'Enter the title of the fee';
@@ -354,9 +399,12 @@ class _AddEditFeesState extends State<AddEditFees> {
                               onTap: () async {
                                 DateTime? pickedDate = await showDatePicker(
                                   context: context,
-                                  initialDate: dateTime.add(const Duration(days: 1)),
-                                  firstDate: dateTime.add(const Duration(days: 1)),
-                                  lastDate: dateTime.add(const Duration(days: 365)),
+                                  initialDate:
+                                      isEdit ? dateTime : dateTime.add(const Duration(days: 1)),
+                                  firstDate: isEdit
+                                      ? dateTime
+                                      : DateTime.now().add(const Duration(days: 1)),
+                                  lastDate: DateTime.now().add(const Duration(days: 365)),
                                   helpText: 'Select the date: ',
                                   builder: (BuildContext context, Widget? child) {
                                     return Theme(
@@ -394,8 +442,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                                       year: pickedDate.year,
                                     );
 
-                                    lastDateController.text =
-                                        DateFormat('dd/MM/yyyy').format(dateTime).toString();
+                                    lastDateController.text = dateTime.toString();
                                   });
                                 }
                               },
@@ -405,56 +452,14 @@ class _AddEditFeesState extends State<AddEditFees> {
                             ),
                             DropdownButtonFormField<String>(
                               value: yearController.text,
-                              items: [
-                                DropdownMenuItem(
-                                  value: '1st Year',
-                                  child: Text(
-                                    '1st Year',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: '2nd Year',
-                                  child: Text(
-                                    '2nd Year',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: '3rd Year',
-                                  child: Text(
-                                    '3rd Year',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: '4th Year',
-                                  child: Text(
-                                    '4th Year',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              items: dropdowns,
                               onChanged: (value) {
-                                if (value != null) {
-                                  yearController.text = value;
-                                  setState(() {});
+                                if (!(!Provider.of<FeeProvider>(context, listen: false).isLoading &&
+                                    DateTime.now().isAfter(DateTime.parse(feeModel.lastDate!)))) {
+                                  if (value != null) {
+                                    yearController.text = value;
+                                    setState(() {});
+                                  }
                                 }
                               },
                               dropdownColor: Colors.white,
@@ -535,6 +540,11 @@ class _AddEditFeesState extends State<AddEditFees> {
                                         child: TextFormField(
                                           controller: getTitleController(i: index),
                                           autovalidateMode: AutovalidateMode.onUserInteraction,
+                                          readOnly:
+                                              !Provider.of<FeeProvider>(context, listen: false)
+                                                      .isLoading &&
+                                                  DateTime.now()
+                                                      .isAfter(DateTime.parse(feeModel.lastDate!)),
                                           validator: (value) {
                                             if (value != null && value.isEmpty) {
                                               return 'Enter the description of this field of the fee';
@@ -577,6 +587,11 @@ class _AddEditFeesState extends State<AddEditFees> {
                                           inputFormatters: <TextInputFormatter>[
                                             FilteringTextInputFormatter.digitsOnly,
                                           ],
+                                          readOnly:
+                                              !Provider.of<FeeProvider>(context, listen: false)
+                                                      .isLoading &&
+                                                  DateTime.now()
+                                                      .isAfter(DateTime.parse(feeModel.lastDate!)),
                                           autovalidateMode: AutovalidateMode.onUserInteraction,
                                           validator: (value) {
                                             if (value != null && value.isEmpty) {
@@ -623,6 +638,69 @@ class _AddEditFeesState extends State<AddEditFees> {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
+                                                    if (!(!Provider.of<FeeProvider>(context,
+                                                                listen: false)
+                                                            .isLoading &&
+                                                        DateTime.now().isAfter(
+                                                            DateTime.parse(feeModel.lastDate!)))) {
+                                                      if (index == noOfData - 1) {
+                                                        getTitleController(i: index).text = '';
+                                                        getAmountController(i: index).text = '0';
+                                                      } else {
+                                                        for (int i = index; i < noOfData; i++) {
+                                                          if (i != noOfData - 1) {
+                                                            getTitleController(i: i).text =
+                                                                getTitleController(i: i + 1).text;
+                                                            getAmountController(i: i).text =
+                                                                (getAmountController(i: i + 1)
+                                                                    .text);
+                                                          } else {
+                                                            getTitleController(i: i).text = '';
+                                                            getAmountController(i: i).text = '0';
+                                                          }
+                                                        }
+                                                      }
+
+                                                      noOfData--;
+                                                      totalAmountController();
+
+                                                      setState(() {});
+                                                    }
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.remove_circle_outline_outlined,
+                                                    color: Colors.black54,
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    if (!(!Provider.of<FeeProvider>(context,
+                                                                listen: false)
+                                                            .isLoading &&
+                                                        DateTime.now().isAfter(
+                                                            DateTime.parse(feeModel.lastDate!)))) {
+                                                      noOfData++;
+
+                                                      setState(() {});
+                                                    }
+                                                  },
+                                                  child: const Icon(
+                                                    Icons.add_circle_outline_outlined,
+                                                    color: Colors.black54,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : GestureDetector(
+                                              onTap: () {
+                                                if (!(!Provider.of<FeeProvider>(context,
+                                                            listen: false)
+                                                        .isLoading &&
+                                                    DateTime.now().isAfter(
+                                                        DateTime.parse(feeModel.lastDate!)))) {
+                                                  if (index == noOfData - 1 && noOfData != 5) {
+                                                    noOfData++;
+                                                  } else {
                                                     if (index == noOfData - 1) {
                                                       getTitleController(i: index).text = '';
                                                       getAmountController(i: index).text = '0';
@@ -642,54 +720,10 @@ class _AddEditFeesState extends State<AddEditFees> {
 
                                                     noOfData--;
                                                     totalAmountController();
-
-                                                    setState(() {});
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.remove_circle_outline_outlined,
-                                                    color: Colors.black54,
-                                                  ),
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    noOfData++;
-
-                                                    setState(() {});
-                                                  },
-                                                  child: const Icon(
-                                                    Icons.add_circle_outline_outlined,
-                                                    color: Colors.black54,
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          : GestureDetector(
-                                              onTap: () {
-                                                if (index == noOfData - 1 && noOfData != 5) {
-                                                  noOfData++;
-                                                } else {
-                                                  if (index == noOfData - 1) {
-                                                    getTitleController(i: index).text = '';
-                                                    getAmountController(i: index).text = '0';
-                                                  } else {
-                                                    for (int i = index; i < noOfData; i++) {
-                                                      if (i != noOfData - 1) {
-                                                        getTitleController(i: i).text =
-                                                            getTitleController(i: i + 1).text;
-                                                        getAmountController(i: i).text =
-                                                            (getAmountController(i: i + 1).text);
-                                                      } else {
-                                                        getTitleController(i: i).text = '';
-                                                        getAmountController(i: i).text = '0';
-                                                      }
-                                                    }
                                                   }
 
-                                                  noOfData--;
-                                                  totalAmountController();
+                                                  setState(() {});
                                                 }
-
-                                                setState(() {});
                                               },
                                               child: const Icon(
                                                 Icons.remove_circle_outline_outlined,

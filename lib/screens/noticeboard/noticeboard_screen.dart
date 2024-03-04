@@ -4,6 +4,7 @@ import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/model/notice_model.dart';
 import 'package:online_college/providers/notice_provider.dart';
 import 'package:online_college/widgets/bottom_sheet_for_notice.dart';
+import 'package:online_college/widgets/dialog_for_notice.dart';
 import 'package:provider/provider.dart';
 
 class NoticeBoardScreen extends StatefulWidget {
@@ -192,6 +193,10 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                             NoticeModel n = showNoticeList[index];
 
                             return GestureDetector(
+                              onTap: () => showDialogForNotice(
+                                context: context,
+                                notice: n,
+                              ),
                               onLongPress: () => bottomSheetForNotice(
                                 context: context,
                                 isEdit: true,

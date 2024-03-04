@@ -4,6 +4,7 @@ import 'package:online_college/model/notice_model.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/notice_firestore.dart';
 import 'package:online_college/repositories/notifications.dart';
+import 'package:online_college/widgets/dialog_for_notice.dart';
 import 'package:provider/provider.dart';
 
 class NoticeProvider extends ChangeNotifier {
@@ -100,12 +101,10 @@ class NoticeProvider extends ChangeNotifier {
     await getNoticeList(context: context);
 
     for (var element in noticeList) {
-      if (DateTime.now()
-              .add(const Duration(hours: 24))
-              .isBefore(DateTime.parse(element.createdTime)) &&
-          DateTime.now().isAfter(DateTime.parse(element.createdTime))) {
+      if (DateTime.parse(element.createdTime)
+          .isAfter(DateTime.now().subtract(const Duration(hours: 24)))) {
         if (!context.mounted) return;
-        // await showDialogForNotice(context: context, notice: element, time: 'Today');
+        await showDialogForNotice(context: context, notice: element);
       }
     }
   }

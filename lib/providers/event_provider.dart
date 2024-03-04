@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/model/event_model.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/repositories/event_firestore.dart';
@@ -32,6 +33,15 @@ class EventProvider extends ChangeNotifier {
         tokens.add(element.notificationToken);
       }
     });
+
+    if (!context.mounted) return;
+    Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
+      if (element.notificationToken != "") {
+        tokens.add(element.notificationToken);
+      }
+    });
+
+    tokens.remove(UserSharedPreferences.notificationToken);
 
     NotificationServices().sendNotification(
       title: eventModel.title,

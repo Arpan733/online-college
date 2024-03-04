@@ -18,6 +18,7 @@ import 'package:online_college/screens/login/login_screen.dart';
 import 'package:online_college/screens/material/material_screen.dart';
 import 'package:online_college/screens/meeting/meeting_list_screen.dart';
 import 'package:online_college/screens/meeting/meeting_screen.dart';
+import 'package:online_college/screens/noticeboard/noticeboard_screen.dart';
 import 'package:online_college/screens/professor_list/professor_list_screen.dart';
 import 'package:online_college/screens/quiz/quiz_detail_screen.dart';
 import 'package:online_college/screens/quiz/quiz_play_screen.dart';
@@ -68,6 +69,7 @@ class Routes {
   static const String meetingList = 'meetingList';
   static const String meeting = 'meeting';
   static const String material = 'material';
+  static const String noticeboard = 'noticeboard';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -165,6 +167,8 @@ class Routes {
             builder: (BuildContext context) => MeetingScreen(mid: settings.arguments.toString()));
       case material:
         return MaterialPageRoute(builder: (BuildContext context) => const MaterialScreen());
+      case noticeboard:
+        return MaterialPageRoute(builder: (BuildContext context) => const NoticeBoardScreen());
       default:
         return MaterialPageRoute(
           builder: (_) {

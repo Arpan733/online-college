@@ -6,6 +6,7 @@ import 'package:online_college/providers/event_provider.dart';
 import 'package:online_college/providers/fee_provider.dart';
 import 'package:online_college/providers/holiday_provider.dart';
 import 'package:online_college/providers/meeting_provider.dart';
+import 'package:online_college/providers/notice_provider.dart';
 import 'package:online_college/repositories/notifications.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       if (!mounted) return;
       await Provider.of<MeetingProvider>(context, listen: false)
           .checkUpcomingMeeting(context: context);
+
+      if (!mounted) return;
+      await Provider.of<NoticeProvider>(context, listen: false)
+          .checkUpcomingNotice(context: context);
 
       if (UserSharedPreferences.role == 'student') {
         if (!mounted) return;

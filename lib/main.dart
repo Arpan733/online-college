@@ -13,6 +13,7 @@ import 'package:online_college/providers/holiday_provider.dart';
 import 'package:online_college/providers/leave_application_provider.dart';
 import 'package:online_college/providers/material_provider.dart';
 import 'package:online_college/providers/meeting_provider.dart';
+import 'package:online_college/providers/notice_provider.dart';
 import 'package:online_college/providers/quiz_provider.dart';
 import 'package:online_college/providers/result_provider.dart';
 import 'package:online_college/providers/school_gallery_provider.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => QuizProvider()),
         ChangeNotifierProvider(create: (context) => MeetingProvider()),
         ChangeNotifierProvider(create: (context) => MaterialProvider()),
+        ChangeNotifierProvider(create: (context) => NoticeProvider()),
       ],
       child: const MaterialApp(
         title: 'Online College',

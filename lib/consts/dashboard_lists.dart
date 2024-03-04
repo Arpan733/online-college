@@ -107,6 +107,13 @@ List<Map<String, dynamic>> functionalityListTeacher = [
     },
   },
   {
+    'name': 'Notice Board',
+    'image': 'assets/icons/noticeboard.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, Routes.noticeboard);
+    },
+  },
+  {
     'name': 'Log Out',
     'image': 'assets/icons/logout.png',
     'onTap': (BuildContext context) async {
@@ -213,6 +220,13 @@ List<Map<String, dynamic>> functionalityListStudent = [
     'image': 'assets/icons/event.png',
     'onTap': (BuildContext context) {
       Navigator.pushNamed(context, Routes.events);
+    },
+  },
+  {
+    'name': 'Notice Board',
+    'image': 'assets/icons/noticeboard.png',
+    'onTap': (BuildContext context) {
+      Navigator.pushNamed(context, Routes.noticeboard);
     },
   },
   {

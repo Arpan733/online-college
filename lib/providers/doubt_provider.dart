@@ -81,7 +81,7 @@ class DoubtProvider extends ChangeNotifier {
     } else {
       if (!context.mounted) return;
       Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
-        if (element.role == 'teacher' && element.notificationToken != "") {
+        if (element.notificationToken != "") {
           tokens.add(element.notificationToken);
         }
       });

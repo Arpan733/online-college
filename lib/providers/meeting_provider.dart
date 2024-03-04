@@ -44,6 +44,15 @@ class MeetingProvider extends ChangeNotifier {
       }
     });
 
+    if (!context.mounted) return;
+    Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
+      if (element.notificationToken != "") {
+        tokens.add(element.notificationToken);
+      }
+    });
+
+    tokens.remove(UserSharedPreferences.notificationToken);
+
     NotificationServices().sendNotification(
       title: 'Discussion on ${meetingModel.title}',
       message:

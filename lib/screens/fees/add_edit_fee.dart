@@ -527,6 +527,7 @@ class _AddEditFeesState extends State<AddEditFees> {
                             ListView.builder(
                               shrinkWrap: true,
                               padding: EdgeInsets.zero,
+                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: noOfData,
                               itemBuilder: (context, index) {
                                 return Container(

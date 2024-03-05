@@ -72,17 +72,10 @@ class _DoubtDetailScreenState extends State<DoubtDetailScreen> {
       },
       backgroundColor: const Color(0xFF2855AE),
       color: Colors.white,
-<<<<<<< HEAD
       child: Consumer<DoubtProvider>(
         builder: (context, doubt, child) => Scaffold(
           backgroundColor: Colors.white,
           body: Stack(
-=======
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Consumer<DoubtProvider>(
-          builder: (context, doubt, child) => Stack(
->>>>>>> 40c8c68fe89eaa1a13f1412b24befc06a1d9c996
             children: [
               Positioned(
                 bottom: 0,
@@ -506,7 +499,6 @@ class _DoubtDetailScreenState extends State<DoubtDetailScreen> {
                     ),
             ],
           ),
-<<<<<<< HEAD
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           floatingActionButton:
               Provider.of<DoubtProvider>(context, listen: false).doubt.solved == 'false'
@@ -535,36 +527,6 @@ class _DoubtDetailScreenState extends State<DoubtDetailScreen> {
                     )
                   : Container(),
         ),
-=======
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton:
-            Provider.of<DoubtProvider>(context, listen: false).doubt.solved == 'false'
-                ? GestureDetector(
-                    onTap: () => bottomSheetForChat(
-                        context: context,
-                        doubtModel: Provider.of<DoubtProvider>(context, listen: false).doubt),
-                    child: Container(
-                      height: 60,
-                      width: 60,
-                      margin: const EdgeInsets.only(bottom: 15),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          begin: Alignment.centerRight,
-                          end: Alignment.centerLeft,
-                          colors: [Color(0xFF2855AE), Color(0xFF7292CF)],
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.comment_outlined,
-                        size: 25,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
-                : Container(),
->>>>>>> 40c8c68fe89eaa1a13f1412b24befc06a1d9c996
       ),
     );
   }

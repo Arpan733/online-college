@@ -117,16 +117,12 @@ bottomSheetForDoubt({
                   child: DropdownButtonFormField<String>(
                     value: subjectController.text,
                     items: dropDownList,
-<<<<<<< HEAD
                     onChanged: (value) {
                       if (value != null) {
                         subjectController.text = value;
                         set(() {});
                       }
                     },
-=======
-                    onChanged: (value) {},
->>>>>>> 40c8c68fe89eaa1a13f1412b24befc06a1d9c996
                     dropdownColor: Colors.white,
                     iconEnabledColor: Colors.white,
                     decoration: InputDecoration(

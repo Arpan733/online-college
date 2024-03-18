@@ -656,7 +656,7 @@ class _AddEditResultState extends State<AddEditResult> {
                         },
                         decoration: InputDecoration(
                           prefixIcon: const Icon(
-                            Icons.currency_rupee_outlined,
+                            Icons.grade_outlined,
                             color: Colors.black87,
                           ),
                           labelText: 'SPI',

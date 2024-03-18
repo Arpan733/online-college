@@ -344,7 +344,9 @@ class _ResultScreenForStudentState extends State<ResultScreenForStudent> {
                                     Text(
                                       double.parse(res.spi!) > 0.7
                                           ? 'You are an Excellent,'
-                                          : 'Good job,',
+                                          : double.parse(res.spi!) > 0.33
+                                              ? 'Good job,'
+                                              : 'You\'re failed,',
                                       style: GoogleFonts.rubik(
                                         color: Colors.black87,
                                         fontSize: 16,

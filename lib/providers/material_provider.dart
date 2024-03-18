@@ -65,15 +65,6 @@ class MaterialProvider extends ChangeNotifier {
     await getMaterialList(context: context);
   }
 
-  Future<void> solveMaterial(
-      {required BuildContext context, required MaterialModel materialModel}) async {
-    await MaterialFireStore()
-        .updateMaterialAtFireStore(context: context, materialModel: materialModel);
-
-    if (!context.mounted) return;
-    await getMaterialList(context: context);
-  }
-
   Future<void> deleteMaterial({required BuildContext context, required String mid}) async {
     await MaterialFireStore().deleteMaterialFromFireStore(context: context, mid: mid);
 

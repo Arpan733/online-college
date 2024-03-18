@@ -131,7 +131,7 @@ class ResultProvider extends ChangeNotifier {
                 controller: TextEditingController(text: sub[i]),
                 decoration: InputDecoration(
                   prefixIcon: const Icon(
-                    Icons.currency_rupee_outlined,
+                    Icons.topic_outlined,
                     color: Colors.black87,
                   ),
                   labelText: 'Subject',
@@ -171,7 +171,7 @@ class ResultProvider extends ChangeNotifier {
                 },
                 decoration: InputDecoration(
                   prefixIcon: const Icon(
-                    Icons.currency_rupee_outlined,
+                    Icons.grade_outlined,
                     color: Colors.black87,
                   ),
                   labelText: 'Marks (100)',

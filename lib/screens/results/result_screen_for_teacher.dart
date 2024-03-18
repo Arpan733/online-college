@@ -17,10 +17,37 @@ class ResultScreenForTeacher extends StatefulWidget {
 }
 
 class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
+  String sort = 'All';
   String currentYear = '1st Year';
+
+  List<String> dropDownList = [
+    "All",
+    "Fail",
+    "Pass",
+  ];
+
+  List<DropdownMenuItem<String>> dropDowns = [];
+
+  List<ResultModel> showResultList = [];
 
   @override
   void initState() {
+    for (var element in dropDownList) {
+      dropDowns.add(
+        DropdownMenuItem(
+          value: element,
+          child: Text(
+            element,
+            style: GoogleFonts.rubik(
+              color: const Color(0xFF2855AE),
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<ResultProvider>(context, listen: false).getResultList(context: context);
     });
@@ -41,41 +68,17 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
         backgroundColor: Colors.white,
         body: Consumer<ResultProvider>(
           builder: (context, result, child) {
-            List<ResultModel> resultsList = [];
+            showResultList = [];
             List<StudentUserModel> studentsList = [];
 
             for (var element in result.results) {
-              for (var re in element.result!) {
-                if (re.year == currentYear) {
-                  resultsList.add(element);
+              Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((stu) {
+                if (element.sid == stu.id && stu.year == currentYear) {
+                  showResultList.add(element);
+                  studentsList.add(stu);
                 }
-              }
+              });
             }
-
-            Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((element) {
-              for (var re in resultsList) {
-                if (re.sid == element.id) {
-                  studentsList.add(element);
-                }
-              }
-            });
-
-            studentsList.sort(
-              (a, b) {
-                int aRoll = int.parse(a.rollNo);
-                int bRoll = int.parse(b.rollNo);
-                return aRoll.compareTo(bRoll);
-              },
-            );
-
-            List<ResultModel> sortedResultsList = [];
-
-            for (var student in studentsList) {
-              ResultModel result = resultsList.firstWhere((result) => result.sid == student.id);
-              sortedResultsList.add(result);
-            }
-
-            resultsList = sortedResultsList;
 
             return Stack(
               children: [
@@ -209,7 +212,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                     SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       sliver: SliverList.builder(
-                        itemCount: resultsList.length,
+                        itemCount: showResultList.length,
                         itemBuilder: (context, index) {
                           if (result.isLoading) {
                             return SizedBox(
@@ -222,7 +225,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                             );
                           }
 
-                          if (resultsList.isEmpty) {
+                          if (showResultList.isEmpty) {
                             return SizedBox(
                               height: MediaQuery.of(context).size.height - 200,
                               child: Center(
@@ -240,7 +243,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                           }
 
                           StudentUserModel sum = studentsList[index];
-                          ResultModel resultModel = resultsList[index];
+                          ResultModel resultModel = showResultList[index];
                           Result res = Result(
                               year: currentYear,
                               spi: '0.0',
@@ -252,105 +255,199 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                             }
                           }
 
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context,
-                                  arguments: {'resultModel': resultModel, 'result': res},
-                                  Routes.addEditResult);
-                            },
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.black45,
+                              ),
+                            ),
                             child: Container(
                               padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.only(bottom: 20),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: double.parse(res.spi!) > 0.3
+                                    ? Colors.green.withOpacity(0.2)
+                                    : Colors.red.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.black45,
-                                ),
                               ),
-                              child: Row(
+                              child: Column(
                                 children: [
-                                  SizedBox(
-                                    width: 40,
-                                    child: Text(
-                                      sum.rollNo,
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.rubik(
-                                        color: Colors.black87,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Container(
-                                    color: Colors.black38,
-                                    width: 1,
-                                    height: 50,
-                                  ),
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                                  Text(
-                                    '${sum.name} - ${sum.year}',
-                                    style: GoogleFonts.rubik(
-                                      color: Colors.black87,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Container(),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  Row(
                                     children: [
-                                      Text(
-                                        'CPI',
-                                        style: GoogleFonts.rubik(
-                                          color: Colors.black45,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w900,
+                                      SizedBox(
+                                        width: 40,
+                                        child: Text(
+                                          sum.rollNo,
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.rubik(
+                                            color: Colors.black87,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        color: Colors.black38,
+                                        width: 1,
+                                        height: 50,
+                                      ),
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
                                       Text(
-                                        resultModel.cpi!,
+                                        '${sum.name} - ${sum.year}',
                                         style: GoogleFonts.rubik(
                                           color: Colors.black87,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
                                         ),
+                                      ),
+                                      Expanded(
+                                        child: Container(),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'CPI',
+                                            style: GoogleFonts.rubik(
+                                              color: Colors.black45,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                          Text(
+                                            resultModel.cpi!,
+                                            style: GoogleFonts.rubik(
+                                              color: Colors.black87,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                   const SizedBox(
-                                    width: 30,
+                                    height: 5,
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'SPI',
-                                        style: GoogleFonts.rubik(
-                                          color: Colors.black45,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w900,
+                                  ListView.builder(
+                                    shrinkWrap: true,
+                                    padding: EdgeInsets.zero,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: resultModel.result?.length,
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () => Navigator.pushNamed(
+                                          context,
+                                          arguments: {
+                                            'resultModel': resultModel,
+                                            'result': resultModel.result?[index]
+                                          },
+                                          Routes.addEditResult,
                                         ),
-                                      ),
-                                      Text(
-                                        res.spi!,
-                                        style: GoogleFonts.rubik(
-                                          color: Colors.black87,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Divider(
+                                              color: Colors.black38,
+                                            ),
+                                            Text(
+                                              resultModel.result?[index].year ?? '',
+                                              style: GoogleFonts.rubik(
+                                                color: Colors.black87,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            ListView.builder(
+                                              shrinkWrap: true,
+                                              padding: EdgeInsets.zero,
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              itemCount: resultModel.result?[index].data?.length,
+                                              itemBuilder: (context, i) {
+                                                return Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Container(
+                                                        padding: const EdgeInsets.symmetric(
+                                                            vertical: 3, horizontal: 10),
+                                                        decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                            color: Colors.black38,
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                                                          resultModel.result?[index].data?[i]
+                                                                  .subject ??
+                                                              '',
+                                                          style: GoogleFonts.rubik(
+                                                            color: Colors.black87,
+                                                            fontSize: 12,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      padding: const EdgeInsets.symmetric(
+                                                          vertical: 3, horizontal: 20),
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color: Colors.black38,
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        resultModel.result?[index].data?[i].marks ??
+                                                            '',
+                                                        style: GoogleFonts.rubik(
+                                                          color: Colors.black87,
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(vertical: 3),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: Colors.black38,
+                                                ),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Container(),
+                                                  ),
+                                                  Text(
+                                                    'SPI: ${resultModel.result?[index].spi}   ',
+                                                    style: GoogleFonts.rubik(
+                                                      color: Colors.black87,
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                      );
+                                    },
                                   ),
                                 ],
                               ),

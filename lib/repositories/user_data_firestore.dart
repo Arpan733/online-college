@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/model/student_user_model.dart';
 
 import '../consts/utils.dart';
@@ -70,12 +71,20 @@ class UserDataFireStore {
   Future<String?> uploadProfilePhoto(
       {required BuildContext context, required PlatformFile pickedFile}) async {
     try {
-      final ref = FirebaseStorage.instance.ref().child('${user?.uid}/${pickedFile.name}');
+      final folderRef = FirebaseStorage.instance.ref().child(UserSharedPreferences.id);
+
+      final items = await folderRef.listAll();
+
+      await Future.forEach(items.items, (Reference ref) async {
+        await ref.delete();
+      });
+
+      final ref =
+          FirebaseStorage.instance.ref().child('${UserSharedPreferences.id}/${pickedFile.name}');
       UploadTask upload = ref.putFile(File(pickedFile.path!));
 
       final snapshot = await upload.whenComplete(() {});
       final url = await snapshot.ref.getDownloadURL();
-      user?.updatePhotoURL(url.toString());
 
       if (url.isNotEmpty) {
         return url;

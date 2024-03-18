@@ -341,12 +341,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onTap: () async {
                               final result = await FilePicker.platform.pickFiles();
 
+                              print("result: $result");
+
                               if (result != null) {
                                 PlatformFile pickedFile = result.files.first;
 
                                 if (!context.mounted) return;
                                 await fireStoreTeacher.uploadProfilePhoto(
-                                    context: context, pickedFile: pickedFile);
+                                  context: context,
+                                  pickedFile: pickedFile,
+                                );
 
                                 setState(() {
                                   userUrl = fireStoreTeacher.photoUrl ?? '';

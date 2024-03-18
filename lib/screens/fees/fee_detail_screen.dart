@@ -51,6 +51,8 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
       }
     }
 
+    paidStudentsData.sort();
+
     setState(() {
       isLoading = false;
     });

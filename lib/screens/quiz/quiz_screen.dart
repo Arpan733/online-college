@@ -224,7 +224,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                                 ? 'There is not any quiz in which you had zero marks'
                                                 : sort == 'All Skip'
                                                     ? 'There is not any quiz in which you had skip all the quiz'
-                                                    : 'There is no fee'),
+                                                    : 'There is no Quiz'),
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.rubik(
                                       color: Colors.black54,

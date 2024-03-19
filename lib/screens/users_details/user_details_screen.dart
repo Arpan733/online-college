@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:online_college/consts/subjects.dart';
+import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/consts/utils.dart';
 import 'package:online_college/model/student_user_model.dart';
 import 'package:online_college/model/teacher_user_model.dart';
@@ -39,8 +42,12 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
     id: 'id',
     loginTime: 'loginTime',
     notificationToken: 'notificationToken',
+    div: 'div',
   );
   bool isStudent = true;
+
+  List<bool> subs = List.generate(subjects.length, (index) => false);
+  List<bool> subjes = List.generate(subjects.length, (index) => false);
 
   final nameController = TextEditingController();
   final adharNoController = TextEditingController();
@@ -60,6 +67,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
   String motherName = '';
   String fatherName = '';
   String url = '';
+  List<String> subjs = [];
 
   DateTime dateTime = DateTime.now();
   String userUrl = '';
@@ -118,6 +126,15 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
       qualificationController.text = teacherUserModel.qualification;
       emailController.text = teacherUserModel.email;
       userUrl = teacherUserModel.photoUrl;
+      subjs = teacherUserModel.subjects;
+
+      for (var element in subjects) {
+        subs[subjects.indexOf(element)] = subjs.contains(element);
+        subjes[subjects.indexOf(element)] = subjs.contains(element);
+      }
+
+      subjs.clear();
+      subjs = [];
 
       name = nameController.text;
       adharNo = adharNoController.text;
@@ -329,6 +346,12 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                           await fireStoreTeacher.updateTeacherPhotoUrl(
                               context: context, photoUrl: userUrl.trim(), id: teacherUserModel.id);
                         }
+
+                        if (subs.contains(true) && subs != subjes) {
+                          if (!context.mounted) return;
+                          await fireStoreTeacher.updateTeacherSubjects(
+                              context: context, subjects: subjs, id: teacherUserModel.id);
+                        }
                       }
 
                       await onSetState();
@@ -445,7 +468,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                         ),
                                         Text(
                                           isStudent
-                                              ? '${studentUserModel.year} | Roll no: ${studentUserModel.rollNo}'
+                                              ? '${studentUserModel.year} | ${studentUserModel.div} - ${studentUserModel.rollNo}'
                                               : '',
                                           style: GoogleFonts.rubik(
                                             color: Colors.black54,
@@ -778,6 +801,44 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
+                                if (UserSharedPreferences.role == 'teacher')
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                if (UserSharedPreferences.role == 'teacher')
+                                  StatefulBuilder(
+                                    builder: (context, set) => MasonryGridView.count(
+                                      crossAxisCount: 4,
+                                      crossAxisSpacing: 10,
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.zero,
+                                      itemCount: subjects.length,
+                                      itemBuilder: (context, index) {
+                                        return FilterChip(
+                                          label: Text(subjects[index]),
+                                          labelStyle: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: subs[index] ? Colors.white : Colors.black54,
+                                          ),
+                                          selected: subs[index],
+                                          selectedColor: const Color(0xFF2855AE),
+                                          checkmarkColor: Colors.white,
+                                          onSelected: (bool value) {
+                                            if (value) {
+                                              subjs.add(subjects[index]);
+                                            } else {
+                                              subjs.remove(subjects[index]);
+                                            }
+
+                                            subs[index] = value;
+                                            set(() {});
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
                               ],
                             ),
                     ],

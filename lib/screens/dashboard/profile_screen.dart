@@ -323,7 +323,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 Text(
                                   UserSharedPreferences.role == 'student'
-                                      ? '${UserSharedPreferences.year} | Roll no: ${UserSharedPreferences.rollNo}'
+                                      ? '${UserSharedPreferences.year} | ${UserSharedPreferences.div} - ${UserSharedPreferences.rollNo}'
                                       : '',
                                   style: GoogleFonts.rubik(
                                     color: Colors.black54,
@@ -340,8 +340,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           GestureDetector(
                             onTap: () async {
                               final result = await FilePicker.platform.pickFiles();
-
-                              print("result: $result");
 
                               if (result != null) {
                                 PlatformFile pickedFile = result.files.first;

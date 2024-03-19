@@ -41,6 +41,8 @@ class UserSharedPreferences {
 
   static String get loginTime => UserSharedPreferences().get('loginTime');
 
+  static String get div => UserSharedPreferences().get('div');
+
   static Future setString({required String title, required String data}) async {
     await preferences?.setString(title, data);
   }

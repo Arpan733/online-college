@@ -18,10 +18,10 @@ class UserDataFireStore {
   Future<void> updateUser(
       {required BuildContext context,
       required String title,
-      required String data,
+      required data,
       required String id}) async {
     try {
-      Map<String, String> userdata = {
+      Map<String, dynamic> userdata = {
         title: data,
       };
 

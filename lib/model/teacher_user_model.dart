@@ -13,6 +13,7 @@ class TeacherUserModel {
   String role;
   String id;
   String loginTime;
+  List<String> subjects;
   String notificationToken;
 
   TeacherUserModel({
@@ -28,6 +29,7 @@ class TeacherUserModel {
     required this.role,
     required this.id,
     required this.loginTime,
+    required this.subjects,
     required this.notificationToken,
   });
 
@@ -48,6 +50,7 @@ class TeacherUserModel {
         role: json["role"] ?? "",
         id: json["id"] ?? "",
         loginTime: json["loginTime"] ?? "",
+        subjects: List<String>.from(json["subjects"].map((x) => x)),
         notificationToken: json["notificationToken"] ?? "",
       );
 
@@ -64,6 +67,7 @@ class TeacherUserModel {
         "role": role,
         "id": id,
         "loginTime": loginTime,
+        "subjects": List<dynamic>.from(subjects.map((x) => x)),
         "notificationToken": notificationToken,
       };
 }

@@ -84,4 +84,8 @@ class StudentDataFireStoreProvider extends ChangeNotifier {
   Future<void> updateStudentLoginTime(
           {required BuildContext context, required String loginTime, required String id}) =>
       UserDataFireStore().updateUser(context: context, title: 'loginTime', data: loginTime, id: id);
+
+  Future<void> updateStudentDiv(
+          {required BuildContext context, required List<String> div, required String id}) =>
+      UserDataFireStore().updateUser(context: context, title: 'div', data: div, id: id);
 }

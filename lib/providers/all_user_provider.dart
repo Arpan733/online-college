@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:online_college/model/student_user_model.dart';
+import 'package:online_college/model/teacher_user_model.dart';
 import 'package:online_college/repositories/all_user_firestore.dart';
-
-import '../model/student_user_model.dart';
-import '../model/teacher_user_model.dart';
 
 class AllUserProvider extends ChangeNotifier {
   List<TeacherUserModel> _teachersList = [];

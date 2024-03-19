@@ -197,6 +197,7 @@ bottomSheetForTeacher({
                             loginTime: '',
                             notificationToken: '',
                             photoUrl: '',
+                            subjects: [''],
                           );
 
                           await Provider.of<AllUserProvider>(context, listen: false)

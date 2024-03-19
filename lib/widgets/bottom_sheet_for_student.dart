@@ -39,20 +39,29 @@ bottomSheetForStudent({
   String rollNo = '',
   String role = '',
   String id = '',
+  String div = '',
   required BuildContext context,
 }) {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController yearController = TextEditingController();
   TextEditingController rollNoController = TextEditingController();
+  TextEditingController divController = TextEditingController();
 
   yearController.text = '1st Year';
 
-  if (name != '' && phoneNumber != '' && year != '' && rollNo != '' && role != '' && id != '') {
+  if (name != '' &&
+      phoneNumber != '' &&
+      year != '' &&
+      rollNo != '' &&
+      role != '' &&
+      id != '' &&
+      div != '') {
     nameController.text = name;
     phoneNumberController.text = phoneNumber;
     yearController.text = year;
     rollNoController.text = rollNo;
+    divController.text = div;
   }
 
   showModalBottomSheet(
@@ -64,7 +73,7 @@ bottomSheetForStudent({
         return Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
-            height: 430,
+            height: 410,
             width: double.infinity,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -162,86 +171,128 @@ bottomSheetForStudent({
                 const SizedBox(
                   height: 20,
                 ),
-                Container(
-                  height: 60,
-                  width: MediaQuery.of(context).size.width - 40,
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(left: 10),
-                        child: const Icon(
-                          Icons.phone_outlined,
-                          color: Color(0xFF6688CA),
-                        ),
+                Row(
+                  children: [
+                    Container(
+                      height: 60,
+                      width: (MediaQuery.of(context).size.width / 2) - 30,
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.only(left: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      Flexible(
-                        child: DropdownButtonFormField<String>(
-                          padding: const EdgeInsets.only(left: 10),
-                          value: yearController.text,
-                          items: [
-                            DropdownMenuItem(
-                              value: '1st Year',
-                              child: Text(
-                                '1st Year',
-                                style: GoogleFonts.rubik(
-                                  color: const Color(0xFF6688CA),
-                                ),
-                              ),
+                      child: Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 10),
+                            child: const Icon(
+                              Icons.subject_outlined,
+                              color: Color(0xFF6688CA),
                             ),
-                            DropdownMenuItem(
-                              value: '2nd Year',
-                              child: Text(
-                                '2nd Year',
-                                style: GoogleFonts.rubik(
-                                  color: const Color(0xFF6688CA),
-                                ),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: '3rd Year',
-                              child: Text(
-                                '3rd Year',
-                                style: GoogleFonts.rubik(
-                                  color: const Color(0xFF6688CA),
-                                ),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: '4th Year',
-                              child: Text(
-                                '4th Year',
-                                style: GoogleFonts.rubik(
-                                  color: const Color(0xFF6688CA),
-                                ),
-                              ),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            if (value != null) {
-                              yearController.text = value;
-                              set(() {});
-                            }
-                          },
-                          dropdownColor: Colors.white,
-                          iconEnabledColor: Colors.white,
-                          decoration: const InputDecoration(
-                            suffixIcon: Icon(
-                              Icons.arrow_drop_down,
-                              color: Color(0xFF2855AE),
-                              size: 30,
-                            ),
-                            border: InputBorder.none,
                           ),
+                          Flexible(
+                            child: DropdownButtonFormField<String>(
+                              padding: const EdgeInsets.only(left: 10),
+                              value: yearController.text,
+                              items: [
+                                DropdownMenuItem(
+                                  value: '1st Year',
+                                  child: Text(
+                                    '1st Year',
+                                    style: GoogleFonts.rubik(
+                                      color: const Color(0xFF6688CA),
+                                    ),
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: '2nd Year',
+                                  child: Text(
+                                    '2nd Year',
+                                    style: GoogleFonts.rubik(
+                                      color: const Color(0xFF6688CA),
+                                    ),
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: '3rd Year',
+                                  child: Text(
+                                    '3rd Year',
+                                    style: GoogleFonts.rubik(
+                                      color: const Color(0xFF6688CA),
+                                    ),
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: '4th Year',
+                                  child: Text(
+                                    '4th Year',
+                                    style: GoogleFonts.rubik(
+                                      color: const Color(0xFF6688CA),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              onChanged: (value) {
+                                if (value != null) {
+                                  yearController.text = value;
+                                  set(() {});
+                                }
+                              },
+                              dropdownColor: Colors.white,
+                              iconEnabledColor: Colors.white,
+                              decoration: const InputDecoration(
+                                suffixIcon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Color(0xFF2855AE),
+                                  size: 30,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      width: (MediaQuery.of(context).size.width / 2) - 30,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: TextFormField(
+                        controller: divController,
+                        cursorColor: const Color(0xFF6688CA),
+                        cursorWidth: 3,
+                        style: GoogleFonts.rubik(
+                          color: const Color(0xFF6688CA),
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(2),
+                        ],
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.subject_outlined,
+                            color: Color(0xFF6688CA),
+                          ),
+                          label: Text(
+                            'Div',
+                            style: GoogleFonts.rubik(
+                              color: const Color(0xFF6688CA),
+                            ),
+                          ),
+                          hintText: 'Div',
+                          hintStyle: GoogleFonts.rubik(
+                            color: const Color(0xFF6688CA),
+                          ),
+                          border: InputBorder.none,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 20,
@@ -322,6 +373,9 @@ bottomSheetForStudent({
                           Utils().showToast(
                               context: context,
                               message: 'Please fill the phone number for the student');
+                        } else if (divController.text.isEmpty) {
+                          Utils().showToast(
+                              context: context, message: 'Please fill the div for the student');
                         } else if (checkPhoneNumber(
                             context: context, phoneNumber: phoneNumberController.text)) {
                           Utils().showToast(
@@ -352,6 +406,7 @@ bottomSheetForStudent({
                             email: '',
                             motherName: '',
                             fatherName: '',
+                            div: divController.text,
                           );
 
                           await Provider.of<AllUserProvider>(context, listen: false)

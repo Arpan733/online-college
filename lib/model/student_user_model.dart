@@ -16,6 +16,7 @@ class StudentUserModel {
   String role;
   String id;
   String loginTime;
+  String div;
   String notificationToken;
 
   StudentUserModel({
@@ -34,6 +35,7 @@ class StudentUserModel {
     required this.role,
     required this.id,
     required this.loginTime,
+    required this.div,
     required this.notificationToken,
   });
 
@@ -57,6 +59,7 @@ class StudentUserModel {
         role: json["role"] ?? "",
         id: json["id"] ?? "",
         loginTime: json["loginTime"] ?? "",
+        div: json["div"] ?? "",
         notificationToken: json["notificationToken"] ?? "",
       );
 
@@ -76,6 +79,7 @@ class StudentUserModel {
         "role": role,
         "id": id,
         "loginTime": loginTime,
+        "div": div,
         "notificationToken": notificationToken,
       };
 }

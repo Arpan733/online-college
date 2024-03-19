@@ -7,6 +7,7 @@ import 'package:online_college/model/student_user_model.dart';
 import 'package:online_college/providers/assignment_provider.dart';
 import 'package:online_college/repositories/user_data_firestore.dart';
 import 'package:online_college/widgets/bottom_sheet_for_assignment.dart';
+import 'package:online_college/widgets/dialog_for_delete.dart';
 import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
 import 'package:text_scroll/text_scroll.dart';
@@ -142,14 +143,23 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                                   DateTime.now()
                                       .isAfter(DateTime.parse(assignment.assignment.lastDateTime)))
                                 GestureDetector(
-                                  onTap: () async {
-                                    await Provider.of<AssignmentProvider>(context, listen: false)
-                                        .deleteAssignment(
-                                            context: context, aid: assignment.assignment.aid);
+                                  onTap: () => showDialogForDelete(
+                                    context: context,
+                                    text:
+                                        'Are you sure you want to delete ${assignment.assignment.title} assignment?',
+                                    onDelete: () async {
+                                      await Provider.of<AssignmentProvider>(context, listen: false)
+                                          .deleteAssignment(
+                                              context: context, aid: assignment.assignment.aid);
 
-                                    if (!context.mounted) return;
-                                    Navigator.pop(context);
-                                  },
+                                      if (!context.mounted) return;
+                                      Navigator.pop(context);
+
+                                      if (!context.mounted) return;
+                                      Navigator.pop(context);
+                                    },
+                                    onOk: () => Navigator.pop(context),
+                                  ),
                                   child: Container(
                                     height: 30,
                                     width: 40,

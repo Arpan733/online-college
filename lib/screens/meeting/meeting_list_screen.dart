@@ -234,10 +234,17 @@ class _MeetingListScreenState extends State<MeetingListScreen> {
                                   }
                                 }
                               },
-                              onLongPress: () => UserSharedPreferences.role == 'teacher'
-                                  ? bottomSheetForMeeting(
-                                      context: context, isEdit: true, meetingModel: m)
-                                  : null,
+                              onLongPress: () {
+                                if (UserSharedPreferences.role == 'teacher') {
+                                  if (DateTime.now().isAfter(DateTime.parse(m.time)
+                                          .subtract(const Duration(minutes: 5))) &&
+                                      DateTime.now().isBefore(
+                                          DateTime.parse(m.time).add(const Duration(hours: 3)))) {
+                                    bottomSheetForMeeting(
+                                        context: context, isEdit: true, meetingModel: m);
+                                  }
+                                }
+                              },
                               child: Container(
                                 width: MediaQuery.of(context).size.width - 60,
                                 margin: const EdgeInsets.only(bottom: 20),

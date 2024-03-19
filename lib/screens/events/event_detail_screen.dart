@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/providers/event_provider.dart';
 import 'package:online_college/widgets/bottom_sheet_for_event.dart';
+import 'package:online_college/widgets/dialog_for_delete.dart';
 import 'package:provider/provider.dart';
 
 class EventDetailScreen extends StatefulWidget {
@@ -156,10 +157,20 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       top: 30,
                       right: 60,
                       child: IconButton(
-                        onPressed: () {
-                          event.deleteEvent(context: context, eid: event.event.eid);
-                          Navigator.pop(context);
-                        },
+                        onPressed: () => showDialogForDelete(
+                          context: context,
+                          text: 'Are you sure you want to delete ${event.event.title} event?',
+                          onDelete: () async {
+                            await event.deleteEvent(context: context, eid: event.event.eid);
+
+                            if (!context.mounted) return;
+                            Navigator.pop(context);
+
+                            if (!context.mounted) return;
+                            Navigator.pop(context);
+                          },
+                          onOk: () => Navigator.pop(context),
+                        ),
                         icon: const Icon(
                           Icons.delete_outlined,
                           color: Colors.red,

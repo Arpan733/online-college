@@ -4,6 +4,7 @@ import 'package:online_college/consts/routes.dart';
 import 'package:online_college/model/student_user_model.dart';
 import 'package:online_college/providers/fee_provider.dart';
 import 'package:online_college/repositories/user_data_firestore.dart';
+import 'package:online_college/widgets/dialog_for_delete.dart';
 import 'package:provider/provider.dart';
 
 class FeeDetailScreen extends StatefulWidget {
@@ -131,12 +132,20 @@ class _FeeDetailScreenState extends State<FeeDetailScreen> {
                               if (fee.isLoading &&
                                   DateTime.now().isAfter(DateTime.parse(fee.fee.lastDate!)))
                                 GestureDetector(
-                                  onTap: () async {
-                                    fee.deleteFee(context: context, fid: widget.fid);
+                                  onTap: () => showDialogForDelete(
+                                    context: context,
+                                    text: 'Are you sure you want to delete ${fee.fee.title} fee?',
+                                    onDelete: () async {
+                                      await fee.deleteFee(context: context, fid: widget.fid);
 
-                                    if (!context.mounted) return;
-                                    Navigator.pop(context);
-                                  },
+                                      if (!context.mounted) return;
+                                      Navigator.pop(context);
+
+                                      if (!context.mounted) return;
+                                      Navigator.pop(context);
+                                    },
+                                    onOk: () => Navigator.pop(context),
+                                  ),
                                   child: Container(
                                     height: 30,
                                     width: 40,

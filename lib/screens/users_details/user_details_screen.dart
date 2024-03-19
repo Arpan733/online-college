@@ -4,13 +4,13 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:online_college/consts/subjects.dart';
-import 'package:online_college/consts/user_shared_preferences.dart';
 import 'package:online_college/consts/utils.dart';
 import 'package:online_college/model/student_user_model.dart';
 import 'package:online_college/model/teacher_user_model.dart';
 import 'package:online_college/providers/all_user_provider.dart';
 import 'package:online_college/providers/student_data_firestore_provider.dart';
 import 'package:online_college/providers/teacher_data_firestore_provider.dart';
+import 'package:online_college/widgets/dialog_for_delete.dart';
 import 'package:provider/provider.dart';
 
 class UserDetailsScreen extends StatefulWidget {
@@ -200,14 +200,23 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 ),
                 actions: [
                   GestureDetector(
-                    onTap: () async {
-                      await users.deleteUser(
-                          context: context,
-                          id: isStudent ? studentUserModel.id : teacherUserModel.id);
+                    onTap: () => showDialogForDelete(
+                      context: context,
+                      text:
+                          'Are you sure you want to delete ${isStudent ? '${studentUserModel.name} student' : '${teacherUserModel.name} teacher'}?',
+                      onDelete: () async {
+                        await users.deleteUser(
+                            context: context,
+                            id: isStudent ? studentUserModel.id : teacherUserModel.id);
 
-                      if (!context.mounted) return;
-                      Navigator.pop(context);
-                    },
+                        if (!context.mounted) return;
+                        Navigator.pop(context);
+
+                        if (!context.mounted) return;
+                        Navigator.pop(context);
+                      },
+                      onOk: () => Navigator.pop(context),
+                    ),
                     child: Container(
                       height: 30,
                       width: 40,
@@ -801,11 +810,11 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                if (UserSharedPreferences.role == 'teacher')
+                                if (!isStudent)
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                if (UserSharedPreferences.role == 'teacher')
+                                if (!isStudent)
                                   StatefulBuilder(
                                     builder: (context, set) => MasonryGridView.count(
                                       crossAxisCount: 4,

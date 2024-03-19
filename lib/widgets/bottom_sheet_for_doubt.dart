@@ -10,6 +10,8 @@ import '../model/doubt_model.dart';
 import '../providers/doubt_provider.dart';
 
 bottomSheetForDoubt({
+  bool isEdit = false,
+  DoubtModel? d,
   required BuildContext context,
 }) {
   TextEditingController titleController = TextEditingController();
@@ -17,14 +19,29 @@ bottomSheetForDoubt({
   List<DropdownMenuItem<String>> dropDownList = [];
   List<String> subs = [];
 
-  if (UserSharedPreferences.year == '1st Year') {
-    subs = year1;
-  } else if (UserSharedPreferences.year == '2nd Year') {
-    subs = year2;
-  } else if (UserSharedPreferences.year == '3rd Year') {
-    subs = year3;
-  } else if (UserSharedPreferences.year == '4th Year') {
-    subs = year4;
+  if (isEdit && d != null) {
+    titleController.text = d.title;
+    subjectController.text = d.subject;
+
+    if (d.year == '1st Year') {
+      subs = year1;
+    } else if (d.year == '2nd Year') {
+      subs = year2;
+    } else if (d.year == '3rd Year') {
+      subs = year3;
+    } else if (d.year == '4th Year') {
+      subs = year4;
+    }
+  } else {
+    if (UserSharedPreferences.year == '1st Year') {
+      subs = year1;
+    } else if (UserSharedPreferences.year == '2nd Year') {
+      subs = year2;
+    } else if (UserSharedPreferences.year == '3rd Year') {
+      subs = year3;
+    } else if (UserSharedPreferences.year == '4th Year') {
+      subs = year4;
+    }
   }
 
   for (var element in subs) {
@@ -180,28 +197,44 @@ bottomSheetForDoubt({
                           Utils().showToast(
                               context: context, message: 'Enter the title for create a doubt');
                         } else {
-                          String did = const UuidV4().generate().toString();
-                          DoubtModel doubtModel = DoubtModel(
-                            year: UserSharedPreferences.year,
-                            subject: subjectController.text,
-                            did: did,
-                            createdTime: DateTime.now().toString(),
-                            title: titleController.text,
-                            solved: 'false',
-                            chat: [
-                              Chat(
-                                message: titleController.text,
-                                time: DateTime.now().toString(),
-                                id: UserSharedPreferences.id,
-                                role: UserSharedPreferences.role,
-                                attach: [],
-                              ),
-                            ],
-                          );
+                          if (isEdit) {
+                            DoubtModel doubtModel = DoubtModel(
+                              year: d!.year,
+                              subject: subjectController.text,
+                              did: d.did,
+                              createdTime: d.createdTime,
+                              title: titleController.text,
+                              solved: 'false',
+                              chat: d.chat,
+                            );
 
-                          Provider.of<DoubtProvider>(context, listen: false)
-                              .addDoubt(context: context, doubtModel: doubtModel);
-                          Navigator.of(context).pop();
+                            Provider.of<DoubtProvider>(context, listen: false)
+                                .updateDoubt(context: context, doubtModel: doubtModel);
+                            Navigator.of(context).pop();
+                          } else {
+                            String did = const UuidV4().generate().toString();
+                            DoubtModel doubtModel = DoubtModel(
+                              year: UserSharedPreferences.year,
+                              subject: subjectController.text,
+                              did: did,
+                              createdTime: DateTime.now().toString(),
+                              title: titleController.text,
+                              solved: 'false',
+                              chat: [
+                                Chat(
+                                  message: titleController.text,
+                                  time: DateTime.now().toString(),
+                                  id: UserSharedPreferences.id,
+                                  role: UserSharedPreferences.role,
+                                  attach: [],
+                                ),
+                              ],
+                            );
+
+                            Provider.of<DoubtProvider>(context, listen: false)
+                                .addDoubt(context: context, doubtModel: doubtModel);
+                            Navigator.of(context).pop();
+                          }
                         }
                       },
                       child: Container(

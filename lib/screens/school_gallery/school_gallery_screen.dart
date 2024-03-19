@@ -7,6 +7,7 @@ import 'package:online_college/consts/utils.dart';
 import 'package:online_college/model/school_gallery_model.dart';
 import 'package:online_college/providers/school_gallery_provider.dart';
 import 'package:online_college/widgets/bottom_sheet_for_school_photos.dart';
+import 'package:online_college/widgets/dialog_for_delete.dart';
 import 'package:pie_menu/pie_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -225,10 +226,16 @@ class _SchoolGalleryScreenState extends State<SchoolGalleryScreen> {
                                                 if (UserSharedPreferences.role == 'teacher')
                                                   PieAction(
                                                     tooltip: const Text(''),
-                                                    onSelect: () {
-                                                      gallery.deleteSchoolGallery(
-                                                          context: context, sgid: g.sgid);
-                                                    },
+                                                    onSelect: () => showDialogForDelete(
+                                                      context: context,
+                                                      text:
+                                                          'Are you sure you want to delete this photo?',
+                                                      onDelete: () async {
+                                                        await gallery.deleteSchoolGallery(
+                                                            context: context, sgid: g.sgid);
+                                                      },
+                                                      onOk: () => Navigator.pop(context),
+                                                    ),
                                                     buttonTheme: const PieButtonTheme(
                                                       backgroundColor: Colors.black26,
                                                       iconColor: Colors.red,

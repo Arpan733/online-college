@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:online_college/consts/user_shared_preferences.dart';
+import 'package:online_college/model/doubt_model.dart';
 import 'package:online_college/providers/all_user_provider.dart';
+import 'package:online_college/repositories/doubt_firestore.dart';
 import 'package:online_college/repositories/notifications.dart';
 import 'package:provider/provider.dart';
-
-import '../model/doubt_model.dart';
-import '../repositories/doubt_firestore.dart';
 
 class DoubtProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -28,8 +27,10 @@ class DoubtProvider extends ChangeNotifier {
     List<String> tokens = [];
 
     if (!context.mounted) return;
-    Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((element) {
-      if (element.role == 'teacher' && element.notificationToken != "") {
+    Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
+      if (element.role == 'teacher' &&
+          element.subjects.contains(doubtModel.subject) &&
+          element.notificationToken != "") {
         tokens.add(element.notificationToken);
       }
     });
@@ -70,6 +71,15 @@ class DoubtProvider extends ChangeNotifier {
         }
       });
 
+      if (!context.mounted) return;
+      Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
+        if (element.role == 'teacher' &&
+            element.subjects.contains(doubtModel.subject) &&
+            element.notificationToken != "") {
+          tokens.add(element.notificationToken);
+        }
+      });
+
       tokens.remove(UserSharedPreferences.notificationToken);
 
       if (!context.mounted) return;
@@ -81,7 +91,7 @@ class DoubtProvider extends ChangeNotifier {
     } else {
       if (!context.mounted) return;
       Provider.of<AllUserProvider>(context, listen: false).teachersList.forEach((element) {
-        if (element.notificationToken != "") {
+        if (element.notificationToken != "" && element.subjects.contains(doubtModel.subject)) {
           tokens.add(element.notificationToken);
         }
       });
@@ -92,6 +102,8 @@ class DoubtProvider extends ChangeNotifier {
           name = element.name;
         }
       });
+
+      tokens.remove(UserSharedPreferences.notificationToken);
     }
 
     NotificationServices().sendNotification(

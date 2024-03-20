@@ -19,10 +19,61 @@ class DoubtScreen extends StatefulWidget {
 }
 
 class _DoubtScreenState extends State<DoubtScreen> {
+  String status = 'All';
   String currentYear = '1st Year';
+
+  List<String> yearsDropDownList = [
+    "1st Year",
+    "2nd Year",
+    "3rd Year",
+    "4th Year",
+  ];
+
+  List<String> dropDownList = [
+    "All",
+    "Solved",
+    "Unsolved",
+  ];
+
+  List<DropdownMenuItem<String>> yearsDropDowns = [];
+  List<DropdownMenuItem<String>> dropDowns = [];
+
+  List<DoubtModel> ds = [];
 
   @override
   void initState() {
+    for (var element in yearsDropDownList) {
+      yearsDropDowns.add(
+        DropdownMenuItem(
+          value: element,
+          child: Text(
+            element,
+            style: GoogleFonts.rubik(
+              color: Colors.black87,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
+    }
+
+    for (var element in dropDownList) {
+      dropDowns.add(
+        DropdownMenuItem(
+          value: element,
+          child: Text(
+            element,
+            style: GoogleFonts.rubik(
+              color: Colors.black87,
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Provider.of<DoubtProvider>(context, listen: false).getDoubtList(context: context);
     });
@@ -44,18 +95,30 @@ class _DoubtScreenState extends State<DoubtScreen> {
           backgroundColor: Colors.white,
           body: Consumer<DoubtProvider>(
             builder: (context, doubt, child) {
-              List<DoubtModel> ds = [];
+              ds = [];
 
               if (UserSharedPreferences.role == 'student') {
                 for (var element in doubt.doubts) {
                   if (element.year == UserSharedPreferences.year) {
-                    ds.add(element);
+                    if (status == 'All') {
+                      ds.add(element);
+                    } else if (status == 'Solved' && element.solved == 'true') {
+                      ds.add(element);
+                    } else if (status == 'Unsolved' && element.solved == 'false') {
+                      ds.add(element);
+                    }
                   }
                 }
               } else {
                 for (var element in doubt.doubts) {
                   if (element.year == currentYear) {
-                    ds.add(element);
+                    if (status == 'All') {
+                      ds.add(element);
+                    } else if (status == 'Solved' && element.solved == 'true') {
+                      ds.add(element);
+                    } else if (status == 'Unsolved' && element.solved == 'false') {
+                      ds.add(element);
+                    }
                   }
                 }
               }
@@ -107,62 +170,17 @@ class _DoubtScreenState extends State<DoubtScreen> {
                           ),
                         ),
                       ),
-                      if (UserSharedPreferences.role == 'teacher')
-                        SliverList(
-                          delegate: SliverChildListDelegate(
-                            [
-                              Row(
-                                children: [
+                      SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+                            Row(
+                              children: [
+                                if (UserSharedPreferences.role == 'teacher')
                                   Flexible(
                                     child: DropdownButtonFormField<String>(
                                       padding: const EdgeInsets.symmetric(horizontal: 20),
                                       value: currentYear,
-                                      items: [
-                                        DropdownMenuItem(
-                                          value: '1st Year',
-                                          child: Text(
-                                            '1st Year',
-                                            style: GoogleFonts.rubik(
-                                              color: Colors.black87,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: '2nd Year',
-                                          child: Text(
-                                            '2nd Year',
-                                            style: GoogleFonts.rubik(
-                                              color: Colors.black87,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: '3rd Year',
-                                          child: Text(
-                                            '3rd Year',
-                                            style: GoogleFonts.rubik(
-                                              color: Colors.black87,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                        DropdownMenuItem(
-                                          value: '4th Year',
-                                          child: Text(
-                                            '4th Year',
-                                            style: GoogleFonts.rubik(
-                                              color: Colors.black87,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      items: yearsDropDowns,
                                       onChanged: (value) {
                                         if (value != null) {
                                           currentYear = value;
@@ -181,15 +199,37 @@ class _DoubtScreenState extends State<DoubtScreen> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(child: Container()),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
+                                Flexible(
+                                  child: DropdownButtonFormField<String>(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    value: status,
+                                    items: dropDowns,
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        status = value;
+                                        setState(() {});
+                                      }
+                                    },
+                                    dropdownColor: Colors.white,
+                                    iconEnabledColor: Colors.white,
+                                    decoration: const InputDecoration(
+                                      suffixIcon: Icon(
+                                        Icons.arrow_drop_down,
+                                        color: Color(0xFF2855AE),
+                                        size: 30,
+                                      ),
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                          ],
                         ),
+                      ),
                       SliverPadding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         sliver: SliverList.builder(

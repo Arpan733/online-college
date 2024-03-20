@@ -15,13 +15,14 @@ class AssignmentProvider extends ChangeNotifier {
   List<AssignmentModel> get assignmentList => _assignmentList;
 
   AssignmentModel _assignment = AssignmentModel(
-      aid: 'aid',
-      title: 'title',
-      year: 'year',
-      submitted: [],
-      lastDateTime: '',
-      createdDateTime: '',
-      subject: '');
+    aid: 'aid',
+    title: 'title',
+    year: 'year',
+    submitted: [],
+    lastDateTime: '',
+    createdDateTime: '',
+    subject: '',
+  );
 
   AssignmentModel get assignment => _assignment;
 
@@ -159,110 +160,5 @@ class AssignmentProvider extends ChangeNotifier {
         }
       }
     }
-  }
-
-  List<AssignmentModel> sortingForTeacher({
-    required BuildContext context,
-    required String sort,
-  }) {
-    List<AssignmentModel> showAssignmentList = [];
-
-    if (sort == 'All') {
-      showAssignmentList = assignmentList;
-    } else if (sort == 'Created Date') {
-      showAssignmentList =
-          assignmentList.map((element) => AssignmentModel.fromJson(element.toJson())).toList();
-      showAssignmentList.sort(
-        (a, b) {
-          DateTime aDate = DateTime.parse(a.createdDateTime);
-          DateTime bDate = DateTime.parse(b.createdDateTime);
-          return aDate.compareTo(bDate);
-        },
-      );
-    } else if (sort == 'Due Date') {
-      showAssignmentList =
-          assignmentList.map((element) => AssignmentModel.fromJson(element.toJson())).toList();
-      showAssignmentList.sort(
-        (a, b) {
-          DateTime aDate = DateTime.parse(a.lastDateTime);
-          DateTime bDate = DateTime.parse(b.lastDateTime);
-          return aDate.compareTo(bDate);
-        },
-      );
-    } else if (sort == 'Submitted By All Student') {
-      for (var element in assignmentList) {
-        if (element.submitted.length ==
-            Provider.of<AllUserProvider>(context, listen: false).studentsList.length) {
-          showAssignmentList.add(AssignmentModel.fromJson(element.toJson()));
-        }
-      }
-    } else if (sort == 'Not Submitted By All Student') {
-      for (var element in assignmentList) {
-        if (element.submitted.length !=
-            Provider.of<AllUserProvider>(context, listen: false).studentsList.length) {
-          showAssignmentList.add(AssignmentModel.fromJson(element.toJson()));
-        }
-      }
-    } else {
-      for (var element in assignmentList) {
-        if (element.year == sort) {
-          showAssignmentList.add(AssignmentModel.fromJson(element.toJson()));
-        }
-      }
-    }
-
-    return showAssignmentList;
-  }
-
-  List<AssignmentModel> sortingForStudent({
-    required BuildContext context,
-    required String sort,
-  }) {
-    List<AssignmentModel> showAssignmentList = [];
-    List<AssignmentModel> assignments = [];
-
-    for (var element in assignmentList) {
-      if (UserSharedPreferences.year == element.year) {
-        assignments.add(element);
-      }
-    }
-
-    if (sort == 'All') {
-      showAssignmentList = assignments;
-    } else if (sort == 'Created Date') {
-      showAssignmentList =
-          assignments.map((element) => AssignmentModel.fromJson(element.toJson())).toList();
-      showAssignmentList.sort(
-        (a, b) {
-          DateTime aDate = DateTime.parse(a.createdDateTime);
-          DateTime bDate = DateTime.parse(b.createdDateTime);
-          return aDate.compareTo(bDate);
-        },
-      );
-    } else if (sort == 'Due Date') {
-      showAssignmentList =
-          assignments.map((element) => AssignmentModel.fromJson(element.toJson())).toList();
-      showAssignmentList.sort(
-        (a, b) {
-          DateTime aDate = DateTime.parse(a.lastDateTime);
-          DateTime bDate = DateTime.parse(b.lastDateTime);
-          return aDate.compareTo(bDate);
-        },
-      );
-    } else if (sort == 'Submitted') {
-      for (var element in assignments) {
-        if (checkStudentInList(assignment: element)) {
-          showAssignmentList.add(element);
-        }
-      }
-    } else if (sort == 'Not Submitted') {
-      for (var element in assignments) {
-        if (!checkStudentInList(assignment: element)) {
-          showAssignmentList.add(element);
-        }
-      }
-    }
-
-    return showAssignmentList;
   }
 }

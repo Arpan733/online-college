@@ -20,18 +20,44 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
   String sort = 'All';
   String currentYear = '1st Year';
 
+  List<String> yearDropDownList = [
+    "1st Year",
+    "2nd Year",
+    "3rd Year",
+    "4th Year",
+  ];
+
   List<String> dropDownList = [
     "All",
     "Fail",
     "Pass",
+    "By Number",
+    "By CPI",
   ];
 
   List<DropdownMenuItem<String>> dropDowns = [];
+  List<DropdownMenuItem<String>> yearDropDowns = [];
 
   List<ResultModel> showResultList = [];
 
   @override
   void initState() {
+    for (var element in yearDropDownList) {
+      yearDropDowns.add(
+        DropdownMenuItem(
+          value: element,
+          child: Text(
+            element,
+            style: GoogleFonts.rubik(
+              color: const Color(0xFF2855AE),
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
+    }
+
     for (var element in dropDownList) {
       dropDowns.add(
         DropdownMenuItem(
@@ -70,14 +96,95 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
           builder: (context, result, child) {
             showResultList = [];
             List<StudentUserModel> studentsList = [];
+            List<ResultModel> results = [];
 
             for (var element in result.results) {
               Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((stu) {
                 if (element.sid == stu.id && stu.year == currentYear) {
-                  showResultList.add(element);
-                  studentsList.add(stu);
+                  results.add(element);
                 }
               });
+            }
+
+            if (sort == 'All') {
+              showResultList = results.map((e) => e).toList();
+
+              for (var element in showResultList) {
+                Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((stu) {
+                  if (element.sid == stu.id) {
+                    studentsList.add(stu);
+                  }
+                });
+              }
+            } else if (sort == 'Fail') {
+              for (var element in results) {
+                if (double.parse(element.cpi!) < 0.33) {
+                  showResultList.add(element);
+                }
+              }
+
+              for (var element in showResultList) {
+                Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((stu) {
+                  if (element.sid == stu.id) {
+                    studentsList.add(stu);
+                  }
+                });
+              }
+            } else if (sort == 'Pass') {
+              for (var element in results) {
+                if (double.parse(element.cpi!) > 0.33) {
+                  showResultList.add(element);
+                }
+              }
+
+              for (var element in showResultList) {
+                Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((stu) {
+                  if (element.sid == stu.id) {
+                    studentsList.add(stu);
+                  }
+                });
+              }
+            } else if (sort == 'By Number') {
+              for (var element in results) {
+                Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((stu) {
+                  if (element.sid == stu.id) {
+                    studentsList.add(stu);
+                  }
+                });
+              }
+
+              studentsList.sort(
+                (a, b) {
+                  int aNumber = int.parse(a.rollNo);
+                  int bNumber = int.parse(b.rollNo);
+                  return aNumber.compareTo(bNumber);
+                },
+              );
+
+              for (var element in studentsList) {
+                for (var e in results) {
+                  if (e.sid == element.id) {
+                    showResultList.add(e);
+                  }
+                }
+              }
+            } else if (sort == 'By CPI') {
+              showResultList = results.map((e) => e).toList();
+              showResultList.sort(
+                (a, b) {
+                  double aCPI = double.parse(a.cpi!);
+                  double bCPI = double.parse(b.cpi!);
+                  return bCPI.compareTo(aCPI);
+                },
+              );
+
+              for (var element in showResultList) {
+                Provider.of<AllUserProvider>(context, listen: false).studentsList.forEach((stu) {
+                  if (element.sid == stu.id) {
+                    studentsList.add(stu);
+                  }
+                });
+              }
             }
 
             return Stack(
@@ -136,52 +243,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                                 child: DropdownButtonFormField<String>(
                                   padding: const EdgeInsets.symmetric(horizontal: 20),
                                   value: currentYear,
-                                  items: [
-                                    DropdownMenuItem(
-                                      value: '1st Year',
-                                      child: Text(
-                                        '1st Year',
-                                        style: GoogleFonts.rubik(
-                                          color: Colors.black87,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: '2nd Year',
-                                      child: Text(
-                                        '2nd Year',
-                                        style: GoogleFonts.rubik(
-                                          color: Colors.black87,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: '3rd Year',
-                                      child: Text(
-                                        '3rd Year',
-                                        style: GoogleFonts.rubik(
-                                          color: Colors.black87,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: '4th Year',
-                                      child: Text(
-                                        '4th Year',
-                                        style: GoogleFonts.rubik(
-                                          color: Colors.black87,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  items: yearDropDowns,
                                   onChanged: (value) {
                                     if (value != null) {
                                       currentYear = value;
@@ -200,7 +262,29 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                                   ),
                                 ),
                               ),
-                              Expanded(child: Container()),
+                              Flexible(
+                                child: DropdownButtonFormField<String>(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  value: sort,
+                                  items: dropDowns,
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      sort = value;
+                                      setState(() {});
+                                    }
+                                  },
+                                  dropdownColor: Colors.white,
+                                  iconEnabledColor: Colors.white,
+                                  decoration: const InputDecoration(
+                                    suffixIcon: Icon(
+                                      Icons.arrow_drop_down,
+                                      color: Color(0xFF2855AE),
+                                      size: 30,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(
@@ -212,7 +296,7 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                     SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       sliver: SliverList.builder(
-                        itemCount: showResultList.length,
+                        itemCount: showResultList.isEmpty ? 1 : showResultList.length,
                         itemBuilder: (context, index) {
                           if (result.isLoading) {
                             return SizedBox(
@@ -230,7 +314,11 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                               height: MediaQuery.of(context).size.height - 200,
                               child: Center(
                                 child: Text(
-                                  'There is no result for $currentYear student',
+                                  sort == 'Fail'
+                                      ? 'There is all pass in $currentYear student'
+                                      : sort == 'Pass'
+                                          ? 'There is no pass in $currentYear student'
+                                          : 'There is no result for $currentYear student',
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.rubik(
                                     color: Colors.black54,
@@ -241,6 +329,9 @@ class _ResultScreenForTeacherState extends State<ResultScreenForTeacher> {
                               ),
                             );
                           }
+
+                          print(studentsList);
+                          print(showResultList);
 
                           StudentUserModel sum = studentsList[index];
                           ResultModel resultModel = showResultList[index];
